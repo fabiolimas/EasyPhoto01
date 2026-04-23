@@ -1,0 +1,126 @@
+
+a.navbar-brand {
+    width: 151px;
+}
+
+div#modalLab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+}
+.contentModalLab {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+.contentModalLab a {
+
+    text-decoration: none;
+    color: #000;
+
+}
+.logolab {
+    font-size: 48px;
+}
+.tituloLab {
+    font-weight: 700;
+    font-size:14px;
+}
+
+input.quantity-input {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 97px;
+    padding: 2px;
+}
+.enderecoLab {
+    font-size: 13px;
+}
+.row.envioBar {
+    background: #fb9292;
+    padding: 9px;
+    height: 61px;
+    display: flex;
+    align-items: center;
+    position:relative;
+}
+form#uploadForm {
+    position: absolute;
+    right: 22px;
+    top: 13px;
+}
+.imagem img {
+    filter: opacity(0.5);
+    transition: .3s;
+}
+.imagem img:hover {
+    filter: opacity(1);
+}
+.col-md-12.mb-3.boxlab:hover {
+    background: #c9cbca;
+}
+.content {
+    height: 70vh;
+}
+.col-md-12.mb-3.boxlab {
+    border: 1px solid #ccc;
+    width: 63%;
+    margin: 0 auto;
+    transition:.3s;
+}
+.logoEasyPHoto {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    padding: 52px;
+    flex-direction: column;
+}
+.minImagem {
+    width: 31px;
+    height: 44px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 2px;
+}
+.imagemPedido {
+    width: 226px !important;
+    margin: 9px;
+    border: 1px solid #ccc;
+    padding: 6px;
+}
+.loginCliente  {
+    background: #575555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    padding: 12px;
+    margin-top: 12%;
+}
+
+.cropper-container.cropper-bg {
+width: auto !important;
+min-height: 300px;
+/* max-height: 345px; */
+overflow: hidden;
+}
+.image-wrapper img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover; /* Cobrir o contêiner */
+    width: 100%; /* Garantir que a imagem preencha o contêiner */
+    height: 100%; /* Garantir que a imagem preencha o contêiner */
+}
+.image-wrapper canvas {
+    border: 1px solid black;
+}
+.crop-button, .size-select {
+    margin-top: 10px;
+    display: block;
+}

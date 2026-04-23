@@ -1,0 +1,314 @@
+p{
+    color: #4d4b4b;
+}
+a.navbar-brand {
+    width: 151px;
+}
+
+#imageContainer {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    overflow-y: scroll;
+    height: 70vh;
+}
+input.price-input {
+    width: 97px;
+    border-radius: 5px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    padding: 3px;
+}
+.image-wrapper {
+    margin: 10px;
+    position: relative;
+    /* width: 328px; */
+    margin-bottom: 67px;
+    padding: 29px;
+    border-radius: 5px;
+    border: 2px solid #ccc;
+    min-height: 161px;
+    max-height: 290px;
+    flex-direction: column;
+    align-content: center;
+    flex-wrap: nowrap;
+    justify-content: center;
+    display: flex
+;
+}
+.logoEasyPHoto img {
+    filter: drop-shadow(-5px 5px 0px #424649);
+}
+.cropper-canvas, .cropper-wrap-box {
+    overflow: visible;
+    /* margin: 0 auto; */
+    /* margin-top: -24px; */
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* flex-direction: column; */
+}
+.crop-controls {
+    display: flex;
+    justify-content: center;
+    margin: 5px;
+}
+.crop-controls button {
+    margin: 5px;
+    border-radius: 5px;
+    background: #ed8585;
+    border: none;
+}
+
+.crop-button, .size-select {
+    margin-top: 10px;
+    display: block;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    width: 97px;
+    padding: 5px;
+    border: 1px solid #ccc;
+}
+div#modalLab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+}
+.contentModalLab {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+.contentModalLab a {
+
+    text-decoration: none;
+    color: #000;
+
+}
+.logolab {
+    font-size: 48px;
+}
+.tituloLab {
+    font-weight: 700;
+    font-size:14px;
+}
+
+input.quantity-input {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 97px;
+    padding: 2px;
+}
+.enderecoLab {
+    font-size: 13px;
+}
+.row.envioBar {
+    background: #fb9292;
+    padding: 9px;
+    height: 61px;
+    display: flex;
+    align-items: center;
+    position:relative;
+}
+form#uploadForm {
+    position: absolute;
+    right: 22px;
+    top: 13px;
+}
+.imagem img {
+    filter: opacity(0.5);
+    transition: .3s;
+}
+.imagem img:hover {
+    filter: opacity(1);
+}
+.col-md-12.mb-3.boxlab:hover {
+    background: #c9cbca;
+}
+.content {
+    height: 70vh;
+}
+.col-md-12.mb-3.boxlab {
+    border: 1px solid #ccc;
+    width: 63%;
+    margin: 0 auto;
+    transition:.3s;
+}
+.logoEasyPHoto {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    padding: 52px;
+    flex-direction: column;
+}
+.minImagem {
+    width: 31px;
+    height: 44px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 2px;
+}
+.imagemPedido {
+    width: 104px;
+    margin: 9px;
+    border: 1px solid #ccc;
+    padding: 6px;
+}
+.loginCliente  {
+    background: #575555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    padding: 12px;
+    margin-top: 12%;
+}
+.registroCliente  {
+    background: #575555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    padding: 12px;
+    margin-top: 1%;
+    color: #fff;
+}
+
+.cropper-container.cropper-bg {
+width: auto !important;
+min-height: 300px !important;
+/* max-height: 345px; */
+overflow: hidden;
+margin-top: -109px !important;
+}
+.image-wrapper img {
+
+    min-height: 180px;
+    object-fit: cover;
+    width: fit-content !important;
+    height: 100%;
+    /* padding: 17px; */
+    border-radius: 6px;
+    margin-bottom: 10px;
+
+}
+.image-wrapper canvas {
+    border: 1px solid black;
+}
+.crop-button, .size-select {
+    margin-top: 10px;
+    display: block;
+}
+.cropper-hidden {
+    display: block !important;
+}
+.cropper-canvas, .cropper-crop-box, .cropper-drag-box, .cropper-modal, .cropper-wrap-box {
+
+    display: none !important;
+}
+.fimBtns {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-top: -47px;
+}
+span.endlab {
+    font-size: 14px;
+}
+.fimBtns .btn {
+
+    width: auto !important;
+}
+.atributos {
+    display: flex;
+    justify-content: space-evenly;
+    align-content: center;
+    align-items: center;
+}
+.col-md-3.atributos input {
+    margin: 5px;
+    margin-top: 10px;
+    width: -webkit-fill-available;
+    text-align: center;
+    padding: 5px;
+}
+.atributos label {
+    display: none;
+}
+#imageContainer {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    overflow-y: scroll;
+    height: 70vh;
+}
+.image-controls.text-center {
+    margin-top: -50px;
+    margin-left: 91%;
+}
+span#total_pedido {
+    position: relative;
+
+    font-weight: 500;
+}
+@media (max-width: 600px) {
+    .modal-dialog {
+        top: 21%;
+
+    }
+    span.price-input {
+        margin-top: 60px;
+        margin-left: -97px;
+    }
+    span#total_pedido {
+        position: absolute;
+        top: 19px;
+        right: 31px;
+        font-weight: 500;
+    }
+    .col-md-3.atributos input {
+
+        width: 32%;
+
+    }
+    li.nav-item .btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+    .content {
+        height: 59vh;
+    }
+    li.nav-item.dropdown {
+        background: #ccc;
+        border-radius: 5px;
+        margin-top: 10px;
+        padding: 5px;
+    }
+    form#uploadForm {
+
+       top: 46px;
+    }
+    #imageContainer {
+
+        height: 65vh;
+    }
+    .row.envioBar {
+
+        margin-top: 52px;
+    }
+    .row.fimBtns {
+        margin-top: 2px;
+    }
+    .fimBtns .btn {
+
+        width: 100% !important;
+    }
+  }
