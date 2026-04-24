@@ -46,6 +46,7 @@ class SiteController extends Controller
         $itensPedido=PedidoItem::where('pedido_id', $pedido->id)->get();
         $totalImagens=0;
         $totalPedido=0;
+        $cliente=Cliente::find($pedido->cliente_id);
 
         foreach($itensPedido as $item){
             $totalImagens+=$item->quantidade;
@@ -54,7 +55,7 @@ class SiteController extends Controller
         $laboratorio=Laboratorio::find($pedido->laboratorio_id);
 
 
-        return view('site.pedidos.detalhes-pedido', compact('totalPedido','laboratorio','pedido','itensPedido','totalImagens'));
+        return view('site.pedidos.detalhes-pedido', compact('cliente','totalPedido','laboratorio','pedido','itensPedido','totalImagens'));
     }
 
     public function buscaPedidos(Request $request){
