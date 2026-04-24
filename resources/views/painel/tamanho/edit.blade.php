@@ -10,10 +10,16 @@
 <div class="col-md-6">
     <form method="post" action="{{route('update-tamanho', $tamanho->id)}}">
         @csrf
-        <input type="text" name="nome" class="form-control mb-3" placeholder="Nome" value="{{$tamanho->nome}}">
-        <input type="text" name="altura" class="form-control mb-3" placeholder="Altura" value="{{$tamanho->altura}}">
-        <input type="text" name="largura" class="form-control mb-3" placeholder="Largura" value="{{$tamanho->largura}}">
-        <input type="text" name="preco" class="form-control mb-3" placeholder="Preço" value="{{$tamanho->preco}}">
+        <label for="nome">Nome</label>
+        <input type="text" name="nome" id="nome" class="form-control mb-3" placeholder="Nome" value="{{$tamanho->nome}}">
+        <label for="altura">Altura</label>
+        <input type="text" name="altura" id="altura" class="form-control mb-3" placeholder="Altura" value="{{$tamanho->altura}}">
+
+        <label for="largura">Largura</label>
+        <input type="text" name="largura" id="largura" class="form-control mb-3" placeholder="Largura" value="{{$tamanho->largura}}">
+
+        <label for="preco">Preço</label>
+        <input type="text" name="preco" id="preco" class="form-control mb-3" placeholder="Preço" value="{{$tamanho->preco}}">
 
             <button type="submit" class="btn btn-primary">Salvar</button>
     </form>
