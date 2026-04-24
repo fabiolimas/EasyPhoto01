@@ -5,6 +5,7 @@
 @section('content_header')
 
 @php( $login_url = View::getSection('login_url') ?? config('adminlte.login_url', 'login') )
+@php( $password_reset_url = View::getSection('password_reset_url') ?? config('adminlte.password_reset_url', 'password/reset') )
 @section('content')
 
 @include('components.alerts')
@@ -31,9 +32,25 @@
                     </div>
 
                 </form>
-                <div class="row text-center">
-                    <h5>Não tem Cadastro?</h5>
+                <hr>
+                <div class="row text-center mt-3">
+                    <div class="col-md-6">
+                        <h5>Esqueceu a senha?</h5>
+                                         {{-- Password reset link --}}
+    @if($password_reset_url)
+        <p class="my-0">
+            <a href="{{ $password_reset_url }}" class="text-white" target="_blank">
+                {{ __('Redefinir senha!') }}
+            </a>
+        </p>
+    @endif
+                    </div>
+                    <div class="col-md-6">
+ <h5>Não tem Cadastro?</h5>
                     <a href="{{route('registro_cliente')}}" class="item-link text-white">Clique aqui e cadastre-se</a>
+
+                    </div>
+
                 </div>
 
 

@@ -99,6 +99,6 @@ Route::get('/download/{id}', [ImageUploadController::class, 'downloadFiles'])->n
 
 Route::get('/cielo/{pedido}/{valor}',[PaymentController::class, 'cielo']);
 });
-
+Route::post('/webhook/cielo', [PaymentController::class, 'webhook']);
 
 

@@ -60,7 +60,7 @@ class ImageUploadController extends Controller
     $pedido->user_id = $user->id;
     $pedido->cliente = $user->name; // Atualize conforme necessário
     $pedido->status = 'Aguardando Impressão';
-    $pedido->status_pagamento = 'Aguardando Pagamento';
+    $pedido->status_pagamento = 'pendente';
     $pedido->laboratorio_id = $request->laboratorio_id;
     $pedido->observacao = $request->observacao;
     $pedido->total=number_format($request->total, 2, '.', ',');
