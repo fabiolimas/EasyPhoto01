@@ -16,6 +16,9 @@ a.navbar-brand {
     transform: none;
     max-width: 869px;
 }
+div#exampleModalLong {
+    margin-top: 35%;
+}
 input.price-input {
     width: 97px;
     border-radius: 5px;
