@@ -45,7 +45,7 @@
                     <td>{{$pedido->observacao}}</td>
                     <td class="@if ($pedido->status == 'Finalizado') text-success @else text-danger @endif">
                         {{ $pedido->status }}</td>
-                         <td class="@if ($pedido->status_pagamento == 'Pago') text-success @else text-danger @endif">
+                         <td class="@if ($pedido->status_pagamento == 'pago') text-success @else text-danger @endif">
                         {{ $pedido->status_pagamento }}</td>
 
                     <td><a href="{{ route('detalhe-pedido', $pedido->id) }}" class="btn btn-danger"><i class="far fa-images"></i> Visualizar</a></td>

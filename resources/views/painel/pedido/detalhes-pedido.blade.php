@@ -27,7 +27,7 @@
                     <td class="">Status Pedido: <span class="@if($pedido->status == 'Aguardando Impressão') text-danger @else text-success @endif"><b>{{ $pedido->status }}</b></span></td>
                 </tr>
                    <tr>
-                    <td class="">Status Pagamento: <span class="@if($pedido->status_pagamento == 'Aguardando Pagamento') text-danger @else text-success @endif"><b>{{ $pedido->status_pagamento }}</b></span></td>
+                    <td class="">Status Pagamento: <span class="@if($pedido->status_pagamento == 'pendente') text-danger @else text-success @endif"><b>{{ $pedido->status_pagamento }}</b></span></td>
                 </tr>
 
             </table>

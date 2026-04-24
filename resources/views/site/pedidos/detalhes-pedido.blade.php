@@ -27,7 +27,7 @@
                     <td class="">Status do pedido: <span class="@if($pedido->status =='Finalizado') text-success @else text-danger @endif"><b>{{ $pedido->status }}</b></td>
                 </tr>
                    <tr>
-                    <td class="">Status Pagamento: <span class="@if($pedido->status_pagamento =='Pago') text-success @else text-danger @endif"><b>{{ $pedido->status_pagamento }}</b></td>
+                    <td class="">Status Pagamento: <span class="@if($pedido->status_pagamento =='pago') text-success @else text-danger @endif"><b>{{ $pedido->status_pagamento }}</b></td>
                 </tr>
             </table>
         </div>

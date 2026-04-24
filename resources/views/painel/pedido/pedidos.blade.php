@@ -45,7 +45,7 @@
         <td>{{date('d/m/Y H:i', strtotime($pedido->created_at))}}</td>
         <td>{{$pedido->observacao}}</td>
         <td class="@if($pedido->status=='Aguardando Impressão') text-danger @else text-success @endif">{{$pedido->status}}</td>
-        <td class="@if($pedido->status_pagamento == 'Aguardando Pagamento') text-danger @else text-success @endif">{{$pedido->status_pagamento}}</td>
+        <td class="@if($pedido->status_pagamento == 'pendente') text-danger @else text-success @endif">{{$pedido->status_pagamento}}</td>
 
         <td><a href="{{route('download-files',$pedido->id)}}"><i class="fa fa-user-pen"></i> <i class="fas fa-download"></i></a> | <a href="{{route('altera-status', $pedido->id)}}"><i class="fas fa-check-circle"></i></a></td>
       </tr>
