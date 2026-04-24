@@ -38,6 +38,10 @@ Route::get('/registre-se', function(){
     return view('site.auth.registro_cliente');
 })->name('registro_cliente');
 
+// Route::get('/privacidade', function(){
+//     return view('site.mod_privacidade');
+// })->name('privacidade');
+
 Route::post('/registro-cliente',[RegisterController::class, 'storeCliente'])->name('registro-cliente');
 
 

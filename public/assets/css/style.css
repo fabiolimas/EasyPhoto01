@@ -12,6 +12,10 @@ a.navbar-brand {
     overflow-y: scroll;
     height: 70vh;
 }
+    .modal.show .modal-dialog {
+    transform: none;
+    max-width: 869px;
+}
 input.price-input {
     width: 97px;
     border-radius: 5px;
