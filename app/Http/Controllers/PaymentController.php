@@ -123,6 +123,27 @@ public function webhook(Request $request)
     return response()->json(['success' => true]);
 }
 
+public function simularPagamento($paymentId)
+{
+    $payment = Payment::where('payment_id', $paymentId)->first();
+
+    if (!$payment) {
+        return "Pagamento não encontrado";
+    }
+
+    // Simula como pago
+    $payment->update([
+        'status' => 'pago'
+    ]);
+
+    // Atualiza pedido também
+    $pedido = $payment->pedido;
+    $pedido->update([
+        'status' => 'pago'
+    ]);
+
+    return "Pagamento simulado com sucesso!";
+}
 
 
 }
