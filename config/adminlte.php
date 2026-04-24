@@ -330,6 +330,12 @@ return [
             'icon' => 'fas fa-fw fa-user',
             'can'=>'is_admin',
         ],
+         [
+            'text' => 'Clientes',
+            'route' => 'clientes',
+            'icon' => 'fas fa-fw fa-users',
+            'can'=>'is_admin',
+        ],
         [
             'text' => 'Laboratórios',
             'route' => 'laboratorios',

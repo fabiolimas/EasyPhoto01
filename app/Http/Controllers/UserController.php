@@ -90,4 +90,21 @@ class UserController extends Controller
 
     }
 
+    public function clientes(){
+
+    $clientes=Cliente::paginate(30);
+
+    return view('painel.clientes.index', compact('clientes'));
+    }
+
+    public function editCliente(Request $request){
+
+            $cliente=Cliente::find($request->id);
+
+
+    return view ('painel.clientes.edit', compact('cliente'));
+
+
+    }
+
 }

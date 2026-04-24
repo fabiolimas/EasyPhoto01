@@ -271,8 +271,8 @@ span#total_pedido {
         top: 21%;
 
     }
-    .col-md-3.offset-9.offset-sm-2.d-flex.justify-content-end {
-    justify-content: flex-start;
+    .col-md-3.offset-9.d-flex.justify-content-end {
+    justify-content: flex-start !important;
 }
     span.price-input {
         margin-top: 60px;

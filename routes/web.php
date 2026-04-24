@@ -53,6 +53,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/enviar/{id}',[ImageUploadController::class, 'showUploadForm'])->name('enviar-fotos');
     Route::post('/upload', [ImageUploadController::class, 'uploadImage'])->name('upload.image');
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
     //PedidosClientes
 Route::get('/pedidos-cliente', [SiteController::class, 'pedidoCliente'])->name('pedidos-cliente');
 Route::get('/meus-dados/{id}', [SiteController::class, 'meusDados'])->name('meus-dados');
@@ -66,6 +68,14 @@ Route::get('/usuario',[UserController::class, 'usuario'])->name('usuario');
 Route::post('/usuario',[UserController::class, 'store'])->name('store-user');
 Route::get('/usuario/{id}',[UserController::class, 'destroy'])->name('destroy-user');
 Route::get('/edit-usuario/{id}',[UserController::class, 'edit'])->name('edit-user');
+Route::post('/edit-usuario/{id}',[UserController::class, 'update'])->name('update-user');
+
+//Clientes
+Route::get('/clientes', [App\Http\Controllers\UserController::class, 'clientes'])->name('clientes');
+Route::get('/usuario',[UserController::class, 'usuario'])->name('usuario');
+Route::post('/usuario',[UserController::class, 'store'])->name('store-user');
+Route::get('/usuario/{id}',[UserController::class, 'destroy'])->name('destroy-user');
+Route::get('/edit-cliente/{id}',[UserController::class, 'editCliente'])->name('edit-cliente');
 Route::post('/edit-usuario/{id}',[UserController::class, 'update'])->name('update-user');
 
 
