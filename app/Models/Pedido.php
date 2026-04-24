@@ -9,4 +9,14 @@ class Pedido extends Model
 {
     use HasFactory;
     protected $guarded=[];
+
+    public function payments()
+{
+    return $this->hasMany(Payment::class);
+}
+
+public function payment()
+{
+    return $this->hasOne(Payment::class)->latestOfMany();
+}
 }

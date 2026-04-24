@@ -12,20 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('payments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('pedido_id')->constrained()->onDelete('cascade');
-            $table->string('data_pagamento');
-            $table->string('status_pagamento');
-            $table->double('valor', 10,2);
-            $table->string('payment_method');
-            $table->string('mp_payment_id')->nullable();
-            $table->string('preference_id')->nullable();
+        $table->id();
+        $table->foreignId('pedido_id')->constrained()->onDelete('cascade');
 
-            $table->text('pix_qr_code')->nullable();
-            $table->text('pix_copia_cola')->nullable();
-            $table->string('boleto_url')->nullable();
-            $table->timestamps();
-        });
+        $table->string('payment_id')->nullable(); // ID da Cielo
+        $table->string('type')->default('pix');
+        $table->integer('amount'); // em centavos
+        $table->string('status')->default('pendente');
+
+        $table->json('payload')->nullable(); // resposta completa da Cielo
+
+        $table->timestamps();
+    });
     }
 
     /**

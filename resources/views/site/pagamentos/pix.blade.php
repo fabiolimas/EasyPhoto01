@@ -37,7 +37,7 @@
 <div class="container">
     <div class="card card-pix p-4">
 
-        <h4 class="text-center mb-3">💳 Pagamento via PIX</h4>
+        <h4 class="text-center mb-3">Pagamento via PIX</h4>
 
         <!-- Valor -->
         <h2 class="text-center text-success mb-4">

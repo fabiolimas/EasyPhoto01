@@ -17,60 +17,110 @@ class PaymentController extends Controller
     }
 
 
-    public function cielo($pedidoId, $valor){
+    public function cielo($pedidoId, $valor)
+{
+    $pedido = Pedido::findOrFail($pedidoId);
+    $cliente = Cliente::where('user_id', $pedido->user_id)->first();
 
-        $pedido=Pedido::find($pedidoId);
+    $amount = (int) round($pedido->total * 100);
 
-        $cliente=Cliente::where('user_id',$pedido->user_id)->first();
+    // 👉 cria registro ANTES de enviar
+    $payment = Payment::create([
+        'pedido_id' => $pedido->id,
+        'amount' => $amount,
+        'status' => 'pendente',
+        'type' => 'pix'
+    ]);
 
+    $curl = curl_init();
 
+    curl_setopt_array($curl, [
+        CURLOPT_URL => "https://apisandbox.cieloecommerce.cielo.com.br/1/sales/",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_POSTFIELDS => json_encode([
+            'Customer' => [
+                'Name' => $cliente->nome,
+                'Identity' => $cliente->cpf,
+                'IdentityType' => 'cpf'
+            ],
+            'Payment' => [
+                'Type' => 'pix',
+                'Amount' => $amount
+            ],
+            'MerchantOrderId' => $pedido->id
+        ]),
+        CURLOPT_HTTPHEADER => [
+            "Content-Type: application/json",
+            "MerchantId: " . env('MERCHANT_ID'),
+            "MerchantKey: " . env('MERCHANT_KEY'),
+            "RequestId: " . uniqid(),
+            "accept: application/json"
+        ],
+    ]);
 
+    $response = curl_exec($curl);
+    $err = curl_error($curl);
+    curl_close($curl);
 
-$curl = curl_init();
+    if ($err) {
+        return back()->with('error', $err);
+    }
 
-curl_setopt_array($curl, [
-  CURLOPT_URL => "https://apisandbox.cieloecommerce.cielo.com.br/1/sales/",
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => "",
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 30,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => "POST",
-   CURLOPT_POSTFIELDS => json_encode([
-    'Customer' => [
-        'Name' => $cliente->nome,
-        'Identity' => '12345678909',
-        'IdentityType' => 'cpf'
-    ],
-    'Payment' => [
-        'Type' => 'pix',
-        'Amount' => (int) round($pedido->total * 100)
-    ],
-    'MerchantOrderId' => $pedido->id
-  ]),
-  CURLOPT_HTTPHEADER => [
-    "Content-Type: application/json",
-    "MerchantId: a57bea08-8175-463d-81c8-33e731ceeba1",
-    "MerchantKey: CoK6MYufghg7ORmfMVF6VOEqZIxTWcdDXxBhPXgr",
-    "RequestId: get",
-    "accept: application/json"
-  ],
-]);
+    $data = json_decode($response, true);
 
-$response = curl_exec($curl);
-$err = curl_error($curl);
+    // 👉 salva retorno da Cielo
+    if (isset($data['Payment']['PaymentId'])) {
+        $payment->update([
+            'payment_id' => $data['Payment']['PaymentId'],
+            'payload' => json_encode($data)
+        ]);
+    }
 
-
-
-if ($err) {
-  echo "cURL Error #:" . $err;
-} else {
- # echo $response;
+    return view('site.pagamentos.pix', compact('data','pedidoId','valor'));
 }
 
-$data=json_decode($response, true);
+public function consultarPix($paymentId)
+{
+    $curl = curl_init();
 
-return view('site.pagamentos.pix', compact('data','pedidoId','valor'));
+    curl_setopt_array($curl, [
+        CURLOPT_URL => "https://apisandbox.cieloecommerce.cielo.com.br/1/sales/{$paymentId}",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HTTPHEADER => [
+            "Content-Type: application/json",
+            "MerchantId: env('MERCHANT_ID)",
+            "MerchantKey: env('MERCHANT_KEY)",
+        ],
+    ]);
+
+    $response = curl_exec($curl);
+
+
+    $data = json_decode($response, true);
+
+    return $data;
+}
+
+public function webhook(Request $request)
+{
+    $paymentId = $request->input('PaymentId');
+
+    if (!$paymentId) {
+        return response()->json(['error' => 'PaymentId não informado'], 400);
+    }
+
+    $data = $this->consultarPix($paymentId);
+
+    $pedido = Pedido::where('payment_id', $paymentId)->first();
+
+    if ($pedido && $data['Payment']['Status'] == 2) {
+        $pedido->status = 'pago';
+        $pedido->save();
+    }
+
+    return response()->json(['success' => true]);
 }
 
 

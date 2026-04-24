@@ -7,13 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
-      protected $fillable = [
+     protected $fillable = [
         'pedido_id',
-        'data_pagamento',
-        'status_pagamento',
-        'valor',
-        'payment_method',
-        'mp_payment_id',
-        'preference_id'
+        'payment_id',
+        'type',
+        'amount',
+        'status',
+        'payload'
     ];
+
+    public function pedido()
+    {
+        return $this->belongsTo(Pedido::class);
+    }
 }
