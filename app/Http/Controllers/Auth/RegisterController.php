@@ -75,6 +75,16 @@ class RegisterController extends Controller
 
     function storeCliente(Request $request){
 
+    $usuario=User::where('email', $request->email)->first();
+
+
+
+
+    if($usuario){
+  return redirect()->back()->with('error', 'Cliente já possui cadastro');
+
+    }else{
+
         $user= new User();
 
 
@@ -100,9 +110,9 @@ class RegisterController extends Controller
         $cliente->user_id=$user->id;
         $cliente->save();
 
-        return redirect('/')->withsuccess('Cadastro feito');
+        return redirect('/')->with('success','Cadastro realizado com sucesso');
 
-
+    }
 
     }
 

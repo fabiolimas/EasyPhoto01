@@ -7,11 +7,7 @@
 @php( $login_url = View::getSection('login_url') ?? config('adminlte.login_url', 'login') )
 @section('content')
 
-
-<style>
-
-
-</style>
+@include('components.alerts')
     <div class="row d-flex justify-content-center align-itens-center  ">
         <div class="col-md-6 logo d-flex">
             <div class="logoEasyPHoto">
@@ -472,6 +468,16 @@
     </div>
   </div>
 </div>
+<script src="https://unpkg.com/imask"></script>
+<script>
+
+
+    const element = document.getElementById('telefone');
+const maskOptions = {
+  mask: '(00) 00000-0000'
+};
+const mask = IMask(element, maskOptions);
+    </script>
 
 
         @section('css')

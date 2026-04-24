@@ -7,6 +7,8 @@
 
 @section('content')
 
+
+
     <div class="row">
         <h4><i class="fas fa-building text-danger"></i> {{ $laboratorio->nome }} - <span class="endlab">{{$laboratorio->endereco}}</span></h4>
     </div>
@@ -47,7 +49,7 @@
                             <div class="modal-body">
                                 <div class="contentModalLab mt-3">
                                     <div class="row">
-                                        <textarea name="observacao" id="observacao" cols="30" rows="10" class="form-control"></textarea>
+                                        <textarea name="observacao" id="observacao" cols="70" rows="10" class="form-control"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -120,7 +122,7 @@
                     margin: 5% auto;
                     padding: 20px;
                     border: 1px solid #888;
-                    width: 80%;
+
                 }
 
                 .close {

@@ -7,7 +7,7 @@
 @php( $login_url = View::getSection('login_url') ?? config('adminlte.login_url', 'login') )
 @section('content')
 
-
+@include('components.alerts')
 
     <div class="row d-flex justify-content-center align-itens-center mt-5">
         <div class="col-md-6">
