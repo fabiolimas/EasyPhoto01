@@ -107,7 +107,7 @@ Route::get('/download/{id}', [ImageUploadController::class, 'downloadFiles'])->n
 //Pagamentos
 
 
-Route::get('/cielo/{pedido}/{valor}',[PaymentController::class, 'cielo']);
+Route::get('/cielo/{pedido}',[PaymentController::class, 'cielo']);
 });
 Route::post('/webhook/cielo', [PaymentController::class, 'webhook']);
 Route::get('/simular-pagamento/{paymentId}', [PaymentController::class, 'simularPagamento']);
