@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
+use App\Models\Laboratorio;
 use App\Models\Pedido;
 use App\Models\PedidoItem;
-use App\Models\Laboratorio;
 use Illuminate\Http\Request;
 
 class PedidoController extends Controller
@@ -36,6 +37,8 @@ class PedidoController extends Controller
         $totalImagens=0;
         $totalPedido=0;
 
+        $cliente=Cliente::find($pedido->cliente_id);
+
         foreach($itensPedido as $item){
             $totalImagens+=$item->quantidade;
 
@@ -43,7 +46,7 @@ class PedidoController extends Controller
         $laboratorio=Laboratorio::find($pedido->laboratorio_id);
 
 
-        return view('painel.pedido.detalhes-pedido', compact('totalPedido','laboratorio','pedido','itensPedido','totalImagens'));
+        return view('painel.pedido.detalhes-pedido', compact('clienet','totalPedido','laboratorio','pedido','itensPedido','totalImagens'));
     }
 
     public function buscaPedidos(Request $request){

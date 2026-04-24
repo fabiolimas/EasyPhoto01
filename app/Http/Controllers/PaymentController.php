@@ -17,7 +17,7 @@ class PaymentController extends Controller
     }
 
 
-    public function cielo($pedidoId, $valor)
+    public function cielo($pedidoId)
 {
     $pedido = Pedido::findOrFail($pedidoId);
     $cliente = Cliente::where('user_id', $pedido->user_id)->first();
@@ -77,7 +77,7 @@ class PaymentController extends Controller
         ]);
     }
 
-    return view('site.pagamentos.pix', compact('data','pedidoId','valor'));
+    return view('site.pagamentos.pix', compact('data','pedidoId'));
 }
 
 public function consultarPix($paymentId)
