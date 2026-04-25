@@ -5,10 +5,15 @@
 @section('content_header')
 
 @php( $login_url = View::getSection('login_url') ?? config('adminlte.login_url', 'login') )
-@php( $password_reset_url = View::getSection('password_reset_url') ?? config('adminlte.password_reset_url', 'password/reset') )
-@section('content')
 
+@php( $password_reset_url = View::getSection('password_reset_url') ?? config('adminlte.password_reset_url', 'password/reset') )
+
+@section('auth_header', __('adminlte::adminlte.login_message'))@section('content')
+@section('adminlte_css_pre')
+    <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+@stop
 @include('components.alerts')
+
 
     <div class="row d-flex justify-content-center align-itens-center mt-5">
         <div class="col-md-6">
@@ -22,11 +27,24 @@
                 <form id="loginForm" method ="post" action="{{ route('login') }}">
                     @csrf
                     <div class="form-group mb-3">
-                        <input type="email" name="email" id="email" class="form-control" placeholder="E-mail" required>
+                        <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="E-mail" required>
+                               @error('email')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
                     </div>
+
                 <div class="form-group mb-3">
-                    <input type="password" name="password" id="password" class="form-control" placeholder="Senha" required>
-                    </div>
+                    <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="Senha" required>
+                 @error('password')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
+                </div>
+
+
                     <div class="form-group">
                         <button type="submit" id="entrar" class="btn btn-dark">Entrar</button>
                     </div>
