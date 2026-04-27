@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('nome');
             $table->double('valor', 9,2);
-            $table->foreignId('local_relacionado')->constrained()->onDelete('cascade');
+            $table->integer('local_relacionado');
             $table->string('tipo_entrega');
         });
     }
