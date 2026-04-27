@@ -344,6 +344,13 @@ return [
         ],
 
         [
+            'text' => 'Formas de Entrega',
+            'route' => 'formas-de-entrega',
+            'icon' => 'fas fa-shipping-fast',
+            'can'=>'is_admin',
+        ],
+
+        [
             'text' => 'Revelação',
             'icon' => 'fas fa-fw fa-share',
             'can'=>'is_admin',

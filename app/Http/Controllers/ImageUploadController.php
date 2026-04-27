@@ -3,18 +3,20 @@
 // app/Http/Controllers/ImageUploadController.php
 namespace App\Http\Controllers;
 
-use App\Models\User;
-
-use App\Models\Pedido;
-use App\Models\Tamanho;
-use App\Models\PedidoItem;
+use App\Models\Cliente;
+use App\Models\FormasEntrega;
 use App\Models\Laboratorio;
+use App\Models\Pedido;
+use App\Models\PedidoItem;
+use App\Models\Tamanho;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Intervention\Image\Image;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Imagick\Driver;
+use Intervention\Image\Image;
+use Intervention\Image\ImageManager;
 
 
 class ImageUploadController extends Controller
@@ -26,9 +28,21 @@ class ImageUploadController extends Controller
         if (!extension_loaded('imagick')){
             echo 'imagick not installed';
         }
+        $usuario=Auth::user();
+        $cliente=Cliente::where('user_id',$usuario->id)->first();
+
+        $desconto=0;
+
+        if($cliente->desconto >1){
+
+            $desconto=$cliente->desconto/100;
+
+        }
 
         $laboratorio=Laboratorio::find($request->id);
-        return view('site.welcome', compact('tamanhos', 'laboratorio'));
+        $entregas=FormasEntrega::where('local_relacionado', $request->id)->get();
+
+        return view('site.welcome', compact('entregas','desconto','cliente','tamanhos', 'laboratorio'));
     }
 
     public function lab(Request $request){
@@ -65,6 +79,7 @@ class ImageUploadController extends Controller
     $pedido->observacao = $request->observacao;
     $pedido->total=number_format($request->total, 2, '.', ',');
     $pedido->payment_method=null;
+    $pedido->val_entrega=number_format($request->val_entrega, 2, '.', ',');
 
     $pedido->save();
 

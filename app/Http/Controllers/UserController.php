@@ -72,7 +72,8 @@ class UserController extends Controller
             'cidade'    =>$request->cidade,
             'cep'   =>$request->cep,
             'uf'    =>$request->uf,
-            'email' =>$request->email
+            'email' =>$request->email,
+            'desconto'=>$request->desconto,
         ]);
 
             $usuario->update(['name'=>$request->nome,'email'=>$request->email]);
@@ -106,5 +107,7 @@ class UserController extends Controller
 
 
     }
+
+
 
 }

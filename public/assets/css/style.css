@@ -266,8 +266,8 @@ span.endlab {
 }
 span#total_pedido {
     position: relative;
-
     font-weight: 500;
+    margin-left: -16% !important;
 }
 @media (max-width: 600px) {
     .modal-dialog {

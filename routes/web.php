@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\FormasDeEntregasController;
 use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\LaboratorioController;
 use App\Http\Controllers\PagamentoController;
@@ -103,6 +104,16 @@ Route::get('/altera-status/{id}', [PedidoController::class, 'alteraStatus'])->na
 Route::get('/busca-pedido-admin', [PedidoController::class, 'buscaPedidos'])->name('busca-pedidos-admin');
 Route::get('/busca-pedido-admin-lab', [PedidoController::class, 'buscaPedidosLab'])->name('busca-pedidos-admin-lab');
 Route::get('/download/{id}', [ImageUploadController::class, 'downloadFiles'])->name('download-files');
+
+//Formas de Entrega
+Route::get('/formas-de-entrega', [FormasDeEntregasController::class, 'index'])->name('formas-de-entrega');
+
+
+Route::get('/editar-forma-de-entrega/{id}', [FormasDeEntregasController::class, 'edit'])->name('edit-forma-de-entrega');
+Route::put('/editar-forma-de-entrega/{id}', [FormasDeEntregasController::class, 'update'])->name('update-forma-de-entrega');
+Route::get('/forma-de-entrega', [FormasDeEntregasController::class, 'create'])->name('forma-de-entrega');
+Route::post('/forma-de-entrega', [FormasDeEntregasController::class, 'store'])->name('store-forma-entrega');
+Route::get('/destroy/{id}', [FormasDeEntregasController::class, 'destroy'])->name('delete-forma-de-entrega');
 
 //Pagamentos
 

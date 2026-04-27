@@ -40,6 +40,8 @@ class PedidoController extends Controller
 
         $user=User::find($pedido->user_id);
 
+
+
         foreach($itensPedido as $item){
             $totalImagens+=$item->quantidade;
 
@@ -47,7 +49,7 @@ class PedidoController extends Controller
         $laboratorio=Laboratorio::find($pedido->laboratorio_id);
 
 
-        return view('painel.pedido.detalhes-pedido', compact('cliente','totalPedido','laboratorio','pedido','itensPedido','totalImagens'));
+        return view('painel.pedido.detalhes-pedido', compact('user','totalPedido','laboratorio','pedido','itensPedido','totalImagens'));
     }
 
     public function buscaPedidos(Request $request){

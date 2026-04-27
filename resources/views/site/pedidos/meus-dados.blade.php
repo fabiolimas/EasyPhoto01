@@ -77,6 +77,11 @@
             <option value="TO">Tocantins</option>
         </select>
         </div>
+
+          <div class="form-group mb-3">
+            <label for="desconto">Desconto %</label>
+            <input type="text" name="desconto" id="desconto" class="form-control" value="{{$cliente->desconto}}" readonly>
+        </div>
         <div class="form-group mb-3">
             <label for="email">E-mail</label>
             <input type="email" name="email" id="email" class="form-control" placeholder="E-mail" value="{{$cliente->email}}">

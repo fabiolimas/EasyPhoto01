@@ -152,19 +152,28 @@
                 </tr>
             @endforeach
             <tr>
+                <td ></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <th scope="now">Entrega</th>
+                <th scope="now">R$ {{number_format($pedido->val_entrega,2,',','.')}}</th>
+            </tr>
+            <tr>
                 <th scope="now">Total</td>
                 <td></td>
                 <td></td>
                 <td>{{ $totalImagens }}</td>
                 <td></td>
-                <th scope="now">R$ {{number_format($totalPedido,2,',','.')}}</th>
+                <th scope="now">R$ {{number_format($totalPedido+$pedido->val_entrega,2,',','.')}}</th>
             </tr>
 
 
 
         </tbody>
     </table>
-    @if($pedido->status_pagamento == "pendente" and $cliente->nivel 'cliente')
+
+    @if($pedido->status_pagamento)
     <div class="col-md-3 offset-9 d-flex justify-content-end"><a href="/cielo/{{ $pedido->id }}" class="btn btn-success  "><i class="fa-solid fa-cart-arrow-down"></i> Finalizar compra</a></div>
     @else
 
