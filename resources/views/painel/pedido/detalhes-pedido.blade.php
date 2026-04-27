@@ -166,12 +166,24 @@
                 </tr>
             @endforeach
             <tr>
+                <td ></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <th scope="now">Entrega</th>
+               @if($pedido->val_entrega == 0 || $pedido->val_entrega == null)
+                <td>Retirar na loja</td>
+                @else
+                <th scope="now">R$ {{number_format($pedido->val_entrega,2,',','.')}}</th>
+                @endif
+            </tr>
+            <tr>
                 <th scope="now">Total</td>
                 <td></td>
                 <td></td>
                 <td>{{ $totalImagens }}</td>
                 <td></td>
-                <th scope="now">R$ {{number_format($totalPedido,2,',','.')}}</th>
+                <th scope="now">R$ {{number_format($totalPedido+$pedido->val_entrega,2,',','.')}}</th>
             </tr>
         </tbody>
     </table>

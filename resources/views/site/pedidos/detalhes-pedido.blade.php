@@ -157,7 +157,11 @@
                 <td></td>
                 <td></td>
                 <th scope="now">Entrega</th>
+                @if($pedido->val_entrega == 0 || $pedido->val_entrega == null)
+                <td>Retirar na loja</td>
+                @else
                 <th scope="now">R$ {{number_format($pedido->val_entrega,2,',','.')}}</th>
+                @endif
             </tr>
             <tr>
                 <th scope="now">Total</td>
