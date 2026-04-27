@@ -12,9 +12,9 @@ a.navbar-brand {
     overflow-y: scroll;
     height: 70vh;
 }
-    div#exampleModalCenter, div#exampleModalLong, div#modalObservacao {
+    #exampleModalCenter, #exampleModalLong, #modalObservacao {
     transform: none;
-    max-width: 869px;
+    --bs-modal-width: 869px;
 }
 div#exampleModalLong
 

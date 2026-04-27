@@ -6,6 +6,7 @@ use App\Models\Cliente;
 use App\Models\Laboratorio;
 use App\Models\Pedido;
 use App\Models\PedidoItem;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PedidoController extends Controller
@@ -37,7 +38,7 @@ class PedidoController extends Controller
         $totalImagens=0;
         $totalPedido=0;
 
-        $cliente=Cliente::find($pedido->cliente_id);
+        $user=User::find($pedido->user_id);
 
         foreach($itensPedido as $item){
             $totalImagens+=$item->quantidade;
