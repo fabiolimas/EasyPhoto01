@@ -472,11 +472,17 @@
 <script>
 
 
-    const element = document.getElementById('telefone');
+    const telefone = document.getElementById('telefone');
+    const cpf = document.getElementById('cpf');
 const maskOptions = {
   mask: '(00) 00000-0000'
 };
-const mask = IMask(element, maskOptions);
+const maskcpf={
+    mask:'000.000.000-00'
+}
+const mask = IMask(telefone, maskOptions);
+const maskc = IMask(cpf, maskcpf);
+
     </script>
 
 
