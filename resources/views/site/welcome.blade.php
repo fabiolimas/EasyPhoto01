@@ -411,12 +411,15 @@
 
                 function updateTotalPedido() {
                     let total = 0;
+                     const valor_entrega=parseInt($('#val_entrega').val())|| 0;
                     $('#imageContainer .image-wrapper').each(function() {
                         const price = parseFloat($(this).find('.price-inputv').val()) || 0;
                         const quantity = parseInt($(this).find('.quantity-input').val()) || 1;
-                          const valor_entrega=parseInt($('#val_entrega').val())|| 0;
-                        total += price * quantity+valor_entrega;
+
+                        total += price * quantity;
+
                     });
+                    total+=valor_entrega;
                     $('#input_total').val(total);
                     $('#total_pedido').html(total.toLocaleString('pt-BR', {
                         style: 'currency',
