@@ -46,7 +46,8 @@ class SiteController extends Controller
         $itensPedido=PedidoItem::where('pedido_id', $pedido->id)->get();
         $totalImagens=0;
         $totalPedido=0;
-        $cliente=Cliente::find($pedido->cliente_id);
+        $usuario=User::find($pedido->user_id);
+        $cliente=Cliente::where('user_id',$usuario->id)->first();
 
         foreach($itensPedido as $item){
             $totalImagens+=$item->quantidade;
