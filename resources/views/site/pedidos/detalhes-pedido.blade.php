@@ -179,8 +179,8 @@
 
  @if($pedido->status_pagamento === 'pendente' && !empty($cliente?->cpf))
     <div class="col-md-3 offset-9 d-flex justify-content-end">
-        <a href="/cielo/{{ $pedido->id }}" class="btn btn-success">
-            <i class="fa-solid fa-cart-arrow-down"></i> Finalizar compra
+        <a href="{{route('pagamento.escolha',$pedido->id)}}" class="btn btn-success">
+            <i class="fa-solid fa-cart-arrow-down"></i> Avançar
         </a>
     </div>
 

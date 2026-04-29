@@ -7,7 +7,7 @@
 
 
 @section('content')
-
+@include('components.alerts')
 
 <h2>Pagamento Pedido #{{ $pedidoId }}</h2>
 

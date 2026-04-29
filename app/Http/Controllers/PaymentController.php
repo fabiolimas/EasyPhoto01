@@ -16,8 +16,29 @@ class PaymentController extends Controller
         return view('site.pagamentos.index', compact('pedidoId', 'valor'));
     }
 
+    public function escolhaPagamento($pedidoId){
 
-    public function cielo($pedidoId)
+    $pedido=Pedido::find($pedidoId);
+    return view('site.pagamentos.escolha', compact('pedido'));
+    }
+
+
+    public function processarPagamento(Request $request, $pedidoId)
+{
+
+
+    if ($request->forma_pagamento == 'pix') {
+        return redirect()->route('pagamento.pix', $pedidoId);
+    }
+
+    if ($request->forma_pagamento == 'cartao') {
+        return redirect()->route('pagamento.cartao', $pedidoId);
+    }
+
+    return back()->with('error', 'Selecione uma forma de pagamento');
+}
+
+    public function cieloPix($pedidoId)
 {
     $pedido = Pedido::findOrFail($pedidoId);
     $cliente = Cliente::where('user_id', $pedido->user_id)->first();
@@ -79,6 +100,8 @@ class PaymentController extends Controller
 
     return view('site.pagamentos.pix', compact('data','pedidoId'));
 }
+
+
 
 public function consultarPix($paymentId)
 {
@@ -143,6 +166,73 @@ public function simularPagamento($paymentId)
     ]);
 
     return "Pagamento simulado com sucesso!";
+}
+
+public function cieloCard($pedidoId){
+
+$pedido = Pedido::findOrFail($pedidoId);
+    $cliente = Cliente::where('user_id', $pedido->user_id)->first();
+
+    $amount = (int) round($pedido->total * 100);
+
+    // 👉 cria registro ANTES de enviar
+    $payment = Payment::create([
+        'pedido_id' => $pedido->id,
+        'amount' => $amount,
+        'status' => 'pendente',
+        'type' => 'CreditCard'
+    ]);
+    $curl = curl_init();
+
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://apisandbox.cieloecommerce.cielo.com.br/1/sales/",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_POSTFIELDS => json_encode([
+    'Customer' => [
+            'Name' => $cliente->nome,
+        'Identity' => $cliente->cpf,
+
+    ],
+    'Payment' => [
+        'Type' => 'CreditCard',
+        'IsCryptocurrencyNegociation' => false,
+       'CreditCard' => [
+                'CardNumber' => '5371542802050634',
+                'Holder' => $cliente->nome,
+                'ExpirationDate' => '07/2027',
+                'SecurityCode' => '574',
+                'Brand' => 'Master'
+        ],
+        'Amount' => 10000,
+        'Currency' => 'BRL',
+        'Country' => 'BRA',
+        'Installments' => 1
+    ],
+    'MerchantOrderId' => '12'
+  ]),
+  CURLOPT_HTTPHEADER => [
+    "Content-Type: application/json",
+    "MerchantId: a57bea08-8175-463d-81c8-33e731ceeba1",
+    "MerchantKey: CoK6MYufghg7ORmfMVF6VOEqZIxTWcdDXxBhPXgr",
+    "accept: application/json"
+  ],
+]);
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}
 }
 
 

@@ -117,8 +117,11 @@ Route::get('/destroy/{id}', [FormasDeEntregasController::class, 'destroy'])->nam
 
 //Pagamentos
 
-
-Route::get('/cielo/{pedido}',[PaymentController::class, 'cielo']);
+Route::get('/pagamento/escolha/{pedido}',[PaymentController::class, 'escolhaPagamento'])->name('pagamento.escolha');
+Route::get('/pagamento/pix/{pedido}',[PaymentController::class, 'cieloPix'])->name('pagamento.pix');
+Route::get('/pagamento/cartao/{pedido}',[PaymentController::class, 'cieloCard'])->name('pagamento.cartao');
+Route::post('/pagamento/processar/{pedido}', [PaymentController::class, 'processarPagamento'])
+    ->name('pagamento.processar');
 });
 Route::post('/webhook/cielo', [PaymentController::class, 'webhook']);
 Route::get('/simular-pagamento/{paymentId}', [PaymentController::class, 'simularPagamento']);
