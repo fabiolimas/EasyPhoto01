@@ -94,6 +94,89 @@
     </div>
     </form>
 </div>
+<script src="https://unpkg.com/imask"></script>
+<script>
+
+
+    const telefone = document.getElementById('telefone');
+    const cpf = document.getElementById('cpf');
+const maskOptions = {
+  mask: '(00) 00000-0000'
+};
+const maskcpf={
+    mask:'000.000.000-00'
+}
+const mask = IMask(telefone, maskOptions);
+const maskc = IMask(cpf, maskcpf);
+
+    </script>
+<script>
+
+// ===============================
+// VALIDADOR DE CPF
+// ===============================
+function validarCPF(cpf) {
+    cpf = cpf.replace(/[^\d]+/g,'');
+
+    if (cpf.length !== 11) return false;
+
+    // elimina CPFs inválidos conhecidos
+    if (/^(\d)\1+$/.test(cpf)) return false;
+
+    let soma = 0;
+    let resto;
+
+    // 1º dígito
+    for (let i = 1; i <= 9; i++)
+        soma += parseInt(cpf.substring(i-1, i)) * (11 - i);
+
+    resto = (soma * 10) % 11;
+    if ((resto === 10) || (resto === 11)) resto = 0;
+
+    if (resto !== parseInt(cpf.substring(9, 10))) return false;
+
+    soma = 0;
+
+    // 2º dígito
+    for (let i = 1; i <= 10; i++)
+        soma += parseInt(cpf.substring(i-1, i)) * (12 - i);
+
+    resto = (soma * 10) % 11;
+    if ((resto === 10) || (resto === 11)) resto = 0;
+
+    if (resto !== parseInt(cpf.substring(10, 11))) return false;
+
+    return true;
+}
+
+// ===============================
+// VALIDAÇÃO EM TEMPO REAL
+// ===============================
+cpf.addEventListener('blur', function () {
+    if (!validarCPF(this.value)) {
+        this.classList.add('is-invalid');
+        this.classList.remove('is-valid');
+    } else {
+        this.classList.remove('is-invalid');
+        this.classList.add('is-valid');
+    }
+});
+
+// ===============================
+// BLOQUEAR SUBMIT
+// ===============================
+document.getElementById('registerForm').addEventListener('submit', function(e){
+
+    if (!validarCPF(cpf.value)) {
+        e.preventDefault();
+        cpf.classList.add('is-invalid');
+        alert('CPF inválido!');
+        return;
+    }
+
+});
+
+</script>
 @stop
 
 @section('css')

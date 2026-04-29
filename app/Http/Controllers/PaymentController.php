@@ -331,7 +331,7 @@ if ($err) {
         $pedido->update(['status' => 'pago']);
     }
 
-    return redirect()->back()->with('success', 'Pagamento'.$pedido->id. 'processado!');
+    return redirect()->route('pedidos-cliente')->with('success', 'Pagamento'.$pedido->id. 'processado!');
 }
 
 
