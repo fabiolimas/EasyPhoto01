@@ -5,6 +5,8 @@
 @section('content_header')
 
 @section('content')
+
+@include('components.alerts')
 <div class="container py-5">
 
     <h3 class="text-center mb-4">Pagamento com Cartão</h3>

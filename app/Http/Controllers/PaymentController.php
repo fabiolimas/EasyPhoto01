@@ -254,11 +254,20 @@ public function simularPagamento($paymentId)
 public function cieloCard(Request $request, $pedido_id)
 {
     $pedido = Pedido::findOrFail($pedido_id);
+     $cliente = Cliente::where('user_id', $pedido->user_id)->first();
 
     $numero = str_replace(' ', '', $request->numero);
     [$mes, $ano] = explode('/', $request->validade);
 
     $amount = (int) round($pedido->total * 100);
+
+     // 👉 cria registro ANTES de enviar
+    $payment = Payment::create([
+        'pedido_id' => $pedido->id,
+        'amount' => $amount,
+        'status' => 'pendente',
+        'type' => 'CreditCard'
+    ]);
 
     $curl = curl_init();
 
@@ -267,6 +276,11 @@ public function cieloCard(Request $request, $pedido_id)
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_CUSTOMREQUEST => "POST",
         CURLOPT_POSTFIELDS => json_encode([
+            'Customer' => [
+            'Name' => $cliente->nome,
+        'Identity' => $cliente->cpf,
+
+    ],
             "MerchantOrderId" => $pedido->id,
             "Payment" => [
                 "Type" => "CreditCard",
@@ -289,26 +303,35 @@ public function cieloCard(Request $request, $pedido_id)
         ],
     ]);
 
+
+
     $response = curl_exec($curl);
-    curl_close($curl);
+
+    dd($response);
+
+    $err = curl_error($curl);
 
     $data = json_decode($response, true);
 
-    // salvar pagamento
-    Payment::create([
-        'pedido_id' => $pedido->id,
-        'payment_id' => $data['Payment']['PaymentId'] ?? null,
-        'amount' => $amount,
-        'status' => $data['Payment']['Status'] ?? 'erro',
-        'type' => 'cartao',
-        'payload' => json_encode($data)
-    ]);
+if ($err) {
+        return back()->with('error', $err);
+    }
+
+    $data = json_decode($response, true);
+
+    // 👉 salva retorno da Cielo
+    if (isset($data['Payment']['PaymentId'])) {
+        $payment->update([
+            'payment_id' => $data['Payment']['PaymentId'],
+            'payload' => json_encode($data)
+        ]);
+    }
 
     if(isset($data['Payment']['Status']) && $data['Payment']['Status'] == 2){
         $pedido->update(['status' => 'pago']);
     }
 
-    return redirect()->back()->with('success', 'Pagamento processado!');
+    return redirect()->back()->with('success', 'Pagamento'.$pedido->id. 'processado!');
 }
 
 
