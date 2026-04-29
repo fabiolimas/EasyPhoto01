@@ -27,6 +27,9 @@
                      <div class="form-group mb-3">
                         <label for="cpf">CPF</label>
                         <input type="text" name="cpf" id="cpf" class="form-control" placeholder="Apenas numeros" required>
+                        <div class="invalid-feedback">
+    CPF inválido
+</div>
                     </div>
                     <div class="form-group mb-3" >
                         <label for="telefone">Telefone</label>
