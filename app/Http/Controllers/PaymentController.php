@@ -229,10 +229,18 @@ $err = curl_error($curl);
 curl_close($curl);
 
 if ($err) {
-  echo "cURL Error #:" . $err;
-} else {
-  echo $response;
-}
+        return back()->with('error', $err);
+    }
+
+    $data = json_decode($response, true);
+
+    // 👉 salva retorno da Cielo
+    if (isset($data['Payment']['PaymentId'])) {
+        $payment->update([
+            'payment_id' => $data['Payment']['PaymentId'],
+            'payload' => json_encode($data)
+        ]);
+    }
 }
 
 
