@@ -14,7 +14,7 @@
 
             <div class="card shadow p-4">
 
-                <form id="formCartao" method="POST" action="{{ route('pagamento.cartao.processar') }}">
+                <form id="formCartao" method="POST" action="{{ route('pagamento.cartao.processar', $pedido->id) }}">
                     @csrf
 
                     <input type="hidden" name="pedido_id" value="{{ $pedido->id }}">

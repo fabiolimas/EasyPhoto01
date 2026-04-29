@@ -22,9 +22,17 @@ class PaymentController extends Controller
     return view('site.pagamentos.escolha', compact('pedido'));
     }
 
+    public function cardview($pedidoId){
+
+    $pedido=Pedido::find($pedidoId);
+
+    return view('site.pagamentos.cartao',compact('pedido'));
+
+    }
+
 
     public function processarPagamento(Request $request, $pedidoId)
-{
+    {
 
 
     if ($request->forma_pagamento == 'pix') {
@@ -32,7 +40,7 @@ class PaymentController extends Controller
     }
 
     if ($request->forma_pagamento == 'cartao') {
-        return redirect()->route('pagamento.cartao', $pedidoId);
+        return redirect()->route('pagamento.cardView', $pedidoId);
     }
 
     return back()->with('error', 'Selecione uma forma de pagamento');
@@ -243,9 +251,9 @@ public function simularPagamento($paymentId)
 //     }
 // }
 
-public function cieloCard(Request $request)
+public function cieloCard(Request $request, $pedido_id)
 {
-    $pedido = Pedido::findOrFail($request->pedido_id);
+    $pedido = Pedido::findOrFail($pedido_id);
 
     $numero = str_replace(' ', '', $request->numero);
     [$mes, $ano] = explode('/', $request->validade);

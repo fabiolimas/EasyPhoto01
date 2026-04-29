@@ -119,7 +119,8 @@ Route::get('/destroy/{id}', [FormasDeEntregasController::class, 'destroy'])->nam
 
 Route::get('/pagamento/escolha/{pedido}',[PaymentController::class, 'escolhaPagamento'])->name('pagamento.escolha');
 Route::get('/pagamento/pix/{pedido}',[PaymentController::class, 'cieloPix'])->name('pagamento.pix');
-Route::get('/pagamento/cartao/{pedido}',[PaymentController::class, 'cieloCard'])->name('pagamento.cartao');
+Route::get('/pagamento/card/{pedido}',[PaymentController::class, 'cardView'])->name('pagamento.cardView');
+Route::post('/pagamento/cartao/{pedido}',[PaymentController::class, 'cieloCard'])->name('pagamento.cartao.processar');
 Route::post('/pagamento/processar/{pedido}', [PaymentController::class, 'processarPagamento'])
     ->name('pagamento.processar');
 });
