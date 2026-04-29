@@ -61,7 +61,7 @@
         </div>
 
         <!-- Botão copiar -->
-        <button class="btn btn-primary w-100 mb-3" onclick="copiarPix()">
+        <button class="btn btn-dark w-100 mb-3" onclick="copiarPix()">
             📋 Copiar código PIX
         </button>
 

@@ -307,7 +307,7 @@ public function cieloCard(Request $request, $pedido_id)
 
     $response = curl_exec($curl);
 
-    dd($response);
+
 
     $err = curl_error($curl);
 

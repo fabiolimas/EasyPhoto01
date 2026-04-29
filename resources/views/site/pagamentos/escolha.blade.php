@@ -47,7 +47,7 @@
                 </div>
 
                 <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-success px-5">
+                    <button type="submit" class="btn btn-dark px-5">
                         Continuar
                     </button>
                 </div>

@@ -52,7 +52,7 @@
                 </form>
                 <hr>
                 <div class="row text-center mt-3">
-                    <div class="col-md-6">
+                    <div class="col-md-6 mb-3">
                         <h5>Esqueceu a senha?</h5>
                                          {{-- Password reset link --}}
     @if($password_reset_url)
@@ -63,7 +63,7 @@
         </p>
     @endif
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 mb-3">
  <h5>Não tem Cadastro?</h5>
                     <a href="{{route('registro_cliente')}}" class="item-link text-white">Clique aqui e cadastre-se</a>
 

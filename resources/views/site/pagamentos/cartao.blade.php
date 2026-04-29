@@ -43,7 +43,7 @@
                         {{-- CVV --}}
                         <div class="col-md-6 mb-3">
                             <label>CVV</label>
-                            <input type="text" name="cvv" id="cvv" class="form-control" maxlength="4" required>
+                            <input type="text" name="cvv" id="cvv" class="form-control" maxlength="3" required>
                         </div>
                     </div>
 
@@ -53,7 +53,7 @@
                         <select name="parcelas" id="parcelas" class="form-control"></select>
                     </div>
 
-                    <button class="btn btn-success w-100">Pagar</button>
+                    <button class="btn btn-dark w-100">Pagar</button>
                 </form>
 
             </div>
