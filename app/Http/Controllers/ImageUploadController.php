@@ -63,6 +63,7 @@ class ImageUploadController extends Controller
 
     $user = User::find($request->user_id);
 
+
     $images = $request->file('images');
     $tamanhos = json_decode($request->input('tamanhos'), true);
     $quantidades = json_decode($request->input('quantidades'), true);
@@ -79,6 +80,7 @@ class ImageUploadController extends Controller
     $pedido->observacao = $request->observacao;
     $pedido->total=number_format($request->total, 2, '.', ',');
     $pedido->payment_method=null;
+    $pedido->forma_de_entrega=$request->forma_entrega;
     $pedido->val_entrega=number_format($request->val_entrega, 2, '.', ',');
 
     $pedido->save();

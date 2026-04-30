@@ -17,7 +17,7 @@
                 <div class="row g-4">
 
                     {{-- PIX --}}
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="w-100">
                             <input type="radio" name="forma_pagamento" value="pix" class="d-none input-pagamento">
 
@@ -31,7 +31,7 @@
                     </div>
 
                     {{-- CARTÃO --}}
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="w-100">
                             <input type="radio" name="forma_pagamento" value="cartao" class="d-none input-pagamento">
 
@@ -40,6 +40,20 @@
                                 <p class="text-muted">Parcelamento disponível</p>
 
                                 <i class="fa-solid fa-credit-card fa-3x text-primary"></i>
+                            </div>
+                        </label>
+                    </div>
+
+                    {{-- Pagamento na Retirada --}}
+                    <div class="col-md-4">
+                        <label class="w-100">
+                            <input type="radio" name="forma_pagamento" value="retirada" class="d-none input-pagamento">
+
+                            <div class="card card-pagamento p-4 text-center h-100">
+                                <h5>Pagamento na Retirada</h5>
+                            <p class="text-muted">Pague direto no caixa</p>
+
+                                <i class="fas fa-cash-register fa-3x text-warning"></i>
                             </div>
                         </label>
                     </div>

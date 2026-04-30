@@ -12,23 +12,21 @@
         <div class="row detalhesPedido">
             <table class="table table-striped mb-3 mt-3">
                 <tr>
-                    <td>Cliente: <b>{{ $pedido->cliente }}</b></td>
+                    <td>Cliente: <b>{{ $pedido->cliente }}</b></td><td>Telefone: <b>{{$cliente->telefone}}</b></td>
                 </tr>
                 <tr>
-                    <td>Data: <b>{{ date('d/m/Y H:i', strtotime($pedido->created_at)) }}</b></td>
+                    <td>Data: <b>{{ date('d/m/Y H:i', strtotime($pedido->created_at)) }}</b></td><td>Entrega: <b> {{$pedido->forma_de_entrega}} </b></td>
                 </tr>
                 <tr>
-                    <td>Enviado para: <b>{{ $laboratorio->nome}}</b></td>
+                    <td>Enviado para: <b>{{ $laboratorio->nome}}</b></td><td>Pagamento: <b> @if($pedido->val_entrega == 0) Pagamento na Retirada @else {{$pedido->payment_method}} @endif </b></td>
                 </tr>
                 <tr>
-                    <td >Observação: <span class="text-danger"><b>{{ $pedido->observacao }}</b></span></td>
+                    <td >Observação: <span class="text-danger"><b>{{ $pedido->observacao }}</b></span></td> <td class="">Status Pagamento: <span class="@if($pedido->status_pagamento =='pago') text-success @else text-danger @endif"><b>{{ $pedido->status_pagamento }}</b></td>
                 </tr>
                 <tr>
-                    <td class="">Status do pedido: <span class="@if($pedido->status =='Finalizado') text-success @else text-danger @endif"><b>{{ $pedido->status }}</b></td>
+                    <td class="">Status do pedido: <span class="@if($pedido->status =='Finalizado') text-success @else text-danger @endif"><b>{{ $pedido->status }}</b></td><td></td>
                 </tr>
-                   <tr>
-                    <td class="">Status Pagamento: <span class="@if($pedido->status_pagamento =='pago') text-success @else text-danger @endif"><b>{{ $pedido->status_pagamento }}</b></td>
-                </tr>
+
             </table>
         </div>
     </div>
@@ -158,7 +156,7 @@
                 <td></td>
                 <th scope="now">Entrega</th>
                 @if($pedido->val_entrega == 0 || $pedido->val_entrega == null)
-                <td>Retirar na loja</td>
+                <td>{{$pedido->forma_de_entrega}}</td>
                 @else
                 <th scope="now">R$ {{number_format($pedido->val_entrega,2,',','.')}}</th>
                 @endif

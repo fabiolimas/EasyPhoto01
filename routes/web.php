@@ -114,6 +114,7 @@ Route::put('/editar-forma-de-entrega/{id}', [FormasDeEntregasController::class, 
 Route::get('/forma-de-entrega', [FormasDeEntregasController::class, 'create'])->name('forma-de-entrega');
 Route::post('/forma-de-entrega', [FormasDeEntregasController::class, 'store'])->name('store-forma-entrega');
 Route::get('/destroy/{id}', [FormasDeEntregasController::class, 'destroy'])->name('delete-forma-de-entrega');
+Route::get('/buscar-entrega/{id}', [FormasDeEntregasController::class, 'buscar']);
 
 //Pagamentos
 

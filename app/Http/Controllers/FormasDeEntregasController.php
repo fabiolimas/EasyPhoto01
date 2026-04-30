@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\FormasEntrega;
 use App\Models\Laboratorio;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class FormasDeEntregasController extends Controller
 {
@@ -78,4 +79,18 @@ class FormasDeEntregasController extends Controller
 
    return redirect()->back()->with('success','Forma de entrega excluida com sucesso!');
    }
+
+   public function buscar($id)
+{
+    $entrega = DB::table('formas_entregas')->where('id', $id)->first();
+
+    if (!$entrega) {
+        return response()->json(['erro' => 'Não encontrada'], 404);
+    }
+
+    return response()->json([
+        'valor' => $entrega->valor,
+        'nome' =>$entrega->nome
+    ]);
+}
 }

@@ -36,6 +36,7 @@
 
                 <input type="hidden" name="laboratorio_id" id="laboratorio_id" value="{{ $laboratorio->id }}">
                  <input type="hidden" name="val_entrega" id="val_entrega">
+                 <input type="hidden" name="forma_entrega" id="forma_entrega">
                 <input type="hidden" name="total" id="input_total">
                 <input type="hidden" name="user_id" id="user_id" value="{{ auth()->id() }}">
                 {{-- Modal Observação --}}
@@ -77,7 +78,7 @@
                                         @foreach ($entregas as $entrega)
                                             <div class="form-check">
                                                 <input class="form-check-input entregainput" type="radio" name="entrega"
-                                                    id="entrega-{{ $entrega->nome }}" value="{{ $entrega->valor }}">
+                                                    id="entrega-{{ $entrega->nome }}" value="{{ $entrega->id }}">
                                                 <label class="form-check-label" for="entrega-{{ $entrega->nome }}">
                                                     {{ $entrega->nome }}
                                                 </label>
@@ -282,26 +283,41 @@
                             });
                     });
                 });
-                // Taxa de entrega
-                let selecionado = false;
+   let selecionado = false;
 
-    // quando selecionar o radio
-    $('.entregainput').on('change', function () {
-        selecionado = true;
+$('.entregainput').on('change', function () {
+    selecionado = true;
 
-        $('#processButton')
-            .removeClass('disabled')
-            .addClass('btn-success');
+    $('#processButton')
+        .removeClass('disabled')
+        .addClass('btn-success');
 
-           let valorSelecionado = $('input[name="entrega"]:checked').val();
+    let entregaId = $('input[name="entrega"]:checked').val();
 
-        $('#val_entrega').val(valorSelecionado);
+    // AJAX para buscar o valor da entrega
+    $.ajax({
+        url: '/buscar-entrega/' + entregaId,
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
 
+            // aqui você recebe o valor vindo do backend
+            let valorEntrega = response.valor;
+            let formaEntrega = response.nome;
 
-        updateTotalPedido();
+            $('#val_entrega').val(valorEntrega);
+            $('#forma_entrega').val(formaEntrega);
 
-        console.log(valorSelecionado);
+            updateTotalPedido();
+
+            console.log('ID:', entregaId);
+            console.log('Valor:', valorEntrega);
+        },
+        error: function () {
+            console.error('Erro ao buscar valor da entrega');
+        }
     });
+});
 
     // clique no botão
     $('#processButton').on('click', function () {
