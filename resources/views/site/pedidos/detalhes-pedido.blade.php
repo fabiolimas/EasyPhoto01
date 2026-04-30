@@ -18,7 +18,7 @@
                     <td>Data: <b>{{ date('d/m/Y H:i', strtotime($pedido->created_at)) }}</b></td><td>Entrega: <b> {{$pedido->forma_de_entrega}} </b></td>
                 </tr>
                 <tr>
-                    <td>Enviado para: <b>{{ $laboratorio->nome}}</b></td><td>Pagamento: <b> @if($pedido->val_entrega == 0) Pagamento na Retirada @else {{$pedido->payment_method}} @endif </b></td>
+                    <td>Enviado para: <b>{{ $laboratorio->nome}}</b></td><td>Pagamento: <b> @if($pedido->val_entrega == 0 and $pedido->payment_method == null) Pagamento na Retirada @else {{$pedido->payment_method}} @endif </b></td>
                 </tr>
                 <tr>
                     <td >Observação: <span class="text-danger"><b>{{ $pedido->observacao }}</b></span></td> <td class="">Status Pagamento: <span class="@if($pedido->status_pagamento =='pago') text-success @else text-danger @endif"><b>{{ $pedido->status_pagamento }}</b></td>
