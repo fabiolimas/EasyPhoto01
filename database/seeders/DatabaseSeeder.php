@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             LaboratorioSeeder::class,
             UserSeeder::class,
             ClienteSeeder::class,
+            EntregaSeeder::class,
 
 
 
