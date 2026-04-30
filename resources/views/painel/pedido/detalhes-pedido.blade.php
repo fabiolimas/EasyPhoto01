@@ -12,7 +12,9 @@
         <div class="row detalhesPedido table-responsive">
               <table class="table table-striped mb-3 mt-3">
                 <tr>
-                    <td>Cliente: <b>{{ $pedido->cliente }}</b></td><td>Telefone: <b>{{$cliente->telefone}}</b></td>
+                    <td>Cliente: <b>{{ $pedido->cliente }}</b>
+  <i class="fas fa-search m-2" data-bs-toggle="modal" data-bs-target="#dadosCliente" style="cursor:pointer"></i>
+</td><td>Telefone: <b>{{$cliente->telefone}}</b></td>
                 </tr>
                 <tr>
                     <td>Data: <b>{{ date('d/m/Y H:i', strtotime($pedido->created_at)) }}</b></td><td>Entrega: <b> {{$pedido->forma_de_entrega}} </b></td>
@@ -185,8 +187,50 @@
         </tbody>
     </table>
 </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+
+
+<!-- Modal1 -->
+<div class="modal fade" id="dadosCliente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true" style="--bs-modal-width: 900px">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+            <h5>Dados do Cliente</h5>
+
+      </div>
+      <div class="modal-body">
+        <div class="row">
+            <div class="col-md-6">
+                Nome: <input type="text" class="form-control" value="{{$cliente->nome}}" readonly>
+            </div>
+            <div class="col-md-6">
+                Telefone: <input type="text" class="form-control"  value="{{$cliente->telefone}}" readonly>
+            </div>
+              <div class="col-md-5">
+                Endereço: <input type="text" class="form-control" value="{{$cliente->endereco}}" readonly>
+            </div>
+             <div class="col-md-2">
+                Bairro: <input type= "text"  class="form-control" value="{{$cliente->bairro}}" readonly>
+            </div>
+             <div class="col-md-2">
+                Cidade: <input type= "text" class="form-control"  value="{{$cliente->cidade}}" readonly>
+            </div>
+              <div class="col-md-2">
+                CEP: <input type= "text" class="form-control"  value="{{$cliente->cep}}" readonly>
+            </div>
+        </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+
+      </div>
+    </div>
+  </div>
+</div>
 @stop
 @section('css')
     {{-- Add here extra stylesheets --}}
