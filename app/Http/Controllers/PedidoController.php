@@ -39,7 +39,7 @@ class PedidoController extends Controller
         $totalPedido=0;
 
         $user=User::find($pedido->user_id);
-
+ $cliente=Cliente::where('user_id',$user->id)->first();
 
 
         foreach($itensPedido as $item){
