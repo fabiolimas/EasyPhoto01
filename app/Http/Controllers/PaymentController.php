@@ -172,13 +172,15 @@ public function simularPagamento($paymentId)
 
     // Simula como pago
     $payment->update([
-        'status' => 'pago'
+        'status' => 'pago',
+
     ]);
 
     // Atualiza pedido também
     $pedido = $payment->pedido;
     $pedido->update([
-        'status_pagamento' => 'pago'
+        'status_pagamento' => 'pago',
+        'payment_method'=> 'Pix'
     ]);
 
     return "Pagamento simulado com sucesso!";
