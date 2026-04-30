@@ -49,7 +49,7 @@ class PedidoController extends Controller
         $laboratorio=Laboratorio::find($pedido->laboratorio_id);
 
 
-        return view('painel.pedido.detalhes-pedido', compact('user','totalPedido','laboratorio','pedido','itensPedido','totalImagens'));
+        return view('painel.pedido.detalhes-pedido', compact('cliente','user','totalPedido','laboratorio','pedido','itensPedido','totalImagens'));
     }
 
     public function buscaPedidos(Request $request){
