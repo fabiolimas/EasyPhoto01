@@ -15,8 +15,8 @@ class TamanhoSeeder extends Seeder
     {
         Tamanho::create([
             'nome'=>'10x15',
-            'altura'=>'15',
-            'largura'=>'10',
+            'altura'=>'10',
+            'largura'=>'15',
             'preco'=>2.20
 
         ]);
