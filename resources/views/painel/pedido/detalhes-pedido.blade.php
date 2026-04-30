@@ -208,7 +208,7 @@
             <div class="col-md-6">
                 Telefone: <input type="text" class="form-control"  value="{{$cliente->telefone}}" readonly>
             </div>
-              <div class="col-md-5">
+              <div class="col-md-6">
                 Endereço: <input type="text" class="form-control" value="{{$cliente->endereco}}" readonly>
             </div>
              <div class="col-md-2">
