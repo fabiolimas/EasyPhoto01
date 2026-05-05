@@ -225,6 +225,19 @@
 
         <script>
             $(document).ready(function() {
+
+                var cssRule =
+        "color: red;" +
+        "font-size: 20px;" +
+        "font-weight: bold;";
+console.log("%cEstamos monitorando alterações aqui :)", cssRule);
+
+var cssRule =
+        "color: black;" +
+        "font-size: 15px;" +
+        "font-weight: bold;";
+console.log("%cSeu IP pode ser bloqueado.", cssRule);
+
                 let modalEscolha = $("#modalEscolha");
                 modalEscolha.modal('show');
 
