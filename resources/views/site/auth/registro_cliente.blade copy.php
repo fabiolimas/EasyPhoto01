@@ -1,4 +1,4 @@
-@extends('layouts.login')
+@extends('layouts.site')
 
 @section('title', 'Cadastre-se')
 
@@ -8,189 +8,109 @@
 @section('content')
 
 @include('components.alerts')
-    <div class="row register-card shadow-lg rounded-4 overflow-hidden w-100 mx-0">
+    <div class="row d-flex justify-content-center align-itens-center  ">
+        <div class="col-md-6 logo d-flex">
+            <div class="logoEasyPHoto">
+                <img src="{{asset('assets/img/logo_easy_photo.png')}}" class="w-100">
+            </div>
 
-    <!-- Brand side -->
-    <div class="col-lg-5 d-none d-lg-flex flex-column justify-content-between p-5 text-white brand-side">
-      <div>
-        <h2 class="fw-bold mb-0" style="letter-spacing:1px;">EASY<span class="fw-light">PHOTO</span></h2>
-        <p class="mt-2 opacity-75 small">by Lojas Imagem</p>
-      </div>
-
-      <div>
-        <h1 class="fw-bold display-6 lh-sm">Crie sua conta<br/>em poucos passos.</h1>
-        <p class="opacity-75 mt-3">
-          Tenha acesso a revelações, álbuns personalizados, presentes exclusivos e muito mais.
-        </p>
-
-        <ul class="list-unstyled mt-4 d-flex flex-column gap-3">
-          <li class="d-flex align-items-center gap-3">
-            <span class="step-badge"><i class="bi bi-check-lg"></i></span>
-            <small>Pedidos rápidos e seguros</small>
-          </li>
-          <li class="d-flex align-items-center gap-3">
-            <span class="step-badge"><i class="bi bi-check-lg"></i></span>
-            <small>Histórico das suas revelações</small>
-          </li>
-          <li class="d-flex align-items-center gap-3">
-            <span class="step-badge"><i class="bi bi-check-lg"></i></span>
-            <small>Promoções exclusivas para clientes</small>
-          </li>
-        </ul>
-      </div>
-
-      <div class="opacity-50 small">© 2026 EasyPhoto</div>
-    </div>
-
-    <!-- Form side -->
-    <div class="col-lg-7 p-4 p-md-5 text-white form-side">
-      <div class="d-lg-none text-center mb-4">
-        <h2 class="fw-bold mb-0">EASY<span class="fw-light">PHOTO</span></h2>
-      </div>
-
-      <h3 class="fw-bold mb-1">Cadastre-se ✨</h3>
-      <p class="text-secondary mb-4">Preencha seus dados para criar sua conta</p>
-
-      <form method ="post" action="{{ route('registro-cliente') }}" class="row g-3">
-        @csrf
-        <!-- Dados pessoais -->
-        <div class="col-12">
-          <h6 class="text-uppercase small text-secondary fw-semibold mb-2">
-            <i class="bi bi-person-fill me-1"></i> Dados Pessoais
-          </h6>
         </div>
+            <div class="col-md-5 container-fluid registroCliente ">
+                <h4>Cadastre-se</h4>
+                <form id="registerForm" method ="post" action="{{ route('registro-cliente') }}">
+                    @csrf
+                    <div class="row">
+                    <div class="form-group mb-3">
+                        <label for="nome">Nome Completo</label>
+                        <input type="text" name="nome" id="nome" class="form-control" placeholder="Nome completo" required>
+                    </div>
+                     <div class="form-group mb-3">
+                        <label for="cpf">CPF</label>
+                        <input type="text" name="cpf" id="cpf" class="form-control" placeholder="Apenas numeros" required>
+                        <div class="invalid-feedback">
+    CPF inválido
+</div>
+                    </div>
+                    <div class="form-group mb-3" >
+                        <label for="telefone">Telefone</label>
+                        <input type="text" name="telefone" id="telefone" class="form-control" placeholder="(xx)xxxx-xxxx" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="endereco">Endereço</label>
+                        <input type="text" name="endereco" id="endereco" class="form-control" placeholder="Endereço" required>
+                    </div>
+                    <div class="form-group mb-3 col-md-6">
+                        <label for="bairro">Bairro</label>
+                        <input type="text" name="bairro" id="bairro" class="form-control" placeholder="Bairro" required>
+                    </div>
+                    <div class="form-group mb-3 col-md-6">
+                        <label for="cep">CEP</label>
+                        <input type="text" name="cep" id="cep" class="form-control" placeholder="CEP" required>
+                    </div>
+                    <div class="form-group mb-3 col-md-6">
+                        <label for="cidade">Cidade</label>
+                        <input type="text" name="cidade" id="cidade" class="form-control" placeholder="Cidade" required>
+                    </div>
+                    <div class="form-group mb-3 col-md-6">
+                        <label for="uf">Estado</label>
+                    <select class="form-select" name="uf" id="uf">
+                        <option value="">Selecione</option>
+                        <option value="AC">Acre</option>
+                        <option value="AL">Alagoas</option>
+                        <option value="AP">Amapá</option>
+                        <option value="AM">Amazonas</option>
+                        <option value="BA">Bahia</option>
+                        <option value="CE">Ceará</option>
+                        <option value="DF">Distrito Federal</option>
+                        <option value="ES">Espirito Santo</option>
+                        <option value="GO">Goiás</option>
+                        <option value="MA">Maranhão</option>
+                        <option value="MS">Mato Grosso do Sul</option>
+                        <option value="MT">Mato Grosso</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="PA">Pará</option>
+                        <option value="PB">Paraíba</option>
+                        <option value="PR">Paraná</option>
+                        <option value="PE">Pernambuco</option>
+                        <option value="PI">Piauí</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="RN">Rio Grande do Norte</option>
+                        <option value="RS">Rio Grande do Sul</option>
+                        <option value="RO">Rondônia</option>
+                        <option value="RR">Roraima</option>
+                        <option value="SC">Santa Catarina</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="SE">Sergipe</option>
+                        <option value="TO">Tocantins</option>
+                    </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="email">E-mail</label>
+                        <input type="email" name="email" id="email" class="form-control" placeholder="E-mail" required>
+                    </div>
 
-        <div class="col-md-12">
-          <label class="form-label small text-secondary">Nome Completo</label>
-          <div class="input-group">
-            <span class="input-group-text input-icon"><i class="bi bi-person-fill"></i></span>
-            <input type="text" class="form-control form-control-dark" name="nome" id="nome" placeholder="Seu nome completo" />
-          </div>
+                <div class="form-group mb-3">
+                    <label for="password">Senha</label>
+                    <input type="password" name="password" id="password" class="form-control" placeholder="Senha" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" id="cadastrar" class="btn btn-dark">Cadastrar</button>
+                    </div>
+                </div>
+                </form>
+
+                <p class="text-white mt-3">Ao se cadastrar você concorda com a nossa <a href="#" class="text-dark" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+  Política de Privacidade
+                </a>
+                <div class="row text-center mt-2">
+                    <h5>Já possui cadastro?</h5>
+                    <a href="{{route('login_cliente')}}" class="item-link text-white">Faça login aqui!</a>
+                </div>
+
+
+
+            </div>
         </div>
-
-        <div class="col-md-6">
-          <label class="form-label small text-secondary">CPF</label>
-          <div class="input-group">
-            <span class="input-group-text input-icon"><i class="bi bi-card-text"></i></span>
-            <input type="text" class="form-control form-control-dark" name="cpf" id="cpf" placeholder="000.000.000-00" maxlength="14" />
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <label class="form-label small text-secondary">Telefone</label>
-          <div class="input-group">
-            <span class="input-group-text input-icon"><i class="bi bi-telephone-fill"></i></span>
-            <input type="tel" class="form-control form-control-dark" name="telefone" id="telefone" placeholder="(00) 00000-0000" />
-          </div>
-        </div>
-
-        <!-- Endereço -->
-        <div class="col-12 mt-4">
-          <h6 class="text-uppercase small text-secondary fw-semibold mb-2">
-            <i class="bi bi-geo-alt-fill me-1"></i> Endereço
-          </h6>
-        </div>
-
-        <div class="col-md-8">
-          <label class="form-label small text-secondary">Endereço</label>
-          <div class="input-group">
-            <span class="input-group-text input-icon"><i class="bi bi-house-fill"></i></span>
-            <input type="text" class="form-control form-control-dark" name="endereco" id="endereco" placeholder="Rua, número" />
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <label class="form-label small text-secondary">CEP</label>
-          <div class="input-group">
-            <span class="input-group-text input-icon"><i class="bi bi-mailbox"></i></span>
-            <input type="text" class="form-control form-control-dark"  name="cep" id="cep" placeholder="00000-000" maxlength="9" />
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <label class="form-label small text-secondary">Bairro</label>
-          <input type="text" class="form-control form-control-dark" name="bairro" id="bairro" placeholder="Bairro" />
-        </div>
-
-        <div class="col-md-4">
-          <label class="form-label small text-secondary">Cidade</label>
-          <input type="text" class="form-control form-control-dark" name="cidade" id="cidade" placeholder="Cidade" />
-        </div>
-
-        <div class="col-md-2">
-          <label class="form-label small text-secondary">Estado</label>
-          <select class="form-select form-select-dark" name="uf" id="uf">
-            <option value="">UF</option>
-            <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
-            <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
-            <option>GO</option><option>MA</option><option>MS</option><option>MT</option>
-            <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
-            <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
-            <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
-            <option>SP</option><option>SE</option><option>TO</option>
-          </select>
-        </div>
-
-        <!-- Acesso -->
-        <div class="col-12 mt-4">
-          <h6 class="text-uppercase small text-secondary fw-semibold mb-2">
-            <i class="bi bi-shield-lock-fill me-1"></i> Dados de Acesso
-          </h6>
-        </div>
-
-        <div class="col-md-6">
-          <label class="form-label small text-secondary">E-mail</label>
-          <div class="input-group">
-            <span class="input-group-text input-icon"><i class="bi bi-envelope-fill"></i></span>
-            <input type="email" class="form-control form-control-dark" name="email" id="email"  placeholder="seu@email.com" />
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <label class="form-label small text-secondary">Senha</label>
-          <div class="input-group">
-            <span class="input-group-text input-icon"><i class="bi bi-lock-fill"></i></span>
-            <input id="password" type="password" class="form-control form-control-dark" name="password" id="password" placeholder="••••••••" />
-            <button type="button" class="input-group-text input-icon" id="togglePwd" aria-label="Mostrar senha">
-              <i id="pwdIcon" class="bi bi-eye-fill"></i>
-            </button>
-          </div>
-        </div>
-
-        <div class="col-12 mt-3">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="terms" required/>
-            <label class="form-check-label small text-secondary" for="terms">
-              Concordo com a <a href="#" class="link-red text-decoration-none" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">Política de Privacidade</a>
-            </label>
-          </div>
-        </div>
-
-        <div class="col-12 mt-3">
-          <button type="submit" class="btn btn-primary-red w-100 fw-semibold py-2">
-            Criar minha conta <i class="bi bi-arrow-right ms-1"></i>
-          </button>
-        </div>
-
-        <p class="text-center text-secondary small mt-3 mb-0">
-          Já possui cadastro?
-          <a href="{{route('login_cliente')}}" class="text-decoration-none fw-semibold link-red">Faça login aqui!</a>
-        </p>
-      </form>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    const toggle = document.getElementById('togglePwd');
-    const pwd = document.getElementById('password');
-    const icon = document.getElementById('pwdIcon');
-    toggle.addEventListener('click', () => {
-      const isPwd = pwd.type === 'password';
-      pwd.type = isPwd ? 'text' : 'password';
-      icon.className = isPwd ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill';
-    });
-  </script>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-bs-hidden="true">

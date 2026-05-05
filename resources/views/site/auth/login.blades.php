@@ -1,196 +1,105 @@
-@extends('layouts.login')
+@extends('layouts.site')
 
-@section('title', 'Cadastre-se')
+@section('title', 'Dashboard')
 
 @section('content_header')
 
 @php( $login_url = View::getSection('login_url') ?? config('adminlte.login_url', 'login') )
-@section('content')
 
+@php( $password_reset_url = View::getSection('password_reset_url') ?? config('adminlte.password_reset_url', 'password/reset') )
+
+@section('auth_header', __('adminlte::adminlte.login_message'))@section('content')
+@section('adminlte_css_pre')
+    <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+@stop
 @include('components.alerts')
-    <div class="row register-card shadow-lg rounded-4 overflow-hidden w-100 mx-0">
 
-    <!-- Brand side -->
-    <div class="col-lg-5 d-none d-lg-flex flex-column justify-content-between p-5 text-white brand-side">
-      <div>
-        <h2 class="fw-bold mb-0" style="letter-spacing:1px;">EASY<span class="fw-light">PHOTO</span></h2>
-        <p class="mt-2 opacity-75 small">by Lojas Imagem</p>
-      </div>
 
-      <div>
-        <h1 class="fw-bold display-6 lh-sm">Crie sua conta<br/>em poucos passos.</h1>
-        <p class="opacity-75 mt-3">
-          Tenha acesso a revelações, álbuns personalizados, presentes exclusivos e muito mais.
+    <div class="row d-flex justify-content-center align-itens-center mt-5">
+        <div class="col-md-6">
+            <div class="logoEasyPHoto">
+                <img src="{{asset('assets/img/logo_easy_photo.png')}}" class="w-100">
+            </div>
+
+        </div>
+            <div class="col-md-6 ">
+                <h4>Login</h4>
+                <form id="loginForm" method ="post" action="{{ route('login') }}">
+                    @csrf
+                    <div class="form-group mb-3">
+                        <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="E-mail" required>
+                               @error('email')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
+                    </div>
+
+                <div class="form-group mb-3">
+                    <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="Senha" required>
+                 @error('password')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
+                </div>
+
+
+                    <div class="form-group">
+                        <button type="submit" id="entrar" class="btn btn-dark">Entrar</button>
+                    </div>
+
+                </form>
+                <hr>
+                <div class="row text-center mt-3">
+                    <div class="col-md-6 mb-3">
+                        <h5>Esqueceu a senha?</h5>
+                                         {{-- Password reset link --}}
+    @if($password_reset_url)
+        <p class="my-0">
+            <a href="{{ $password_reset_url }}" class="text-white" target="_blank">
+                {{ __('Redefinir senha!') }}
+            </a>
         </p>
+    @endif
+                    </div>
+                    <div class="col-md-6 mb-3">
+ <h5>Não tem Cadastro?</h5>
+                    <a href="{{route('registro_cliente')}}" class="item-link text-white">Clique aqui e cadastre-se</a>
 
-        <ul class="list-unstyled mt-4 d-flex flex-column gap-3">
-          <li class="d-flex align-items-center gap-3">
-            <span class="step-badge"><i class="bi bi-check-lg"></i></span>
-            <small>Pedidos rápidos e seguros</small>
-          </li>
-          <li class="d-flex align-items-center gap-3">
-            <span class="step-badge"><i class="bi bi-check-lg"></i></span>
-            <small>Histórico das suas revelações</small>
-          </li>
-          <li class="d-flex align-items-center gap-3">
-            <span class="step-badge"><i class="bi bi-check-lg"></i></span>
-            <small>Promoções exclusivas para clientes</small>
-          </li>
-        </ul>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+        </div>
+
+
+<!-- Modal1 -->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+
+
       </div>
-
-      <div class="opacity-50 small">© 2026 EasyPhoto</div>
-    </div>
-
-    <!-- Form side -->
-    <div class="col-lg-7 p-4 p-md-5 text-white form-side">
-      <div class="d-lg-none text-center mb-4">
-        <h2 class="fw-bold mb-0">EASY<span class="fw-light">PHOTO</span></h2>
+      <div class="modal-body">
+        Este site utiliza cookies e tecnologias semelhantes para melhorar sua experiência de navegação.
+Ao navegar ou utilizar serviços neste site, consideramos que você aceita o uso. Saiba mais acessando nossa <a href="#" class="text-dark" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+  Política de Privacidade
+                </a>
       </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Ok, entendi!</button>
 
-      <h3 class="fw-bold mb-1">Cadastre-se ✨</h3>
-      <p class="text-secondary mb-4">Preencha seus dados para criar sua conta</p>
-
-      <form method ="post" action="{{ route('registro-cliente') }}" class="row g-3">
-        @csrf
-        <!-- Dados pessoais -->
-        <div class="col-12">
-          <h6 class="text-uppercase small text-secondary fw-semibold mb-2">
-            <i class="bi bi-person-fill me-1"></i> Dados Pessoais
-          </h6>
-        </div>
-
-        <div class="col-md-12">
-          <label class="form-label small text-secondary">Nome Completo</label>
-          <div class="input-group">
-            <span class="input-group-text input-icon"><i class="bi bi-person-fill"></i></span>
-            <input type="text" class="form-control form-control-dark" name="nome" id="nome" placeholder="Seu nome completo" />
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <label class="form-label small text-secondary">CPF</label>
-          <div class="input-group">
-            <span class="input-group-text input-icon"><i class="bi bi-card-text"></i></span>
-            <input type="text" class="form-control form-control-dark" name="cpf" id="cpf" placeholder="000.000.000-00" maxlength="14" />
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <label class="form-label small text-secondary">Telefone</label>
-          <div class="input-group">
-            <span class="input-group-text input-icon"><i class="bi bi-telephone-fill"></i></span>
-            <input type="tel" class="form-control form-control-dark" name="telefone" id="telefone" placeholder="(00) 00000-0000" />
-          </div>
-        </div>
-
-        <!-- Endereço -->
-        <div class="col-12 mt-4">
-          <h6 class="text-uppercase small text-secondary fw-semibold mb-2">
-            <i class="bi bi-geo-alt-fill me-1"></i> Endereço
-          </h6>
-        </div>
-
-        <div class="col-md-8">
-          <label class="form-label small text-secondary">Endereço</label>
-          <div class="input-group">
-            <span class="input-group-text input-icon"><i class="bi bi-house-fill"></i></span>
-            <input type="text" class="form-control form-control-dark" name="endereco" id="endereco" placeholder="Rua, número" />
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <label class="form-label small text-secondary">CEP</label>
-          <div class="input-group">
-            <span class="input-group-text input-icon"><i class="bi bi-mailbox"></i></span>
-            <input type="text" class="form-control form-control-dark"  name="cep" id="cep" placeholder="00000-000" maxlength="9" />
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <label class="form-label small text-secondary">Bairro</label>
-          <input type="text" class="form-control form-control-dark" name="bairro" id="bairro" placeholder="Bairro" />
-        </div>
-
-        <div class="col-md-4">
-          <label class="form-label small text-secondary">Cidade</label>
-          <input type="text" class="form-control form-control-dark" name="cidade" id="cidade" placeholder="Cidade" />
-        </div>
-
-        <div class="col-md-2">
-          <label class="form-label small text-secondary">Estado</label>
-          <select class="form-select form-select-dark" name="uf" id="uf">
-            <option value="">UF</option>
-            <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
-            <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
-            <option>GO</option><option>MA</option><option>MS</option><option>MT</option>
-            <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
-            <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
-            <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
-            <option>SP</option><option>SE</option><option>TO</option>
-          </select>
-        </div>
-
-        <!-- Acesso -->
-        <div class="col-12 mt-4">
-          <h6 class="text-uppercase small text-secondary fw-semibold mb-2">
-            <i class="bi bi-shield-lock-fill me-1"></i> Dados de Acesso
-          </h6>
-        </div>
-
-        <div class="col-md-6">
-          <label class="form-label small text-secondary">E-mail</label>
-          <div class="input-group">
-            <span class="input-group-text input-icon"><i class="bi bi-envelope-fill"></i></span>
-            <input type="email" class="form-control form-control-dark" name="email" id="email"  placeholder="seu@email.com" />
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <label class="form-label small text-secondary">Senha</label>
-          <div class="input-group">
-            <span class="input-group-text input-icon"><i class="bi bi-lock-fill"></i></span>
-            <input id="password" type="password" class="form-control form-control-dark" name="password" id="password" placeholder="••••••••" />
-            <button type="button" class="input-group-text input-icon" id="togglePwd" aria-label="Mostrar senha">
-              <i id="pwdIcon" class="bi bi-eye-fill"></i>
-            </button>
-          </div>
-        </div>
-
-        <div class="col-12 mt-3">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="terms" required/>
-            <label class="form-check-label small text-secondary" for="terms">
-              Concordo com a <a href="#" class="link-red text-decoration-none" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">Política de Privacidade</a>
-            </label>
-          </div>
-        </div>
-
-        <div class="col-12 mt-3">
-          <button type="submit" class="btn btn-primary-red w-100 fw-semibold py-2">
-            Criar minha conta <i class="bi bi-arrow-right ms-1"></i>
-          </button>
-        </div>
-
-        <p class="text-center text-secondary small mt-3 mb-0">
-          Já possui cadastro?
-          <a href="{{route('login_cliente')}}" class="text-decoration-none fw-semibold link-red">Faça login aqui!</a>
-        </p>
-      </form>
+      </div>
     </div>
   </div>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    const toggle = document.getElementById('togglePwd');
-    const pwd = document.getElementById('password');
-    const icon = document.getElementById('pwdIcon');
-    toggle.addEventListener('click', () => {
-      const isPwd = pwd.type === 'password';
-      pwd.type = isPwd ? 'text' : 'password';
-      icon.className = isPwd ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill';
-    });
-  </script>
+
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-bs-hidden="true">
@@ -551,92 +460,27 @@
     </div>
   </div>
 </div>
-<script src="https://unpkg.com/imask"></script>
-<script>
+     <script>
 
+  $(document).ready(function () {
+    let dataSalva = localStorage.getItem('modalExibida');
 
-    const telefone = document.getElementById('telefone');
-    const cpf = document.getElementById('cpf');
-const maskOptions = {
-  mask: '(00) 00000-0000'
-};
-const maskcpf={
-    mask:'000.000.000-00'
-}
-const mask = IMask(telefone, maskOptions);
-const maskc = IMask(cpf, maskcpf);
-
-    </script>
-
-    <script>
-
-// ===============================
-// VALIDADOR DE CPF
-// ===============================
-function validarCPF(cpf) {
-    cpf = cpf.replace(/[^\d]+/g,'');
-
-    if (cpf.length !== 11) return false;
-
-    // elimina CPFs inválidos conhecidos
-    if (/^(\d)\1+$/.test(cpf)) return false;
-
-    let soma = 0;
-    let resto;
-
-    // 1º dígito
-    for (let i = 1; i <= 9; i++)
-        soma += parseInt(cpf.substring(i-1, i)) * (11 - i);
-
-    resto = (soma * 10) % 11;
-    if ((resto === 10) || (resto === 11)) resto = 0;
-
-    if (resto !== parseInt(cpf.substring(9, 10))) return false;
-
-    soma = 0;
-
-    // 2º dígito
-    for (let i = 1; i <= 10; i++)
-        soma += parseInt(cpf.substring(i-1, i)) * (12 - i);
-
-    resto = (soma * 10) % 11;
-    if ((resto === 10) || (resto === 11)) resto = 0;
-
-    if (resto !== parseInt(cpf.substring(10, 11))) return false;
-
-    return true;
-}
-
-// ===============================
-// VALIDAÇÃO EM TEMPO REAL
-// ===============================
-cpf.addEventListener('blur', function () {
-    if (!validarCPF(this.value)) {
-        this.classList.add('is-invalid');
-        this.classList.remove('is-valid');
+    if (!dataSalva) {
+        $("#exampleModalLong").modal("show");
+        localStorage.setItem('modalExibida', new Date().getTime());
     } else {
-        this.classList.remove('is-invalid');
-        this.classList.add('is-valid');
+        let agora = new Date().getTime();
+        let diferenca = agora - dataSalva;
+
+        let umDia = 24 * 60 * 60 * 1000;
+
+        if (diferenca > umDia) {
+            $("#exampleModalLong").modal("show");
+            localStorage.setItem('modalExibida', agora);
+        }
     }
 });
-
-// ===============================
-// BLOQUEAR SUBMIT
-// ===============================
-document.getElementById('registerForm').addEventListener('submit', function(e){
-
-    if (!validarCPF(cpf.value)) {
-        e.preventDefault();
-        cpf.classList.add('is-invalid');
-        alert('CPF inválido!');
-        return;
-    }
-
-});
-
-</script>
-
-
+        </script>
         @section('css')
         {{-- Add here extra stylesheets --}}
         {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
@@ -644,5 +488,7 @@ document.getElementById('registerForm').addEventListener('submit', function(e){
 
     @section('js')
         <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+
+
     @stop
     @stop
