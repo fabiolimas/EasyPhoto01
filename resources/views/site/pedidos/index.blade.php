@@ -7,7 +7,28 @@
 
 @section('content')
 
-
+<style>
+        body {
+            background: #f5f6fa;
+        }
+        .card-pix {
+            max-width: 500px;
+            margin: 50px auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .qr-code {
+            max-width: 250px;
+            margin: 0 auto;
+        }
+        .copy-box {
+            background: #f1f2f6;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 13px;
+            word-break: break-all;
+        }
+    </style>
     <input type="text" name="busca" id="busca" class="form-control mb-3" placeholder="Buscar...">
     <div class="row table-responsive">
     <table class="table result">

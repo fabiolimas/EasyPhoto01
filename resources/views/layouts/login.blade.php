@@ -54,6 +54,17 @@
     .link-red { color: #ff4757; }
     .link-red:hover { color: #ff6b78; }
     .divider hr { border-color: rgba(255,255,255,.15); }
+
+        #exampleModalCenter, #exampleModalLong, #modalObservacao {
+    transform: none;
+    --bs-modal-width: 869px;
+}
+div#exampleModalLong
+
+ {
+    margin-top: 18%;
+    margin-left: -32px;
+}
   </style>
 </head>
 <body class="d-flex align-items-center justify-content-center p-3">

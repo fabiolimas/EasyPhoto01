@@ -7,7 +7,28 @@
 
 @section('content')
 
-
+<style>
+        body {
+            background: #f5f6fa;
+        }
+        .card-pix {
+            max-width: 500px;
+            margin: 50px auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .qr-code {
+            max-width: 250px;
+            margin: 0 auto;
+        }
+        .copy-box {
+            background: #f1f2f6;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 13px;
+            word-break: break-all;
+        }
+    </style>
 
 <div class="col-md-6 container-fluid registroCliente ">
     <h4>Meus Dados</h4>
