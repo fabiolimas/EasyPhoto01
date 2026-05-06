@@ -1,4 +1,4 @@
-@extends('layouts.site')
+@extends('layouts.envio')
 
 @section('title', 'Dashboard')
 
@@ -32,7 +32,7 @@
     </div>
     <div class="row btnAcoes mb-3 mt-3">
         <div class="col-md-3 offset-md-10 offset-sd-1">
-        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalPedido"><i class="far fa-images"></i> Visualizar Fotos</a>
+        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalPedido"><i class="bi bi-images"></i> Visualizar Fotos</a>
         </div>
 
     </div>
@@ -178,7 +178,7 @@
  @if($pedido->status_pagamento === 'pendente' && !empty($cliente?->cpf))
     <div class="col-md-3 offset-9 d-flex justify-content-end">
         <a href="{{route('pagamento.escolha',$pedido->id)}}" class="btn btn-success">
-            <i class="fa-solid fa-cart-arrow-down"></i> Avançar
+            <i class="bi bi-bag"></i> Avançar
         </a>
     </div>
 

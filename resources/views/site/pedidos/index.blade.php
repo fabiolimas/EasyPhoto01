@@ -1,4 +1,4 @@
-@extends('layouts.site')
+@extends('layouts.envio')
 
 @section('title', 'Dashboard')
 
@@ -8,7 +8,7 @@
 @section('content')
 
 
-    <input type="text" name="busca" id="busca" class="form-control" placeholder="Buscar...">
+    <input type="text" name="busca" id="busca" class="form-control mb-3" placeholder="Buscar...">
     <div class="row table-responsive">
     <table class="table result">
         <thead>
@@ -48,7 +48,7 @@
                          <td class="@if ($pedido->status_pagamento == 'pago') text-success @else text-danger @endif">
                         {{ $pedido->status_pagamento }}</td>
 
-                    <td><a href="{{ route('detalhe-pedido', $pedido->id) }}" class="btn btn-danger"><i class="far fa-images"></i> Visualizar</a></td>
+                    <td><a href="{{ route('detalhe-pedido', $pedido->id) }}" class="btn btn-danger"><i class="bi bi-images"></i> Visualizar</a></td>
 
                 </tr>
             @endforeach

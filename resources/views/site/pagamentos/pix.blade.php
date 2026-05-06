@@ -1,5 +1,5 @@
 
-@extends('layouts.site')
+@extends('layouts.envio')
 
 @section('title', 'Pagamento')
 

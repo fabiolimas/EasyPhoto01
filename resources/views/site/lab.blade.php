@@ -1,4 +1,4 @@
-@extends('layouts.site')
+@extends('layouts.envio')
 
 @section('title', 'Dashboard')
 
@@ -37,7 +37,7 @@
                                 <a href="{{route('enviar-fotos',$laboratorio->id)}}">
                                     <div class="row">
                                         <div class="col-md-2 text-center">
-                                            <div class="logolab"><i class="fas fa-building text-danger"></i></div>
+                                            <div class="logolab"><i class="bi bi-shop"></i></div>
                                         </div>
                                         <div class="col-md-10 mt-1">
                                             <div class="tituloLab">{{$laboratorio->nome}}</div>

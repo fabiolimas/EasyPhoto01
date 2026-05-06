@@ -1,4 +1,4 @@
-@extends('layouts.site')
+@extends('layouts.envio')
 
 @section('content')
 <div class="container py-5">
@@ -32,8 +32,8 @@ if($cliente->pagamento_retirada == 1){
                             <div class="card card-pagamento p-4 text-center h-100">
                                 <h5>PIX</h5>
                                 <p class="text-muted">Pagamento instantâneo</p>
+                                <i class="bi bi-qr-code fs-1 text-success"  ></i>
 
-                                <i class="fa-solid fa-qrcode fa-3x text-success"></i>
                             </div>
                         </label>
                     </div>
@@ -47,7 +47,7 @@ if($cliente->pagamento_retirada == 1){
                                 <h5>Cartão de Crédito</h5>
                                 <p class="text-muted">Parcelamento disponível</p>
 
-                                <i class="fa-solid fa-credit-card fa-3x text-primary"></i>
+                               <i class="bi bi-credit-card fs-1 text-warning"></i>
                             </div>
                         </label>
                     </div>
@@ -61,7 +61,7 @@ if($cliente->pagamento_retirada == 1){
                                 <h5>Pagamento na Retirada</h5>
                             <p class="text-muted">Pague direto no caixa</p>
 
-                                <i class="fas fa-cash-register fa-3x text-warning"></i>
+                                <i class="bi bi-shop fs-3 text-warning"></i>
                             </div>
                         </label>
                     </div>

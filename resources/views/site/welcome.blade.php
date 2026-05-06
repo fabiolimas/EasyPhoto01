@@ -1,523 +1,377 @@
-@extends('layouts.site')
-
-@section('title', 'Dashboard')
-
-@section('content_header')
-
+@extends('layouts.envio')
 
 @section('content')
 
 
-
-    <div class="row">
-        <h4><i class="fas fa-building text-danger"></i> {{ $laboratorio->nome }} - <span
-                class="endlab">{{ $laboratorio->endereco }}</span></h4>
-    </div>
-    <div class="content position-relative">
-
-        <div class="row">
-            <div id="imageContainer" class="row">
-
-            </div>
-        </div>
-
-
-    </div>
-    <div class="row envioBar">
-        <div class="col-md-3"><label for="imageInput">
-                <span class="btn btn-danger me-3"> <i class="fa-solid fa-images"></i> Adicionar imagens</span>
-            </label></div>
-        <div class="col-md-9">
-            <span class="me-3 offset-md-6 "><span id="total_pedido"></span> </span>
-            <form id="uploadForm" enctype="multipart/form-data">
-                @csrf
-
-                <input type="file" name="images[]" id="imageInput" accept="image/*" multiple style="visibility: hidden">
-
-                <input type="hidden" name="laboratorio_id" id="laboratorio_id" value="{{ $laboratorio->id }}">
-                 <input type="hidden" name="val_entrega" id="val_entrega">
-                 <input type="hidden" name="forma_entrega" id="forma_entrega">
-                <input type="hidden" name="total" id="input_total">
-                <input type="hidden" name="user_id" id="user_id" value="{{ auth()->id() }}">
-                {{-- Modal Observação --}}
-                <div class="modal fade" id="modalObservacao" tabindex="-1" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Observação </h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="contentModalLab mt-3">
-                                    <div class="row">
-                                        <textarea name="observacao" id="observacao" cols="70" rows="10" class="form-control"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salvar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {{-- Modal Forma de entrega --}}
-                <div class="modal fade" id="modalEntrega" tabindex="-1" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Formas de Entrega </h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="contentModalLab mt-3">
-                                    <div class="row">
-                                        @foreach ($entregas as $entrega)
-                                            <div class="form-check">
-                                                <input class="form-check-input entregainput" type="radio" name="entrega"
-                                                    id="entrega-{{ $entrega->nome }}" value="{{ $entrega->id }}">
-                                                <label class="form-check-label" for="entrega-{{ $entrega->nome }}">
-                                                    {{ $entrega->nome }}
-                                                </label>
-                                            </div>
-                                        @endforeach
-                                    </div>
-
-                                </div>
-                            </div>
-
-                              <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                        </div>
-                        </div>
-
-                    </div>
-                </div>
-
-        <div class="row fimBtns">
-            <div class="col-md-4 col-sd-6">
-                <span class="btn btn-secondary w-100" data-bs-toggle="modal" data-bs-target="#modalObservacao"><i
-                        class="fas fa-sticky-note"></i> Observação</span>
-            </div>
-            <div class="col-md-4 col-sd-6">
-                <span class="btn btn-secondary w-100" data-bs-toggle="modal" data-bs-target="#modalEntrega"><i
-                        class="fas fa-shipping-fast"></i> Forma de Entrega</span>
-            </div>
-            <div class="col-md-4 col-sd-6">
-                <button type="button" id="processButton" class="btn btn-dark mt-3 mb-3 w-100 disabled" ><i
-                        class="fa-solid fa-cart-shopping"></i>
-                    Enviar</button>
-            </div>
-
-
-        </div>
-        </form>
-            {{-- modal aviso envio --}}
-
-            <div class="modal fade" id="modalAviso" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Atenção</h5>
+    {{-- Loja --}}
+    <div class="store-header">
+      <i class="bi bi-shop"></i>
+      <div>
+        <strong>{{ $laboratorio->nome ?? 'Laboratório' }}</strong>
+        <span class="ms-2">- {{ $laboratorio->endereco ?? '' }}</span>
       </div>
-      <div class="modal-body">
-        Selecione uma forma de envio antes de continuar.
+    </div>
+
+    <form id="uploadForm" enctype="multipart/form-data">
+      @csrf
+
+      <input type="hidden" id="val_entrega" name="val_entrega" value="0">
+      <input type="hidden" id="forma_entrega" name="forma_entrega" value="">
+      <input type="hidden" id="input_total" name="total" value="0">
+      <input type="hidden" id="observacao_input" name="observacao" value="">
+   <input type="hidden" name="user_id" id="user_id" value="{{ auth()->id() }}">
+     <input type="hidden" name="laboratorio_id" id="laboratorio_id" value="{{ $laboratorio->id }}">
+     <input type="file" id="imageInput" name="images[]" multiple accept="image/*" style="visibility: hidden">
+      {{-- Grid de imagens --}}
+      <div class="row g-3" id="imageContainer">
+        {{-- <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <label for="imageInput" class="empty-upload h-100 mb-0">
+            <i class="bi bi-cloud-arrow-up"></i>
+            <strong>Adicionar imagens</strong>
+
+          </label>
+
+        </div> --}}
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ok</button>
+    </form>
+  </div>
+
+  {{-- Modal Observação --}}
+  <div class="modal fade" id="modalObservacao" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="bi bi-chat-left-text me-2"></i>Observação</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <textarea id="observacao_text" class="form-control form-control-dark" rows="4" placeholder="Digite uma observação para o pedido..."></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-action btn-action-primary" id="salvarObservacao" data-bs-dismiss="modal">Salvar</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
-        <!-- Modal for Progress Bar -->
-        <div id="progressModal" class="modalProg" style="display: none;">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <progress id="uploadProgress" value="0" max="100"></progress>
+
+  {{-- Modal Forma de entrega --}}
+  <div class="modal fade" id="modalEntrega" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="bi bi-truck me-2"></i>Formas de Entrega</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          @foreach ($entregas as $entrega)
+            <div class="form-check mb-2">
+              <input class="form-check-input entregainput" type="radio" name="entrega" id="entrega{{ $entrega->id }}" value="{{ $entrega->id }}">
+              <label class="form-check-label" for="entrega{{ $entrega->id }}">
+                {{ $entrega->nome }}
+              </label>
             </div>
+          @endforeach
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-action btn-action-dark" data-bs-dismiss="modal">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{-- Modal aviso envio --}}
+  <div class="modal fade" id="modalAviso" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-warning"><i class="bi bi-exclamation-triangle me-2"></i>Atenção</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">Selecione uma forma de envio antes de continuar.</div>
+        <div class="modal-footer">
+          <button type="button" class="btn-action btn-action-primary" data-bs-dismiss="modal">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{-- Modal Escolha de Imagem --}}
+  <div class="modal fade" id="modalEscolha" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Selecionar Imagens</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body text-center">
+          <label for="imageInput" class="btn-action btn-action-primary">
+            <i class="bi bi-images me-2"></i>Escolher arquivos
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{-- Modal Progresso --}}
+  <div id="progressModal">
+    <button class="close">&times;</button>
+    <div class="progress-box">
+      <h5 class="mb-3">Enviando imagens...</h5>
+      <progress id="uploadProgress" value="0" max="100" style="width:100%;height:18px"></progress>
+    </div>
+  </div>
+
+  {{-- Action bar --}}
+  <div class="action-bar">
+    <div class="container-fluid">
+      <div class="action-bar-inner">
+        <label for="imageInput" class="btn-action mb-0">
+          <i class="bi bi-images"></i> Adicionar imagens
+        </label>
+
+        <div class="total-badge">
+          <small>Total</small>
+          <span id="total_pedido">R$ 0,00</span>
         </div>
 
-        {{-- Modal Escolha de Imagem --}}
-        <div class="modal fade" id="modalEscolha" tabindex="-1" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <h5 class="text-center">Selecionar Imagens</h5>
-                        <div class="contentModalLab mt-3">
-                            <div class="row">
-                                <label for="imageInput">
-                                    <div class="imagem">
-                                        <img src="{{ asset('assets/img/upload.jpg') }}" alt="Selecionar imagens"
-                                            title="Selecionar Imagens" class="w-100" style="cursor: pointer">
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="d-flex gap-2 flex-wrap">
+          <button type="button" class="btn-action btn-action-dark" data-bs-toggle="modal" data-bs-target="#modalObservacao">
+            <i class="bi bi-chat-left-text"></i> Observação
+          </button>
+          <button type="button" class="btn-action btn-action-dark" data-bs-toggle="modal" data-bs-target="#modalEntrega">
+            <i class="bi bi-truck"></i> Forma de Entrega
+          </button>
+          <button type="button" id="processButton" class="btn-action btn-action-primary disabled">
+            <i class="bi bi-cart-check"></i> Enviar
+          </button>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <style>
-            .modalProg {
-                display: none;
-                position: fixed;
-                z-index: 1;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                overflow: auto;
-                background-color: rgb(0, 0, 0);
-                background-color: rgba(0, 0, 0, 0.4);
-                padding-top: 60px;
-            }
+ <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script>
+    $(function () {
+      const modalEscolha = new bootstrap.Modal(document.getElementById('modalEscolha'));
 
-            .modal-content {
-                background-color: #fefefe;
-                margin: 5% auto;
-                padding: 20px;
-                border: 1px solid #888;
+      const cropSizes = [
+        @foreach ($tamanhos as $tamanho)
+          {
+            width: {{ $tamanho->largura }},
+            height: {{ $tamanho->altura }},
+            @if ($cliente->desconto > 1)
+              price: {{ $tamanho->preco * $desconto }}
+            @else
+              price: {{ $tamanho->preco }}
+            @endif
+          },
+        @endforeach
+      ];
 
-            }
+      $('#imageInput').on('change', function () {
+        const files = Array.from(this.files);
+        handleFiles(files);
+      });
 
-            .close {
-                color: #aaa;
-                float: right;
-                font-size: 28px;
-                font-weight: bold;
-            }
+      $('#salvarObservacao').on('click', function () {
+        $('#observacao_input').val($('#observacao_text').val());
+      });
 
-            .close:hover,
-            .close:focus {
-                color: black;
-                text-decoration: none;
-                cursor: pointer;
-            }
-
-            .image-wrapper {
-
-                margin-bottom: 20px;
-            }
-
-            .image-wrapper img {
-                max-width: 100%;
-                height: auto;
-                display: block;
-
-
-            }
-
-            .crop-controls {
-                display: flex;
-                justify-content: center;
-                gap: 10px;
-                margin-top: 10px;
-            }
-        </style>
-
-        <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-        <script>
-            $(document).ready(function() {
-
-                var cssRule =
-        "color: red;" +
-        "font-size: 20px;" +
-        "font-weight: bold;";
-console.log("%cEstamos monitorando alterações aqui :)", cssRule);
-
-var cssRule =
-        "color: black;" +
-        "font-size: 15px;" +
-        "font-weight: bold;";
-console.log("%cSeu IP pode ser bloqueado.", cssRule);
-
-                let modalEscolha = $("#modalEscolha");
-                modalEscolha.modal('show');
-
-                const cropSizes = [
-                    @foreach ($tamanhos as $tamanho)
-                        {
-                            width: {{ $tamanho->largura }},
-                            height: {{ $tamanho->altura }},
-                            @if ($cliente->desconto > 1)
-                                price: {{ $tamanho->preco * $desconto }}
-                            @else
-                                price: {{ $tamanho->preco }}
-                            @endif
-                        },
-                    @endforeach
-                ];
-
-                $('#imageInput').on('change', function() {
-                    const files = Array.from(this.files);
-                    handleFiles(files);
-                });
-
-                $('#processButton').on('click', function() {
-                    const formData = new FormData($('#uploadForm')[0]);
-                    let sizeArray = [];
-                    let quantityArray = [];
-                    let priceArray = [];
-
-                    let imagesProcessed = 0;
-                    const images = $('#imageContainer img');
-
-                    images.each(function(i, img) {
-                        fetch(img.src)
-                            .then(res => res.blob())
-                            .then(blob => {
-                                formData.append('images[]', blob, 'image_' + i + '.jpg');
-
-                                const wrapper = $(img).closest('.image-wrapper');
-                                const size = JSON.parse(wrapper.find('.size-select').val());
-                                const quantity = wrapper.find('.quantity-input').val();
-                                const price = wrapper.find('.price-inputv').val();
-
-
-
-                                sizeArray.push(size);
-                                quantityArray.push(quantity);
-                                priceArray.push(price);
-
-                                imagesProcessed++;
-                                if (imagesProcessed === images.length) {
-                                    formData.append('tamanhos', JSON.stringify(sizeArray));
-                                    formData.append('quantidades', JSON.stringify(quantityArray));
-                                    formData.append('precos', JSON.stringify(priceArray));
-                                    uploadImages(formData);
-                                }
-                            });
-                    });
-                });
-   let selecionado = false;
-
-$('.entregainput').on('change', function () {
-    selecionado = true;
-
-    $('#processButton')
-        .removeClass('disabled')
-        .addClass('btn-success');
-
-    let entregaId = $('input[name="entrega"]:checked').val();
-
-    // AJAX para buscar o valor da entrega
-    $.ajax({
-        url: '/buscar-entrega/' + entregaId,
-        type: 'GET',
-        dataType: 'json',
-        success: function (response) {
-
-            // aqui você recebe o valor vindo do backend
-            let valorEntrega = response.valor;
-            let formaEntrega = response.nome;
-
-            $('#val_entrega').val(valorEntrega);
-            $('#forma_entrega').val(formaEntrega);
-
-            updateTotalPedido();
-
-            console.log('ID:', entregaId);
-            console.log('Valor:', valorEntrega);
-        },
-        error: function () {
-            console.error('Erro ao buscar valor da entrega');
-        }
-    });
-});
-
-    // clique no botão
-    $('#processButton').on('click', function () {
-
+      $('#processButton').on('click', function () {
         if (!selecionado) {
-            // abre modal de aviso
-            $('#modalAviso').modal('show');
-            return;
-        }});
+          new bootstrap.Modal(document.getElementById('modalAviso')).show();
+          return;
+        }
 
-                function handleFiles(files) {
-                    if (files.length >= 1) {
-                        modalEscolha.modal('hide');
-                    } else {
-                        modalEscolha.modal('show');
-                    }
+        const formData = new FormData($('#uploadForm')[0]);
+        let sizeArray = [], quantityArray = [], priceArray = [];
+        let imagesProcessed = 0;
+        const images = $('#imageContainer img');
 
-                    files.forEach(function(file, i) {
-                        const reader = new FileReader();
+        if (images.length === 0) return;
 
-                        reader.onload = function(e) {
-                            const $wrapper = $('<div>').addClass('col-md-3 image-wrapper');
-                            const $atributos = $('<div>').addClass('col-md-3 atributos');
-                            const $img = $('<img>').attr('src', e.target.result).css({
-                                width: '100%',
-                                height: 'auto',
-                                marginBottom: '10px'
-                            });
+        images.each(function (i, img) {
+          fetch(img.src).then(res => res.blob()).then(blob => {
+            formData.append('images[]', blob, 'image_' + i + '.jpg');
 
-                            const $sizeLabel = $('<label>').text('Tamanho:');
-                            const $sizeSelect = $('<select>').addClass('size-select').on('change',
-                            function() {
-                                updatePrice($wrapper, $(this).val());
-                            });
+            const wrapper = $(img).closest('.image-wrapper');
+            const size = JSON.parse(wrapper.find('.size-select').val());
+            const quantity = wrapper.find('.quantity-input').val();
+            const price = wrapper.find('.price-inputv').val();
 
-                            cropSizes.forEach(function(size, index) {
-                                const $option = $('<option>')
-                                    .val(JSON.stringify(size))
-                                    .text(`${size.height}x${size.width}`);
-                                if (index === 0) $option.prop('selected', true);
-                                $sizeSelect.append($option);
-                            });
+            sizeArray.push(size);
+            quantityArray.push(quantity);
+            priceArray.push(price);
 
-                            const $quantityLabel = $('<label>').text('Quantidade:');
-                            const $quantityInput = $('<input>').addClass('quantity-input').attr({
-                                type: 'number',
-                                min: '1',
-                                value: '1',
-                                placeholder: 'Quantidade'
-                            });
+            imagesProcessed++;
+            if (imagesProcessed === images.length) {
+              formData.append('tamanhos', JSON.stringify(sizeArray));
+              formData.append('quantidades', JSON.stringify(quantityArray));
+              formData.append('precos', JSON.stringify(priceArray));
+              uploadImages(formData);
+            }
+          });
+        });
+      });
 
-                            const $priceLabel = $('<label>').text('Preço:');
-                            const $priceInput = $('<input>').addClass('price-inputv').attr({
-                                type: 'hidden',
-                                readonly: true
-                            });
+      let selecionado = false;
 
-                            const $priceSpan = $('<span>').addClass('price-input');
+      $(document).on('change', '.entregainput', function () {
+        selecionado = true;
+        $('#processButton').removeClass('disabled');
 
-                            const $subtotal = $('<div>').addClass('item-total mt-2');
+        let entregaId = $('input[name="entrega"]:checked').val();
 
-                            const $deleteButton = $('<button>').attr('type', 'button').addClass(
-                                'btn btn-danger mt-2 text-center').html(
-                                '<i class="fa-solid fa-trash"></i>').on('click', function() {
-                                $wrapper.remove();
-                                updateTotalPedido();
-                            });
+        $.ajax({
+          url: '/buscar-entrega/' + entregaId,
+          type: 'GET',
+          dataType: 'json',
+          success: function (response) {
+            $('#val_entrega').val(response.valor);
+            $('#forma_entrega').val(response.nome);
+            updateTotalPedido();
+          },
+          error: function () {
+            console.error('Erro ao buscar valor da entrega');
+          }
+        });
+      });
 
-                            const $controls = $('<div>').addClass('image-controls text-center').append(
-                                $deleteButton);
+      function handleFiles(files) {
+        if (files.length < 1) {
+          modalEscolha.show();
+          return;
+        }
 
-                            $atributos.append($sizeLabel, $sizeSelect, $quantityLabel, $quantityInput,
-                                $priceLabel, $priceSpan, $priceInput, $subtotal);
-                            $wrapper.append($img, $atributos, $controls);
-                            $('#imageContainer').append($wrapper);
+        files.forEach(function (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const $col = $('<div>').addClass('col-12 col-sm-6 col-md-4 col-lg-3 image-wrapper');
+            const $card = $('<div>').addClass('image-card');
+            const $thumb = $('<div>').addClass('image-card-thumb');
+            const $img = $('<img>').attr('src', e.target.result);
+            $thumb.append($img);
 
-                            updatePrice($wrapper, $sizeSelect.val());
-                        };
+            const $atributos = $('<div>').addClass('atributos');
 
-                        reader.readAsDataURL(file);
-                    });
-                }
-
-                function updatePrice(wrapper, size) {
-                    const parsedSize = JSON.parse(size);
-
-                    const price = parsedSize.price;
-                    const quantity = parseInt(wrapper.find('.quantity-input').val()) || 1;
-                    const subtotal = price * quantity;
-
-
-                    wrapper.find('.price-input').html(price.toLocaleString('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL'
-                    }));
-                    wrapper.find('.price-inputv').val(price);
-                    //wrapper.find('.item-total').html('Subtotal: ' + subtotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
-
-                    updateTotalPedido();
-                }
-
-                $(document).on('input', '.quantity-input', function() {
-                    const wrapper = $(this).closest('.image-wrapper');
-                    const size = wrapper.find('.size-select').val();
-                    updatePrice(wrapper, size);
-                });
-
-                function updateTotalPedido() {
-                    let total = 0;
-                     const valor_entrega=parseInt($('#val_entrega').val())|| 0;
-                    $('#imageContainer .image-wrapper').each(function() {
-                        const price = parseFloat($(this).find('.price-inputv').val()) || 0;
-                        const quantity = parseInt($(this).find('.quantity-input').val()) || 1;
-
-                        total += price * quantity;
-
-                    });
-                    total+=valor_entrega;
-                    $('#input_total').val(total);
-                    $('#total_pedido').html(total.toLocaleString('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL'
-                    }));
-                }
-
-                function uploadImages(formData) {
-                    $('#progressModal').show();
-
-                    $.ajax({
-                        url: '{{ route('upload.image') }}',
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': $('input[name="_token"]').val()
-                        },
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        xhr: function() {
-                            var xhr = new window.XMLHttpRequest();
-                            xhr.upload.addEventListener('progress', function(evt) {
-                                if (evt.lengthComputable) {
-                                    var percentComplete = (evt.loaded / evt.total) * 100;
-                                    $('#uploadProgress').val(percentComplete);
-                                    if (percentComplete === 100) {
-                                        $('#progressModal').hide();
-                                    }
-                                }
-                            }, false);
-                            return xhr;
-                        },
-                        success: function(data) {
-                            if (data.images) {
-                                alert('Imagens enviadas com sucesso');
-                                window.location.href = "/detalhe-pedido/" + data.pedido;
-                            }
-                        },
-                        error: function(error) {
-                            console.error('Erro:', error);
-                            $('#progressModal').hide();
-                        }
-                    });
-                }
-
-                $('.close').on('click', function() {
-                    $('#progressModal').hide();
-                });
-
-                $(window).on('click', function(event) {
-                    if (event.target == document.getElementById('progressModal')) {
-                        $('#progressModal').hide();
-                    }
-                });
+            const $sizeLabel = $('<label>').text('Tamanho');
+            const $sizeSelect = $('<select>').addClass('size-select').on('change', function () {
+              updatePrice($col, $(this).val());
             });
-        </script>
+            cropSizes.forEach(function (size, index) {
+              const $option = $('<option>').val(JSON.stringify(size)).text(size.height + 'x' + size.width);
+              if (index === 0) $option.prop('selected', true);
+              $sizeSelect.append($option);
+            });
 
-    </div>
-    </div>
+            const $qtyLabel = $('<label>').text('Quantidade');
+            const $qtyInput = $('<input>').addClass('quantity-input').attr({
+              type: 'number', min: '1', value: '1'
+            });
 
-@stop
-@section('css')
-    {{-- Add here extra stylesheets --}}
-    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
-@stop
+            const $priceSpan = $('<span>').addClass('price-input');
+            const $priceInput = $('<input>').addClass('price-inputv').attr({ type: 'hidden', readonly: true });
+            const $subtotal = $('<div>').addClass('item-total mt-2');
 
-@section('js')
-    <script>
-        console.log("Hi, I'm using the Laravel-AdminLTE package!");
-    </script>
-@stop
-@stop
+            const $deleteBtn = $('<button>').attr('type', 'button')
+              .addClass('btn btn-danger btn-sm')
+              .html('<i class="bi bi-trash3"></i> Remover')
+              .on('click', function () {
+                $col.remove();
+                updateTotalPedido();
+              });
+
+            const $controls = $('<div>').addClass('image-controls').append($deleteBtn);
+
+            $atributos.append(
+              $('<div class="w-100 d-flex gap-2 align-items-center flex-wrap"></div>').append(
+                $sizeSelect, $qtyInput, $priceSpan, $priceInput
+              ),
+              $subtotal,
+              $controls
+            );
+
+            $card.append($thumb, $atributos);
+            $col.append($card);
+            $('#imageContainer').append($col);
+
+            updatePrice($col, $sizeSelect.val());
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function updatePrice(wrapper, size) {
+        const parsedSize = JSON.parse(size);
+        const price = parsedSize.price;
+        wrapper.find('.price-input').html(price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
+        wrapper.find('.price-inputv').val(price);
+        updateTotalPedido();
+      }
+
+      $(document).on('input', '.quantity-input', function () {
+        const wrapper = $(this).closest('.image-wrapper');
+        const size = wrapper.find('.size-select').val();
+        updatePrice(wrapper, size);
+      });
+
+      function updateTotalPedido() {
+        let total = 0;
+        const valor_entrega = parseFloat($('#val_entrega').val()) || 0;
+        $('#imageContainer .image-wrapper').each(function () {
+          const price = parseFloat($(this).find('.price-inputv').val()) || 0;
+          const quantity = parseInt($(this).find('.quantity-input').val()) || 1;
+          total += price * quantity;
+        });
+        total += valor_entrega;
+        $('#input_total').val(total);
+        $('#total_pedido').html(total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
+      }
+
+      function uploadImages(formData) {
+        $('#progressModal').css('display', 'flex');
+
+        $.ajax({
+          url: '{{ route('upload.image') }}',
+          method: 'POST',
+          headers: { 'X-CSRF-TOKEN': $('input[name="_token"]').val() },
+          data: formData,
+          processData: false,
+          contentType: false,
+          xhr: function () {
+            const xhr = new window.XMLHttpRequest();
+            xhr.upload.addEventListener('progress', function (evt) {
+              if (evt.lengthComputable) {
+                const percent = (evt.loaded / evt.total) * 100;
+                $('#uploadProgress').val(percent);
+                if (percent === 100) $('#progressModal').hide();
+              }
+            }, false);
+            return xhr;
+          },
+          success: function (data) {
+            if (data.images) {
+              alert('Imagens enviadas com sucesso');
+              window.location.href = '/detalhe-pedido/' + data.pedido;
+            }
+          },
+          error: function (error) {
+            console.error('Erro:', error);
+            $('#progressModal').hide();
+          }
+        });
+      }
+
+      $(document).on('click', '#progressModal .close', function () {
+        $('#progressModal').hide();
+      });
+      $(window).on('click', function (event) {
+        if (event.target === document.getElementById('progressModal')) {
+          $('#progressModal').hide();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+@endsection
