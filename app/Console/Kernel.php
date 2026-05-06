@@ -14,6 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+
+     $schedule->command('uploads:limpar')->daily();
         // $schedule->command('inspire')->hourly();
         $schedule->command('temp:clear-old-files')->dailyAt('3:00');
 
