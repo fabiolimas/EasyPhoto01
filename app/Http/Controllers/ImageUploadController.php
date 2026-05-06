@@ -102,13 +102,7 @@ class ImageUploadController extends Controller
         $manager = new ImageManager(new Driver());
         $img = $manager->read($image->getRealPath());
 
-        // Aplicar rotação (se necessário)
-        // if (isset($crop['rotate']) && $crop['rotate'] != 0) {
-        //     $img->rotate(-$crop['rotate']); // A rotação é negativa para corrigir a orientação
-        // }
 
-        // Cortar a imagem
-       // $img->crop($crop['width'], $crop['height'], $crop['x'], $crop['y']);
 
         // Definir o caminho da imagem
         $imagePath = 'uploads/' . $pedido->id . '/' . $size['width'] . 'x' . $size['height'] . '/' . $quantity;

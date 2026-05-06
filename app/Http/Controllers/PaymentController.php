@@ -42,6 +42,12 @@ class PaymentController extends Controller
     }
 
     if ($request->forma_pagamento == 'retirada') {
+
+            $pedido=Pedido::find($pedidoId);
+
+            $pedido->update(['payment_method'=>'pagamento na retirada']);
+
+
         return redirect()->route('pedidos-cliente');
     }
 
