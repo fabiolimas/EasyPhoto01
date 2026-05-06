@@ -14,19 +14,20 @@ class PedidoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
+   public function index()
+{
+    $laboratorios = Laboratorio::all();
 
-        $laboratorios=Laboratorio::all();
-        if(auth()->user()->nivel == 'administrador'){
-            $pedidos=Pedido::paginate(20);
+    $query = Pedido::query();
 
-
-        }else{
-            $pedidos=Pedido::where('laboratorio_id',auth()->user()->laboratorio_id)->paginate(20);
-        }
-        return view('painel.pedido.pedidos',compact('pedidos','laboratorios'));
+    if (auth()->user()->nivel != 'administrador') {
+        $query->where('laboratorio_id', auth()->user()->laboratorio_id);
     }
+
+    $pedidos = $query->orderBy('created_at', 'DESC')->paginate(20);
+
+    return view('painel.pedido.pedidos', compact('pedidos', 'laboratorios'));
+}
 
 
 
