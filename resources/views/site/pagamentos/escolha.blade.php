@@ -2,7 +2,15 @@
 
 @section('content')
 <div class="container py-5">
+@php
+if($cliente->pagamento_retirada == 1){
 
+    $personal_col="col-md-4";
+}else{
+
+    $personal_col="col-md-6";
+}
+@endphp
     <h3 class="mb-4 text-center">Escolha a forma de pagamento</h3>
 
     <div class="row justify-content-center">
@@ -17,7 +25,7 @@
                 <div class="row g-4">
 
                     {{-- PIX --}}
-                    <div class="col-md-4">
+                    <div class="{{$personal_col}}">
                         <label class="w-100">
                             <input type="radio" name="forma_pagamento" value="pix" class="d-none input-pagamento">
 
@@ -31,7 +39,7 @@
                     </div>
 
                     {{-- CARTÃO --}}
-                    <div class="col-md-4">
+                    <div class="{{$personal_col}}">
                         <label class="w-100">
                             <input type="radio" name="forma_pagamento" value="cartao" class="d-none input-pagamento">
 
@@ -43,9 +51,9 @@
                             </div>
                         </label>
                     </div>
-
+                        @if($cliente->pagamento_retirada  === 1)
                     {{-- Pagamento na Retirada --}}
-                    <div class="col-md-4">
+                    <div class="{{$personal_col}}">
                         <label class="w-100">
                             <input type="radio" name="forma_pagamento" value="retirada" class="d-none input-pagamento">
 
@@ -57,6 +65,10 @@
                             </div>
                         </label>
                     </div>
+                    @else
+
+
+                    @endif
 
                 </div>
 

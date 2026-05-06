@@ -19,7 +19,9 @@ class PaymentController extends Controller
     public function escolhaPagamento($pedidoId){
 
     $pedido=Pedido::find($pedidoId);
-    return view('site.pagamentos.escolha', compact('pedido'));
+
+    $cliente=Cliente::where('user_id', $pedido->user_id)->first();
+    return view('site.pagamentos.escolha', compact('cliente','pedido'));
     }
 
     public function cardview($pedidoId){

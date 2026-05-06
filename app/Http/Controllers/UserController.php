@@ -74,6 +74,7 @@ class UserController extends Controller
             'uf'    =>$request->uf,
             'email' =>$request->email,
             'desconto'=>$request->desconto,
+            'pagamento_retirada'=>$request->pagamento_retirada,
         ]);
 
             $usuario->update(['name'=>$request->nome,'email'=>$request->email]);
