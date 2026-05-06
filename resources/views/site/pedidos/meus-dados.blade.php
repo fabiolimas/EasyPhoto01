@@ -10,6 +10,7 @@
 <style>
         body {
             background: #f5f6fa;
+            color:#da0b1d;
         }
         .card-pix {
             max-width: 500px;
