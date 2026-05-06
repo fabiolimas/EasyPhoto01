@@ -565,6 +565,7 @@ Ao navegar ou utilizar serviços neste site, consideramos que você aceita o uso
      <script>
 
   $(document).ready(function () {
+    // $("#exampleModalLong").modal("show");
     let dataSalva = localStorage.getItem('modalExibida');
 
     if (!dataSalva) {

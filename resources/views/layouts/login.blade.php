@@ -63,7 +63,7 @@ div#exampleModalLong
 
  {
     margin-top: 18%;
-    margin-left: -32px;
+    /* margin-left: -32px; */
 }
   </style>
 </head>
