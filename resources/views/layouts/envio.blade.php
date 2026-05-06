@@ -15,7 +15,7 @@
   {{-- Navbar --}}
   <nav class="navbar navbar-custom">
     <div class="container-fluid d-flex justify-content-between align-items-center">
-      <a class="navbar-brand-logo text-decoration-none" href="{{ url('/') }}">EASY<span>PHOTO</span></a>
+      <a class="navbar-brand-logo text-decoration-none" href="{{ url('/lab') }}">EASY<span>PHOTO</span></a>
       <div class="d-flex align-items-center gap-3">
 
          @if(Route::is(['pedidos-cliente', 'meus-dados']))
