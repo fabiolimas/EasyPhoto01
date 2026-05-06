@@ -20,7 +20,7 @@
 
          @if(Route::is(['pedidos-cliente', 'meus-dados']))
 
-                            <a class="btn-store-switch text-decoration-none" href="{{ route('lab') }}" ><i class="fas fa-exchange-alt"></i> Enviar Fotos</a>
+                            <a class="btn-store-switch text-decoration-none" href="{{ route('lab') }}" ><i class="bi bi-arrow-left-right"></i> Enviar Fotos</a>
 
                         @endif
                         @if(Route::is('enviar-fotos'))
