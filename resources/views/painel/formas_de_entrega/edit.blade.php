@@ -20,13 +20,11 @@
         <input type="text" name="valor" class="form-control mb-3" value="{{number_format($forma->valor,2,',','.')}}">
         <label for="local">Local Relacionado</label>
         <select class="form-select mb-3" name='local_relacionado' id="local">
-            <option value="{{$forma->local_relacionado}}">{{$forma->local_relacionado}}</option>
-            <option value="Jacobina">Jacobina</option>
-            <option value="Senhor do Bonfim">Senhor do Bonfim</option>
-            <option value="Capim Grosso">Capim Grosso</option>
-            <option value="Juazeiro">Juazeiro</option>
-            <option value="Petrolina Centro">Petrolina Centro</option>
-            <option value="River Shopping">River Shopping</option>
+            <option value="{{$laboratorio->id}}">{{$laboratorio->nome}}</option>
+            @foreach($laboratorios as $lab)
+                    <option value="{{$lab->id}}">{{$lab->nome}}</option>
+            @endforeach
+
         </select>
         <label for="tipo_entrega">Tipo de entrega</label>
         <select name="tipo_entrega" class="form-select mb-3" id="tipo_entrega" >

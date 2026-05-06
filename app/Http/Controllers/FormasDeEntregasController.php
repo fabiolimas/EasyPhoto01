@@ -27,11 +27,12 @@ class FormasDeEntregasController extends Controller
    public function edit($id){
 
     $forma=FormasEntrega::find($id);
+    $laboratorio=Laboratorio::find($forma->local_relacionado);
 
     $laboratorios=Laboratorio::all();
 
 
-   return view('painel.formas_de_entrega.edit', compact('forma','laboratorios'));
+   return view('painel.formas_de_entrega.edit', compact('laboratorio','forma','laboratorios'));
    }
 
    public function store(Request $request){
