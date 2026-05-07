@@ -64,7 +64,7 @@
           <label class="form-label small text-secondary">Nome Completo</label>
           <div class="input-group">
             <span class="input-group-text input-icon"><i class="bi bi-person-fill"></i></span>
-            <input type="text" class="form-control form-control-dark" name="nome" id="nome" placeholder="Seu nome completo" />
+            <input type="text" class="form-control form-control-dark" name="nome" id="nome" placeholder="Seu nome completo" required/>
           </div>
         </div>
 
@@ -72,7 +72,10 @@
           <label class="form-label small text-secondary">CPF</label>
           <div class="input-group">
             <span class="input-group-text input-icon"><i class="bi bi-card-text"></i></span>
-            <input type="text" class="form-control form-control-dark" name="cpf" id="cpf" placeholder="000.000.000-00" maxlength="14" />
+            <input type="text" class="form-control form-control-dark" name="cpf" id="cpf" placeholder="000.000.000-00" maxlength="14" required/>
+                              <div class="invalid-feedback">
+    CPF inválido
+</div>
           </div>
         </div>
 
@@ -80,7 +83,7 @@
           <label class="form-label small text-secondary">Telefone</label>
           <div class="input-group">
             <span class="input-group-text input-icon"><i class="bi bi-telephone-fill"></i></span>
-            <input type="tel" class="form-control form-control-dark" name="telefone" id="telefone" placeholder="(00) 00000-0000" />
+            <input type="tel" class="form-control form-control-dark" name="telefone" id="telefone" placeholder="(00) 00000-0000" required/>
           </div>
         </div>
 
@@ -95,7 +98,7 @@
           <label class="form-label small text-secondary">Endereço</label>
           <div class="input-group">
             <span class="input-group-text input-icon"><i class="bi bi-house-fill"></i></span>
-            <input type="text" class="form-control form-control-dark" name="endereco" id="endereco" placeholder="Rua, número" />
+            <input type="text" class="form-control form-control-dark" name="endereco" id="endereco" placeholder="Rua, número" required/>
           </div>
         </div>
 
@@ -103,23 +106,23 @@
           <label class="form-label small text-secondary">CEP</label>
           <div class="input-group">
             <span class="input-group-text input-icon"><i class="bi bi-mailbox"></i></span>
-            <input type="text" class="form-control form-control-dark"  name="cep" id="cep" placeholder="00000-000" maxlength="9" />
+            <input type="text" class="form-control form-control-dark"  name="cep" id="cep" placeholder="00000-000" maxlength="9" required/>
           </div>
         </div>
 
         <div class="col-md-6">
           <label class="form-label small text-secondary">Bairro</label>
-          <input type="text" class="form-control form-control-dark" name="bairro" id="bairro" placeholder="Bairro" />
+          <input type="text" class="form-control form-control-dark" name="bairro" id="bairro" placeholder="Bairro" required/>
         </div>
 
         <div class="col-md-4">
           <label class="form-label small text-secondary">Cidade</label>
-          <input type="text" class="form-control form-control-dark" name="cidade" id="cidade" placeholder="Cidade" />
+          <input type="text" class="form-control form-control-dark" name="cidade" id="cidade" placeholder="Cidade" required/>
         </div>
 
         <div class="col-md-2">
           <label class="form-label small text-secondary">Estado</label>
-          <select class="form-select form-select-dark" name="uf" id="uf">
+          <select class="form-select form-select-dark" name="uf" id="uf" required>
             <option value="">UF</option>
             <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
             <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
@@ -142,7 +145,7 @@
           <label class="form-label small text-secondary">E-mail</label>
           <div class="input-group">
             <span class="input-group-text input-icon"><i class="bi bi-envelope-fill"></i></span>
-            <input type="email" class="form-control form-control-dark" name="email" id="email"  placeholder="seu@email.com" />
+            <input type="email" class="form-control form-control-dark" name="email" id="email"  placeholder="seu@email.com" required/>
           </div>
         </div>
 
@@ -150,7 +153,7 @@
           <label class="form-label small text-secondary">Senha</label>
           <div class="input-group">
             <span class="input-group-text input-icon"><i class="bi bi-lock-fill"></i></span>
-            <input id="password" type="password" class="form-control form-control-dark" name="password" id="password" placeholder="••••••••" />
+            <input id="password" type="password" class="form-control form-control-dark" name="password" id="password" placeholder="••••••••" required/>
             <button type="button" class="input-group-text input-icon" id="togglePwd" aria-label="Mostrar senha">
               <i id="pwdIcon" class="bi bi-eye-fill"></i>
             </button>
