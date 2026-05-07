@@ -51,7 +51,7 @@
       <h3 class="fw-bold mb-1">Cadastre-se ✨</h3>
       <p class="text-secondary mb-4">Preencha seus dados para criar sua conta</p>
 
-      <form method ="post" action="{{ route('registro-cliente') }}" class="row g-3">
+      <form method ="post" action="{{ route('registro-cliente') }}" class="row g-3" id="registerForm">
         @csrf
         <!-- Dados pessoais -->
         <div class="col-12">
