@@ -3,9 +3,9 @@
 @section('content')
 <div class="container py-5">
 @php
-if($cliente->pagamento_retirada == 1){
+if($cliente->pagamento_retirada == 1 ){
 
-    $personal_col="col-md-4";
+    $personal_col="col-md-6";
 }else{
 
     $personal_col="col-md-6";
