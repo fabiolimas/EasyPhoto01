@@ -61,7 +61,7 @@ if($cliente->pagamento_retirada == 1 ){
                                 <h5>Pagamento na Retirada</h5>
                             <p class="text-muted">Pague direto no caixa</p>
 
-                                <i class="bi bi-shop fs-3 text-primary"></i>
+                               <i class="bi bi-qr-code fs-1 text-success"  ></i>
                             </div>
                         </label>
                     </div>
