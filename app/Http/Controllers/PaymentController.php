@@ -65,6 +65,9 @@ class PaymentController extends Controller
     $pedido = Pedido::findOrFail($pedidoId);
     $cliente = Cliente::where('user_id', $pedido->user_id)->first();
 
+    $apikeysandbox="https://apisandbox.cieloecommerce.cielo.com.br/1/sales/";
+    $apikeyproducao="https://api.cieloecommerce.cielo.com.br/1/sales";
+
     $amount = (int) round($pedido->total * 100);
 
     // 👉 cria registro ANTES de enviar
@@ -78,7 +81,7 @@ class PaymentController extends Controller
     $curl = curl_init();
 
     curl_setopt_array($curl, [
-        CURLOPT_URL => "https://apisandbox.cieloecommerce.cielo.com.br/1/sales/",
+        CURLOPT_URL => $apikeyproducao,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_CUSTOMREQUEST => "POST",
         CURLOPT_POSTFIELDS => json_encode([
@@ -129,9 +132,10 @@ class PaymentController extends Controller
 public function consultarPix($paymentId)
 {
     $curl = curl_init();
-
+$apikeysandbox="https://apisandbox.cieloecommerce.cielo.com.br/1/sales/{$paymentId}";
+    $apikeyproducao="https://api.cieloecommerce.cielo.com.br/1/sales/{$paymentId}";
     curl_setopt_array($curl, [
-        CURLOPT_URL => "https://apisandbox.cieloecommerce.cielo.com.br/1/sales/{$paymentId}",
+        CURLOPT_URL => $apikeyproducao,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_CUSTOMREQUEST => "GET",
         CURLOPT_HTTPHEADER => [
@@ -200,6 +204,9 @@ public function cieloCard(Request $request, $pedido_id)
     $pedido = Pedido::findOrFail($pedido_id);
      $cliente = Cliente::where('user_id', $pedido->user_id)->first();
 
+     $apikeysandbox="https://apisandbox.cieloecommerce.cielo.com.br/1/sales/";
+    $apikeyproducao="https://api.cieloecommerce.cielo.com.br/1/sales/";
+
     $numero = str_replace(' ', '', $request->numero);
     [$mes, $ano] = explode('/', $request->validade);
 
@@ -216,7 +223,7 @@ public function cieloCard(Request $request, $pedido_id)
     $curl = curl_init();
 
     curl_setopt_array($curl, [
-        CURLOPT_URL => "https://apisandbox.cieloecommerce.cielo.com.br/1/sales/",
+        CURLOPT_URL => $apikeyproducao,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_CUSTOMREQUEST => "POST",
         CURLOPT_POSTFIELDS => json_encode([
