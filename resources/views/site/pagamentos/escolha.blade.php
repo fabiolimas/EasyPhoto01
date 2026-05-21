@@ -39,7 +39,7 @@ if($cliente->pagamento_retirada == 1){
                     </div>
 
                     {{-- CARTÃO --}}
-                    <div class="{{$personal_col}}">
+                    {{-- <div class="{{$personal_col}}">
                         <label class="w-100">
                             <input type="radio" name="forma_pagamento" value="cartao" class="d-none input-pagamento">
 
@@ -50,7 +50,7 @@ if($cliente->pagamento_retirada == 1){
                                <i class="bi bi-credit-card fs-1 text-warning"></i>
                             </div>
                         </label>
-                    </div>
+                    </div> --}}
                         @if($cliente->pagamento_retirada  === 1)
                     {{-- Pagamento na Retirada --}}
                     <div class="{{$personal_col}}">
