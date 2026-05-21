@@ -81,7 +81,7 @@
     </div>
 
       <!-- Botão copiar -->
-        <a href="{{route('pedidos')}}" class="btn btn-success w-100 mb-3">
+        <a href="{{route('pedidos-cliente')}}" class="btn btn-success w-100 mb-3">
             <i class="bi bi-check-lg"></i> Feito
         </a>
 </div>
