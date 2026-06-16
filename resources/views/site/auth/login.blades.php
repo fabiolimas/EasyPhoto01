@@ -480,6 +480,9 @@ Ao navegar ou utilizar serviços neste site, consideramos que você aceita o uso
         }
     }
 });
+
+
+
         </script>
         @section('css')
         {{-- Add here extra stylesheets --}}

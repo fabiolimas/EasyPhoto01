@@ -52,11 +52,15 @@
 @endpush
 
 @section('content')
+
+
 <div class="d-flex align-items-center justify-content-center p-3" style="min-height:100vh;">
+
     <div class="row login-card shadow-lg rounded-4 overflow-hidden w-100 g-0">
 
         {{-- Brand side --}}
         <div class="col-lg-6 d-none d-lg-flex flex-column justify-content-between p-5 text-white brand-side">
+
             <div>
                 <h2 class="fw-bold mb-0" style="letter-spacing:1px;">
                     EASY<span class="fw-light">PHOTO</span>
@@ -90,6 +94,7 @@
 
         {{-- Form side --}}
         <div class="col-lg-6 p-4 p-md-5 text-white form-side">
+             @include('components.alerts')
             <div class="d-lg-none text-center mb-4">
                 <h2 class="fw-bold mb-0">EASY<span class="fw-light">PHOTO</span></h2>
             </div>
@@ -584,8 +589,6 @@ Ao navegar ou utilizar serviços neste site, consideramos que você aceita o uso
     }
 });
         </script>
-
-@push('scripts')
 <script>
     function togglePassword() {
         const input = document.getElementById('password');
@@ -595,5 +598,5 @@ Ao navegar ou utilizar serviços neste site, consideramos que você aceita o uso
         icon.className = isPwd ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill';
     }
 </script>
-@endpush
+
 @endsection
