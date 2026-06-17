@@ -127,9 +127,6 @@ class PaymentController extends Controller
         ]);
 
 
-    }else{
-
-        return redirect()->back()->with('error', $data['Message']);
     }
 
 

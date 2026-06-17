@@ -39,6 +39,8 @@
 
         <h4 class="text-center mb-3">Pagamento via PIX</h4>
 
+        @if(isset($data['Payment']['PaymentId']))
+
         <!-- Valor -->
         <h2 class="text-center text-success mb-4">
             R$ {{ number_format($data['Payment']['Amount'] / 100, 2, ',', '.') }}
@@ -79,11 +81,23 @@
         </div>
 
     </div>
-
-      <!-- Botão copiar -->
+       <!-- Botão copiar -->
         <a href="{{route('pedidos-cliente')}}" class="btn btn-success w-100 mb-3">
             <i class="bi bi-check-lg"></i> Feito
         </a>
+    @else
+
+     <p class="text-center text-muted text-danger">
+            Ocorreu um erro ao tentar gerar o seu QRCode de pagamento, tente novamente em instantes!
+        </p>
+
+        <a href="{{route('pedidos-cliente')}}" class="btn btn-warning w-100 mb-3">
+            <i class="bi bi-check-lg"></i> Voltar
+        </a>
+
+    @endif
+
+
 </div>
 
 <script>
