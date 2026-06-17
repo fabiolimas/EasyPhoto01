@@ -115,14 +115,23 @@ class PaymentController extends Controller
 
     $data = json_decode($response, true);
 
+
+
+
     // 👉 salva retorno da Cielo
+
     if (isset($data['Payment']['PaymentId'])) {
         $payment->update([
             'payment_id' => $data['Payment']['PaymentId'],
             'payload' => json_encode($data)
         ]);
 
+
+    }else{
+
+        return redirect()->back()->with('error', $data['Message']);
     }
+
 
     return view('site.pagamentos.pix', compact('data','pedidoId'));
 }
@@ -271,14 +280,6 @@ if ($err) {
     $data = json_decode($response, true);
 
     // 👉 salva retorno da Cielo
-    if (isset($data['Payment']['PaymentId'])) {
-        $payment->update([
-            'payment_id' => $data['Payment']['PaymentId'],
-            'payload' => json_encode($data)
-        ]);
-
-
-    }
 
     if(isset($data['Payment']['Status']) && $data['Payment']['Status'] == 2){
         $pedido->update(['status' => 'pago',  'payment_method'=>'Cartão de Crédito']);
