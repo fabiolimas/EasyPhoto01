@@ -88,7 +88,13 @@
     @else
 
      <p class="text-center text-muted text-danger">
-            Ocorreu um erro ao tentar gerar o seu QRCode de pagamento, tente novamente em instantes!
+            Ocorreu um erro ao tentar gerar o seu QRCode de pagamento, tente novamente em alguns instantes!
+            @if(Auth::user()->nivel=='administrador')
+            <a href="https://status.cielo.com.br/">Status cielo</a>
+
+            @else
+
+            @endif
         </p>
 
         <a href="{{route('pedidos-cliente')}}" class="btn btn-warning w-100 mb-3">
