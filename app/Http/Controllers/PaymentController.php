@@ -142,6 +142,10 @@ class PaymentController extends Controller
 
     public function consultarPix($paymentId)
     {
+
+    $payments= Payment::where('status','pendente')->get();
+
+
         $curl = curl_init();
         $apikeysandbox = "https://apisandbox.cieloecommerce.cielo.com.br/1/sales/{$paymentId}";
         $apikeyproducao = "https://api.cieloecommerce.cielo.com.br/1/sales/{$paymentId}";
@@ -166,7 +170,7 @@ class PaymentController extends Controller
 
     public function webhook(Request $request)
     {
-        $paymentId = $request->input('PaymentId');
+        $paymentId = $request->PaymentId;
 
         if (!$paymentId) {
             return response()->json(['error' => 'PaymentId não informado'], 400);
