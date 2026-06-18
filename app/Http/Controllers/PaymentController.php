@@ -25,6 +25,7 @@ class PaymentController extends Controller
         return view('site.pagamentos.escolha', compact('cliente', 'pedido'));
     }
 
+
     public function cardview($pedidoId)
     {
 
@@ -42,9 +43,9 @@ class PaymentController extends Controller
             return redirect()->route('pagamento.pix', $pedidoId);
         }
 
-        if($request->forma_pagamento == 'checkout'){
+        if ($request->forma_pagamento == 'checkout') {
 
-        return redirect()->route('pagamento.checkout', $pedidoId);
+            return redirect()->route('pagamento.checkout', $pedidoId);
         }
 
         if ($request->forma_pagamento == 'retirada') {
@@ -208,6 +209,31 @@ class PaymentController extends Controller
         return "Pagamento simulado com sucesso!";
     }
 
+    public function detectarBandeira($numero)
+{
+    $numero = preg_replace('/\D/', '', $numero);
+
+    $bandeiras = [
+        'Visa' => '/^4/',
+        'Master' => '/^(5[1-5]|2[2-7])/',
+        'Amex' => '/^(34|37)/',
+        'Elo' => '/^(4011|4312|4389|4514|4576|5041|5066|5067|5090|6277|6362|6363)/',
+        'Diners' => '/^(300|301|302|303|304|305|36|38)/',
+        'Discover' => '/^(6011|65|64[4-9])/',
+        'JCB' => '/^(35)/',
+        'Aura' => '/^(50)/',
+        'Hipercard' => '/^(606282|3841)/',
+    ];
+
+    foreach ($bandeiras as $nome => $regex) {
+        if (preg_match($regex, $numero)) {
+            return $nome;
+        }
+    }
+
+    return null;
+}
+
 
     public function cieloCard(Request $request, $pedido_id)
     {
@@ -219,6 +245,14 @@ class PaymentController extends Controller
 
         $numero = str_replace(' ', '', $request->numero);
         [$mes, $ano] = explode('/', $request->validade);
+
+
+
+$bandeira = $this->detectarBandeira($numero);
+
+if (!$bandeira) {
+    return back()->with('error', 'Bandeira do cartão não identificada.');
+}
 
         $amount = (int) round($pedido->total * 100);
 
@@ -233,7 +267,7 @@ class PaymentController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, [
-            CURLOPT_URL => $apikeysandbox,
+            CURLOPT_URL => $apikeyproducao,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -259,13 +293,14 @@ class PaymentController extends Controller
                         'Holder' => $cliente->nome,
                         'ExpirationDate' => $mes . "/20" . $ano,
                         'SecurityCode' => $request->cvv,
-                        'Brand' => 'Master'
+                        'Brand' => $bandeira
                     ],
                     'Type' => 'CreditCard',
                     'Amount' => $amount,
-                    'Installments' => (int) $request->parcelas
+                    'Installments' => (int) $request->parcelas,
+                    'Capture' => true,
                 ],
-                'MerchantOrderId' => '121'
+                'MerchantOrderId' => (string)$pedido->id
             ]),
             CURLOPT_HTTPHEADER => [
                 "Content-Type: application/json",
@@ -274,9 +309,9 @@ class PaymentController extends Controller
             ],
         ]);
 
-       $response = curl_exec($curl);
+        $response = curl_exec($curl);
 
-
+// dd($response);
 
         $err = curl_error($curl);
 
@@ -288,7 +323,7 @@ class PaymentController extends Controller
 
         $data = json_decode($response, true);
 
-          if (isset($data['Payment']['PaymentId'])) {
+        if (isset($data['Payment']['PaymentId'])) {
             $payment->update([
                 'payment_id' => $data['Payment']['PaymentId'],
                 'payload' => json_encode($data)
@@ -300,7 +335,7 @@ class PaymentController extends Controller
 
         if (isset($data['Payment']['Status']) && $data['Payment']['Status'] == 2) {
 
-        $payment->update([
+            $payment->update([
                 'status' => 'pago',
 
             ]);
@@ -310,41 +345,60 @@ class PaymentController extends Controller
         return redirect()->route('pedidos-cliente')->with('success', 'Pagamento' . $pedido->id . 'processado!');
     }
 
-    public function checkoutCielo(Request $request, $pedido_id){
+    public function checkoutCielo(Request $request, $pedido_id)
+    {
 
-    $pedido = Pedido::findOrFail($pedido_id);
+        $pedido = Pedido::findOrFail($pedido_id);
         $cliente = Cliente::where('user_id', $pedido->user_id)->first();
 
-    $curl = curl_init();
+        $curl = curl_init();
 
-curl_setopt_array($curl, [
-  CURLOPT_URL => "https://cieloecommerce.cielo.com.br/api/public/v1/orders/",
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => "",
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 30,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => "POST",
-  CURLOPT_POSTFIELDS => json_encode([
-    'OrderNumber' => $pedido_id,
-    'SoftDescriptor' => 'Lojas Imagem'
-  ]),
-  CURLOPT_HTTPHEADER => [
-    "Content-type: application/json",
-    "MerchantId: 1212",
-    "accept: application/json"
-  ],
-]);
+        curl_setopt_array($curl, [
+            CURLOPT_URL => "https://cieloecommerce.cielo.com.br/api/public/v1/orders/",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => json_encode([
+                'Cart' => [
+                    'Items' => [
+                        [
+                            'Cart.Items.Name' => 'fotos',
+                            'Cart.Items.UnitPrice' => 10,
+                            'Cart.Items.Quantity' => 2,
+                            'Cart.Items.Type' => 'foto'
+                        ]
+                    ]
+                ],
+                'Customer' => [
+                    'Identity' => '84261300206',
+                    'FullName' => 'Test de Test'
+                ],
+                'Shipping' => [
+                    'Package' => 'box',
+                    'Length' => 1
+                ],
+                'OrderNumber' => 'Pedido01',
+                'SoftDescriptor' => 'Nomefantasia'
+            ]),
+            CURLOPT_HTTPHEADER => [
+                "Content-type: application/json",
+                "MerchantId: 121",
+                "accept: application/json"
+            ],
+        ]);
 
-$response = curl_exec($curl);
-$err = curl_error($curl);
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
 
-curl_close($curl);
+        curl_close($curl);
 
-if ($err) {
-  echo "cURL Error #:" . $err;
-} else {
-  echo $response;
-}
+        if ($err) {
+            echo "cURL Error #:" . $err;
+        } else {
+            echo $response;
+        }
     }
 }

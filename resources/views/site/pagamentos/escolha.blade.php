@@ -39,7 +39,7 @@ if($cliente->pagamento_retirada == 1 ){
                     </div>
 
                      {{-- CHECKOUT --}}
-                    <div class="{{$personal_col}}">
+                    {{-- <div class="{{$personal_col}}">
                         <label class="w-100">
                             <input type="radio" name="forma_pagamento" value="checkout" class="d-none input-pagamento">
 
@@ -51,7 +51,7 @@ if($cliente->pagamento_retirada == 1 ){
 
                             </div>
                         </label>
-                    </div>
+                    </div> --}}
 
                     {{-- CARTÃO --}}
                     <div class="{{$personal_col}}">
@@ -60,7 +60,7 @@ if($cliente->pagamento_retirada == 1 ){
 
                             <div class="card card-pagamento p-4 text-center h-100">
                                 <h5>Cartão de Crédito</h5>
-                                <p class="text-muted">Parcelamento disponível</p>
+                                <p class="">Parcelamento disponível</p>
 
                                <i class="bi bi-credit-card fs-1 text-warning"></i>
                             </div>

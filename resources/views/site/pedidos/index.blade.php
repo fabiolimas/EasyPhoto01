@@ -6,7 +6,7 @@
 
 
 @section('content')
-
+ @include('components.alerts')
 <style>
         body {
             background: #f5f6fa;
