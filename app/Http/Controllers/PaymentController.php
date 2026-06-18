@@ -183,7 +183,7 @@ class PaymentController extends Controller
             ]);
         }
 
-        return redirect()->route('detalhe-pedido',$pedido->id)->with('success', 'Verificação de pagamento concluida');
+        return redirect()->route('detalhes-pedidos-admin',$pedido->id)->with('success', 'Verificação de pagamento concluida');
     }
 
 
