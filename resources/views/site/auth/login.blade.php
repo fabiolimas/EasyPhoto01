@@ -132,7 +132,7 @@
                         </span>
                         <input type="password" name="password" id="password"
                                class="form-control input-dark"
-                               placeholder="••••••••" required>
+                                required>
                         <button type="button" class="input-group-text input-group-text-dark"
                                 onclick="togglePassword()" aria-label="Mostrar senha">
                             <i id="pwdIcon" class="bi bi-eye-fill"></i>

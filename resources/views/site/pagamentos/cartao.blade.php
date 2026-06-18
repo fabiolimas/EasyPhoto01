@@ -69,11 +69,11 @@
                         </div>
                     </div>
 
-                    {{-- Parcelamento
+                    {{-- Parcelamento --}}
                     <div class="mb-3">
                         <label>Parcelamento</label>
                         <select name="parcelas" id="parcelas" class="form-control"></select>
-                    </div> --}}
+                    </div>
 
                     <button class="btn btn-dark w-100">Pagar</button>
                 </form>

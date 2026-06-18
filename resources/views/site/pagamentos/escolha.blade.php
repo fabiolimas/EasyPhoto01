@@ -5,7 +5,7 @@
 @php
 if($cliente->pagamento_retirada == 1 ){
 
-    $personal_col="col-md-6";
+    $personal_col="col-md-4";
 }else{
 
     $personal_col="col-md-6";
@@ -31,7 +31,7 @@ if($cliente->pagamento_retirada == 1 ){
 
                             <div class="card card-pagamento p-4 text-center h-100">
                                 <h5>PIX</h5>
-                                <p class="text-muted">Pagamento instantâneo</p>
+                                <p class="">Pagamento instantâneo</p>
                                 <i class="bi bi-qr-code fs-1 text-success"  ></i>
 
                             </div>
@@ -39,7 +39,7 @@ if($cliente->pagamento_retirada == 1 ){
                     </div>
 
                     {{-- CARTÃO --}}
-                    {{-- <div class="{{$personal_col}}">
+                    <div class="{{$personal_col}}">
                         <label class="w-100">
                             <input type="radio" name="forma_pagamento" value="cartao" class="d-none input-pagamento">
 
@@ -50,16 +50,16 @@ if($cliente->pagamento_retirada == 1 ){
                                <i class="bi bi-credit-card fs-1 text-warning"></i>
                             </div>
                         </label>
-                    </div> --}}
+                    </div>
                         @if($cliente->pagamento_retirada  === 1)
                     {{-- Pagamento na Retirada --}}
                     <div class="{{$personal_col}}">
                         <label class="w-100">
                             <input type="radio" name="forma_pagamento" value="retirada" class="d-none input-pagamento">
 
-                            <div class="card card-pagamento p-4 text-center h-100">
+                            <div class="card card-pagamento p-3 text-center h-100">
                                 <h5>Pagamento na Retirada</h5>
-                            <p class="text-muted">Pague direto no caixa</p>
+                            <p class="">Pague direto no caixa</p>
 
                                 <i class="bi bi-shop fs-1 text-primary"></i>
                             </div>
@@ -98,8 +98,9 @@ if($cliente->pagamento_retirada == 1 ){
 }
 
 .input-pagamento:checked + .card-pagamento {
-    border-color: #198754;
-    background-color: #f0fff4;
+    border-color: #3b0202;
+    background-color: #e10b1e;
+    color: #fff;
 }
 </style>
 
