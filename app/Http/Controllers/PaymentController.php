@@ -16,20 +16,21 @@ class PaymentController extends Controller
         return view('site.pagamentos.index', compact('pedidoId', 'valor'));
     }
 
-    public function escolhaPagamento($pedidoId){
+    public function escolhaPagamento($pedidoId)
+    {
 
-    $pedido=Pedido::find($pedidoId);
+        $pedido = Pedido::find($pedidoId);
 
-    $cliente=Cliente::where('user_id', $pedido->user_id)->first();
-    return view('site.pagamentos.escolha', compact('cliente','pedido'));
+        $cliente = Cliente::where('user_id', $pedido->user_id)->first();
+        return view('site.pagamentos.escolha', compact('cliente', 'pedido'));
     }
 
-    public function cardview($pedidoId){
+    public function cardview($pedidoId)
+    {
 
-    $pedido=Pedido::find($pedidoId);
+        $pedido = Pedido::find($pedidoId);
 
-    return view('site.pagamentos.cartao',compact('pedido'));
-
+        return view('site.pagamentos.cartao', compact('pedido'));
     }
 
 
@@ -37,254 +38,257 @@ class PaymentController extends Controller
     {
 
 
-    if ($request->forma_pagamento == 'pix') {
-        return redirect()->route('pagamento.pix', $pedidoId);
+        if ($request->forma_pagamento == 'pix') {
+            return redirect()->route('pagamento.pix', $pedidoId);
+        }
+
+        if ($request->forma_pagamento == 'retirada') {
+
+            $pedido = Pedido::find($pedidoId);
+
+            $pedido->update(['payment_method' => 'pagamento na retirada']);
+
+
+            return redirect()->route('pedidos-cliente');
+        }
+
+
+
+        if ($request->forma_pagamento == 'cartao') {
+            return redirect()->route('pagamento.cardView', $pedidoId);
+        }
+
+        return back()->with('error', 'Selecione uma forma de pagamento');
     }
-
-    if ($request->forma_pagamento == 'retirada') {
-
-            $pedido=Pedido::find($pedidoId);
-
-            $pedido->update(['payment_method'=>'pagamento na retirada']);
-
-
-        return redirect()->route('pedidos-cliente');
-    }
-
-
-
-    if ($request->forma_pagamento == 'cartao') {
-        return redirect()->route('pagamento.cardView', $pedidoId);
-    }
-
-    return back()->with('error', 'Selecione uma forma de pagamento');
-}
 
     public function cieloPix($pedidoId)
-{
-    $pedido = Pedido::findOrFail($pedidoId);
-    $cliente = Cliente::where('user_id', $pedido->user_id)->first();
+    {
+        $pedido = Pedido::findOrFail($pedidoId);
+        $cliente = Cliente::where('user_id', $pedido->user_id)->first();
 
-    $apikeysandbox="https://apisandbox.cieloecommerce.cielo.com.br/1/sales/";
-    $apikeyproducao="https://api.cieloecommerce.cielo.com.br/1/sales";
+        $apikeysandbox = "https://apisandbox.cieloecommerce.cielo.com.br/1/sales/";
+        $apikeyproducao = "https://api.cieloecommerce.cielo.com.br/1/sales";
 
-    $amount = (int) round($pedido->total * 100);
+        $amount = (int) round($pedido->total * 100);
 
-    // 👉 cria registro ANTES de enviar
-    $payment = Payment::create([
-        'pedido_id' => $pedido->id,
-        'amount' => $amount,
-        'status' => 'pendente',
-        'type' => 'pix'
-    ]);
-
-    $curl = curl_init();
-
-    curl_setopt_array($curl, [
-        CURLOPT_URL => $apikeyproducao,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_CUSTOMREQUEST => "POST",
-        CURLOPT_POSTFIELDS => json_encode([
-            'Customer' => [
-                'Name' => $cliente->nome,
-                'Identity' => $cliente->cpf,
-                'IdentityType' => 'cpf'
-            ],
-            'Payment' => [
-                'Type' => 'pix',
-                'Amount' => $amount
-            ],
-            'MerchantOrderId' => $pedido->id
-        ]),
-        CURLOPT_HTTPHEADER => [
-            "Content-Type: application/json",
-            "MerchantId: " . env('MERCHANT_ID'),
-            "MerchantKey: " . env('MERCHANT_KEY'),
-            "RequestId: " . uniqid(),
-            "accept: application/json"
-        ],
-    ]);
-
-    $response = curl_exec($curl);
-    $err = curl_error($curl);
-
-
-    if ($err) {
-        return back()->with('error', $err);
-    }
-
-    $data = json_decode($response, true);
-
-
-
-
-    // 👉 salva retorno da Cielo
-
-    if (isset($data['Payment']['PaymentId'])) {
-        $payment->update([
-            'payment_id' => $data['Payment']['PaymentId'],
-            'payload' => json_encode($data)
+        // 👉 cria registro ANTES de enviar
+        $payment = Payment::create([
+            'pedido_id' => $pedido->id,
+            'amount' => $amount,
+            'status' => 'pendente',
+            'type' => 'pix'
         ]);
 
+        $curl = curl_init();
 
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $apikeyproducao,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => json_encode([
+                'Customer' => [
+                    'Name' => $cliente->nome,
+                    'Identity' => $cliente->cpf,
+                    'IdentityType' => 'cpf'
+                ],
+                'Payment' => [
+                    'Type' => 'pix',
+                    'Amount' => $amount
+                ],
+                'MerchantOrderId' => $pedido->id
+            ]),
+            CURLOPT_HTTPHEADER => [
+                "Content-Type: application/json",
+                "MerchantId: " . env('MERCHANT_ID'),
+                "MerchantKey: " . env('MERCHANT_KEY'),
+                "RequestId: " . uniqid(),
+                "accept: application/json"
+            ],
+        ]);
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+
+        if ($err) {
+            return back()->with('error', $err);
+        }
+
+        $data = json_decode($response, true);
+
+
+
+
+        // 👉 salva retorno da Cielo
+
+        if (isset($data['Payment']['PaymentId'])) {
+            $payment->update([
+                'payment_id' => $data['Payment']['PaymentId'],
+                'payload' => json_encode($data)
+            ]);
+        }
+
+
+        return view('site.pagamentos.pix', compact('data', 'pedidoId'));
     }
 
 
-    return view('site.pagamentos.pix', compact('data','pedidoId'));
-}
+
+    public function consultarPix($paymentId)
+    {
+        $curl = curl_init();
+        $apikeysandbox = "https://apisandbox.cieloecommerce.cielo.com.br/1/sales/{$paymentId}";
+        $apikeyproducao = "https://api.cieloecommerce.cielo.com.br/1/sales/{$paymentId}";
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $apikeyproducao,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => [
+                "Content-Type: application/json",
+                "MerchantId: env('MERCHANT_ID)",
+                "MerchantKey: env('MERCHANT_KEY)",
+            ],
+        ]);
+
+        $response = curl_exec($curl);
 
 
+        $data = json_decode($response, true);
 
-public function consultarPix($paymentId)
-{
-    $curl = curl_init();
-$apikeysandbox="https://apisandbox.cieloecommerce.cielo.com.br/1/sales/{$paymentId}";
-    $apikeyproducao="https://api.cieloecommerce.cielo.com.br/1/sales/{$paymentId}";
-    curl_setopt_array($curl, [
-        CURLOPT_URL => $apikeyproducao,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_CUSTOMREQUEST => "GET",
-        CURLOPT_HTTPHEADER => [
-            "Content-Type: application/json",
-            "MerchantId: env('MERCHANT_ID)",
-            "MerchantKey: env('MERCHANT_KEY)",
-        ],
-    ]);
-
-    $response = curl_exec($curl);
-
-
-    $data = json_decode($response, true);
-
-    return $data;
-}
-
-public function webhook(Request $request)
-{
-    $paymentId = $request->input('PaymentId');
-
-    if (!$paymentId) {
-        return response()->json(['error' => 'PaymentId não informado'], 400);
+        return $data;
     }
 
-    $data = $this->consultarPix($paymentId);
+    public function webhook(Request $request)
+    {
+        $paymentId = $request->input('PaymentId');
 
-    $pedido = Pedido::where('payment_id', $paymentId)->first();
+        if (!$paymentId) {
+            return response()->json(['error' => 'PaymentId não informado'], 400);
+        }
 
-    if ($pedido && $data['Payment']['Status'] == 2) {
-        $pedido->status = 'pago';
-        $pedido->payment_method='Pix';
-        $pedido->save();
+        $data = $this->consultarPix($paymentId);
+
+        $pedido = Pedido::where('payment_id', $paymentId)->first();
+
+        if ($pedido && $data['Payment']['Status'] == 2) {
+            $pedido->status = 'pago';
+            $pedido->payment_method = 'Pix';
+            $pedido->save();
+        }
+
+        return response()->json(['success' => true]);
     }
 
-    return response()->json(['success' => true]);
-}
+    public function simularPagamento($paymentId)
+    {
+        $payment = Payment::where('payment_id', $paymentId)->first();
 
-public function simularPagamento($paymentId)
-{
-    $payment = Payment::where('payment_id', $paymentId)->first();
+        if (!$payment) {
+            return "Pagamento não encontrado";
+        }
 
-    if (!$payment) {
-        return "Pagamento não encontrado";
+        // Simula como pago
+        $payment->update([
+            'status' => 'pago',
+
+        ]);
+
+        // Atualiza pedido também
+        $pedido = $payment->pedido;
+        $pedido->update([
+            'status_pagamento' => 'pago',
+            'payment_method' => 'Pix'
+        ]);
+
+        return "Pagamento simulado com sucesso!";
     }
 
-    // Simula como pago
-    $payment->update([
-        'status' => 'pago',
 
-    ]);
+    public function cieloCard(Request $request, $pedido_id)
+    {
+        $pedido = Pedido::findOrFail($pedido_id);
+        $cliente = Cliente::where('user_id', $pedido->user_id)->first();
 
-    // Atualiza pedido também
-    $pedido = $payment->pedido;
-    $pedido->update([
-        'status_pagamento' => 'pago',
-        'payment_method'=> 'Pix'
-    ]);
+        $apikeysandbox = "https://apisandbox.cieloecommerce.cielo.com.br/1/sales/";
+        $apikeyproducao = "https://api.cieloecommerce.cielo.com.br/1/sales/";
 
-    return "Pagamento simulado com sucesso!";
-}
+        $numero = str_replace(' ', '', $request->numero);
+        [$mes, $ano] = explode('/', $request->validade);
 
+        $amount = (int) round($pedido->total * 100);
 
-public function cieloCard(Request $request, $pedido_id)
-{
-    $pedido = Pedido::findOrFail($pedido_id);
-     $cliente = Cliente::where('user_id', $pedido->user_id)->first();
+        // 👉 cria registro ANTES de enviar
+        $payment = Payment::create([
+            'pedido_id' => $pedido->id,
+            'amount' => $amount,
+            'status' => 'pendente',
+            'type' => 'CreditCard'
+        ]);
 
-     $apikeysandbox="https://apisandbox.cieloecommerce.cielo.com.br/1/sales/";
-    $apikeyproducao="https://api.cieloecommerce.cielo.com.br/1/sales/";
+        $curl = curl_init();
 
-    $numero = str_replace(' ', '', $request->numero);
-    [$mes, $ano] = explode('/', $request->validade);
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $apikeysandbox,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => json_encode([
+                'Customer' => [
+                    'Name' => $cliente->nome,
+                    'Identity' => $cliente->cpf,
+                    'IdentityType' => 'CPF',
+                    'Email' => $cliente->email,
 
-    $amount = (int) round($pedido->total * 100);
+                ],
+                'Payment' => [
+                    'IsCryptocurrencyNegociation' => false,
+                    'CreditCard' => [
+                        'CardOnFile' => [
+                            'Reason' => 'Unscheduled',
+                            'Usage' => 'Used'
+                        ],
+                        'CardNumber' => $numero,
+                        'Holder' => $cliente->nome,
+                        'ExpirationDate' => $mes . "/20" . $ano,
+                        'SecurityCode' => $request->cvv,
+                        'Brand' => 'Master'
+                    ],
+                    'Type' => 'CreditCard',
+                    'Amount' => $amount,
+                    'Installments' => (int) $request->parcelas
+                ],
+                'MerchantOrderId' => '121'
+            ]),
+            CURLOPT_HTTPHEADER => [
+                "Content-Type: application/json",
+                "MerchantId: " . env('MERCHANT_ID'),
+                "MerchantKey: " . env('MERCHANT_KEY')
+            ],
+        ]);
 
-     // 👉 cria registro ANTES de enviar
-    $payment = Payment::create([
-        'pedido_id' => $pedido->id,
-        'amount' => $amount,
-        'status' => 'pendente',
-        'type' => 'CreditCard'
-    ]);
-
-    $curl = curl_init();
-
-    curl_setopt_array($curl, [
-        CURLOPT_URL => $apikeyproducao,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_CUSTOMREQUEST => "POST",
-        CURLOPT_POSTFIELDS => json_encode([
-            'Customer' => [
-            'Name' => $cliente->nome,
-        'Identity' => $cliente->cpf,
-
-    ],
-            "MerchantOrderId" => $pedido->id,
-            "Payment" => [
-                "Type" => "CreditCard",
-                "Amount" => $amount,
-                "Installments" => (int) $request->parcelas,
-                "SoftDescriptor" => "Lojas Imagem",
-                "CreditCard" => [
-                    "CardNumber" => $numero,
-                    "Holder" => $request->nome,
-                    "ExpirationDate" => $mes . "/20" . $ano,
-                    "SecurityCode" => $request->cvv,
-                    "Brand" => "Visa" // depois dá pra detectar automático
-                ]
-            ]
-        ]),
-        CURLOPT_HTTPHEADER => [
-            "Content-Type: application/json",
-            "MerchantId: " . env('MERCHANT_ID'),
-            "MerchantKey: " . env('MERCHANT_KEY')
-        ],
-    ]);
+       $response = curl_exec($curl);
 
 
 
-    $response = curl_exec($curl);
+        $err = curl_error($curl);
 
+        $data = json_decode($response, true);
 
+        if ($err) {
+            return back()->with('error', $err);
+        }
 
-    $err = curl_error($curl);
+        $data = json_decode($response, true);
 
-    $data = json_decode($response, true);
+        // 👉 salva retorno da Cielo
 
-if ($err) {
-        return back()->with('error', $err);
+        if (isset($data['Payment']['Status']) && $data['Payment']['Status'] == 2) {
+            $pedido->update(['status' => 'pago',  'payment_method' => 'Cartão de Crédito']);
+        }
+
+        return redirect()->route('pedidos-cliente')->with('success', 'Pagamento' . $pedido->id . 'processado!');
     }
-
-    $data = json_decode($response, true);
-
-    // 👉 salva retorno da Cielo
-
-    if(isset($data['Payment']['Status']) && $data['Payment']['Status'] == 2){
-        $pedido->update(['status' => 'pago',  'payment_method'=>'Cartão de Crédito']);
-
-    }
-
-    return redirect()->route('pedidos-cliente')->with('success', 'Pagamento'.$pedido->id. 'processado!');
-}
-
-
 }
