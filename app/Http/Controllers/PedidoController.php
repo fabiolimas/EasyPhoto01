@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use App\Models\Laboratorio;
+use App\Models\Payment;
 use App\Models\Pedido;
 use App\Models\PedidoItem;
 use App\Models\User;
@@ -39,6 +40,10 @@ class PedidoController extends Controller
         $totalImagens=0;
         $totalPedido=0;
 
+         $payment=Payment::where('pedido_id', $pedido->id)
+        ->where('payment_id','<>', null)
+        ->first();
+
         $user=User::find($pedido->user_id);
  $cliente=Cliente::where('user_id',$user->id)->first();
 
@@ -50,7 +55,7 @@ class PedidoController extends Controller
         $laboratorio=Laboratorio::find($pedido->laboratorio_id);
 
 
-        return view('painel.pedido.detalhes-pedido', compact('cliente','user','totalPedido','laboratorio','pedido','itensPedido','totalImagens'));
+        return view('painel.pedido.detalhes-pedido', compact('payment','cliente','user','totalPedido','laboratorio','pedido','itensPedido','totalImagens'));
     }
 
     public function buscaPedidos(Request $request){

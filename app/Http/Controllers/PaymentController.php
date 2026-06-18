@@ -140,24 +140,29 @@ class PaymentController extends Controller
 
 
 
-    public function consultarPix($paymentId)
+    public function consultarPix(Request $request, $paymentId)
     {
 
-    $payments= Payment::where('status','pendente')->get();
+    $payment = Payment::where('payment_id', $paymentId)->first();
+
 
 
         $curl = curl_init();
         $apikeysandbox = "https://apisandbox.cieloecommerce.cielo.com.br/1/sales/{$paymentId}";
-        $apikeyproducao = "https://api.cieloecommerce.cielo.com.br/1/sales/{$paymentId}";
+        $apikeyproducao = "https://apiquery.cieloecommerce.cielo.com.br/1/sales/{$paymentId}";
         curl_setopt_array($curl, [
             CURLOPT_URL => $apikeyproducao,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_HTTPHEADER => [
-                "Content-Type: application/json",
-                "MerchantId: env('MERCHANT_ID)",
-                "MerchantKey: env('MERCHANT_KEY)",
-            ],
+           CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "GET",
+           CURLOPT_HTTPHEADER => [
+    "Content-Type: application/json",
+    "MerchantId: " . env('MERCHANT_ID'),
+    "MerchantKey: " . env('MERCHANT_KEY'),
+],
         ]);
 
         $response = curl_exec($curl);
@@ -165,29 +170,23 @@ class PaymentController extends Controller
 
         $data = json_decode($response, true);
 
-        return $data;
-    }
+      $pedido = Pedido::where('id', $payment->pedido_id)->first();
 
-    public function webhook(Request $request)
-    {
-        $paymentId = $request->PaymentId;
-
-        if (!$paymentId) {
-            return response()->json(['error' => 'PaymentId não informado'], 400);
-        }
-
-        $data = $this->consultarPix($paymentId);
-
-        $pedido = Pedido::where('payment_id', $paymentId)->first();
-
-        if ($pedido && $data['Payment']['Status'] == 2) {
-            $pedido->status = 'pago';
-            $pedido->payment_method = 'Pix';
+        if ($pedido && $data['Payment']['Status'] == 2 || $data['Payment']['Status'] == 1) {
+            $pedido->status_pagamento = 'pago';
+            $pedido->payment_method = $payment->type;
             $pedido->save();
+
+            $payment->update([
+                'status' => 'pago',
+
+            ]);
         }
 
-        return response()->json(['success' => true]);
+        return redirect()->route('detalhe-pedido',$pedido->id)->with('success', 'Verificação de pagamento concluida');
     }
+
+
 
     public function simularPagamento($paymentId)
     {

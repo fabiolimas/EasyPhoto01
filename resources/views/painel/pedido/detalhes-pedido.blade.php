@@ -26,7 +26,7 @@
                     <td >Observação: <span class="text-danger"><b>{{ $pedido->observacao }}</b></span></td> <td class="">Status Pagamento: <span class="@if($pedido->status_pagamento =='pago') text-success @else text-danger @endif"><b>{{ $pedido->status_pagamento }}</b></td>
                 </tr>
                 <tr>
-                    <td class="">Status do pedido: <span class="@if($pedido->status =='Finalizado') text-success @else text-danger @endif"><b>{{ $pedido->status }}</b></td><td></td>
+                    <td class="">Status do pedido: <span class="@if($pedido->status =='Finalizado') text-success @else text-danger @endif"><b>{{ $pedido->status }}</b></td><td>ID Pagamento: @if($payment->payment_id != null){{$payment->payment_id}}@else @endif  <a href="{{route("consultar.pagamento", $payment->payment_id)}}" class="btn btn-success" title="Verificar Pagamento"><i class="fas fa-search"></i></a></td>
                 </tr>
 
             </table>
