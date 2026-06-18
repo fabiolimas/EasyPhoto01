@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Pedido;
 use App\Models\Cliente;
-use App\Models\PedidoItem;
 use App\Models\Laboratorio;
+use App\Models\Payment;
+use App\Models\Pedido;
+use App\Models\PedidoItem;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class SiteController extends Controller
@@ -49,6 +50,10 @@ class SiteController extends Controller
         $usuario=User::find($pedido->user_id);
         $cliente=Cliente::where('user_id',$usuario->id)->first();
 
+        $payment=Payment::where('pedido_id', $pedido->id)
+        ->where('payment_id','<>', null)
+        ->first();
+
         foreach($itensPedido as $item){
             $totalImagens+=$item->quantidade;
 
@@ -56,7 +61,7 @@ class SiteController extends Controller
         $laboratorio=Laboratorio::find($pedido->laboratorio_id);
 
 
-        return view('site.pedidos.detalhes-pedido', compact('cliente','totalPedido','laboratorio','pedido','itensPedido','totalImagens'));
+        return view('site.pedidos.detalhes-pedido', compact('payment','cliente','totalPedido','laboratorio','pedido','itensPedido','totalImagens'));
     }
 
     public function buscaPedidos(Request $request){

@@ -64,7 +64,7 @@
                     <td class="">Status do pedido: <span
                             class="@if ($pedido->status == 'Finalizado') text-success @else text-danger @endif"><b>{{ $pedido->status }}</b>
                     </td>
-                    <td></td>
+                    <td>ID Pagamento: @if($payment->payment_id != null){{$payment->payment_id}}@else @endif</td>
                 </tr>
 
             </table>
