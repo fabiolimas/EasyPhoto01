@@ -283,10 +283,23 @@ class PaymentController extends Controller
 
         $data = json_decode($response, true);
 
+          if (isset($data['Payment']['PaymentId'])) {
+            $payment->update([
+                'payment_id' => $data['Payment']['PaymentId'],
+                'payload' => json_encode($data)
+            ]);
+        }
+
+
         // 👉 salva retorno da Cielo
 
         if (isset($data['Payment']['Status']) && $data['Payment']['Status'] == 2) {
-            $pedido->update(['status' => 'pago',  'payment_method' => 'Cartão de Crédito']);
+
+        $payment->update([
+                'status' => 'pago',
+
+            ]);
+            $pedido->update(['status_pagamento' => 'pago',  'payment_method' => 'Cartão de Crédito']);
         }
 
         return redirect()->route('pedidos-cliente')->with('success', 'Pagamento' . $pedido->id . 'processado!');
