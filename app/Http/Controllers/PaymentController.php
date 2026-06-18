@@ -42,6 +42,11 @@ class PaymentController extends Controller
             return redirect()->route('pagamento.pix', $pedidoId);
         }
 
+        if($request->forma_pagamento == 'checkout'){
+
+        return redirect()->route('pagamento.checkout', $pedidoId);
+        }
+
         if ($request->forma_pagamento == 'retirada') {
 
             $pedido = Pedido::find($pedidoId);
@@ -303,5 +308,43 @@ class PaymentController extends Controller
         }
 
         return redirect()->route('pedidos-cliente')->with('success', 'Pagamento' . $pedido->id . 'processado!');
+    }
+
+    public function checkoutCielo(Request $request, $pedido_id){
+
+    $pedido = Pedido::findOrFail($pedido_id);
+        $cliente = Cliente::where('user_id', $pedido->user_id)->first();
+
+    $curl = curl_init();
+
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://cieloecommerce.cielo.com.br/api/public/v1/orders/",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_POSTFIELDS => json_encode([
+    'OrderNumber' => $pedido_id,
+    'SoftDescriptor' => 'Lojas Imagem'
+  ]),
+  CURLOPT_HTTPHEADER => [
+    "Content-type: application/json",
+    "MerchantId: 1212",
+    "accept: application/json"
+  ],
+]);
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}
     }
 }

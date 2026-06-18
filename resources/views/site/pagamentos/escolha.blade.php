@@ -38,6 +38,21 @@ if($cliente->pagamento_retirada == 1 ){
                         </label>
                     </div>
 
+                     {{-- CHECKOUT --}}
+                    <div class="{{$personal_col}}">
+                        <label class="w-100">
+                            <input type="radio" name="forma_pagamento" value="checkout" class="d-none input-pagamento">
+
+                            <div class="card card-pagamento p-4 text-center h-100">
+                                <h5>Checkout Cielo</h5>
+                                <p class="">Escolha como pagar</p>
+                                <i class="bi bi-bag-check-fill fs-1 text-success"></i>
+
+
+                            </div>
+                        </label>
+                    </div>
+
                     {{-- CARTÃO --}}
                     <div class="{{$personal_col}}">
                         <label class="w-100">

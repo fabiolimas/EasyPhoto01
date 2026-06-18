@@ -126,6 +126,7 @@ Route::post('/pagamento/processar/{pedido}', [PaymentController::class, 'process
     ->name('pagamento.processar');
 });
 Route::post('/webhook/cielo', [PaymentController::class, 'webhook']);
+Route::get('/pagamento/cielo/{pedido}', [PaymentController::class, 'checkoutCielo'])->name('pagamento.checkout');
 Route::get('/simular-pagamento/{paymentId}', [PaymentController::class, 'simularPagamento']);
 
 
