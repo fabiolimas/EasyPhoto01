@@ -153,14 +153,19 @@
   <script>
     $(function () {
       const modalEscolha = new bootstrap.Modal(document.getElementById('modalEscolha'));
-
+        let precodesc=0;
       const cropSizes = [
         @foreach ($tamanhos as $tamanho)
           {
             width: {{ $tamanho->largura }},
             height: {{ $tamanho->altura }},
             @if ($cliente->desconto > 1)
-              price: {{ $tamanho->preco * $desconto }}
+
+
+
+              price: {{$tamanho->preco * $desconto}}
+
+
             @else
               price: {{ $tamanho->preco }}
             @endif

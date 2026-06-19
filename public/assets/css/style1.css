@@ -89,6 +89,10 @@ div#modalLab {
     margin-left: 5px;
 }
 
+div#modalLab .modal-content {
+    background: #70050f !important;
+    color: #fff !important;
+}
 
 
 .enderecoLab {
