@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EasyPhoto — Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="assets/styles.css" rel="stylesheet">
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo"><i class="bi bi-camera-fill"></i></div>
+      <div>
+        <div class="brand-name">EasyPhoto</div>
+        <div class="brand-sub">Portal de vendas</div>
+      </div>
+    </div>
+
+    <div class="sidebar-search">
+      <i class="bi bi-search"></i>
+      <input type="text" placeholder="Buscar no painel...">
+      <kbd>⌘K</kbd>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-label">Principal</div>
+      <a href="index.html" class="nav-item active"><i class="bi bi-grid-1x2"></i><span>Dashboard</span></a>
+      <a href="pedidos.html" class="nav-item"><i class="bi bi-bag-check"></i><span>Pedidos</span><span class="badge-count">12</span></a>
+
+      <div class="nav-group-label">Módulos</div>
+      <a href="usuarios.html" class="nav-item"><i class="bi bi-person"></i><span>Usuários</span></a>
+      <a href="clientes.html" class="nav-item"><i class="bi bi-people"></i><span>Clientes</span></a>
+      <a href="laboratorios.html" class="nav-item"><i class="bi bi-building"></i><span>Laboratórios</span></a>
+      <a href="entregas.html" class="nav-item"><i class="bi bi-truck"></i><span>Formas de Entrega</span></a>
+
+      <div class="nav-group-label">Revelação</div>
+      <a href="#" class="nav-item"><i class="bi bi-images"></i><span>Revelar</span></a>
+      <a href="#" class="nav-item"><i class="bi bi-gear"></i><span>Configurações</span></a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="avatar">FL</div>
+        <div class="user-meta">
+          <div class="user-name">Fábio Lima</div>
+          <div class="user-role">Administrador</div>
+        </div>
+        <i class="bi bi-box-arrow-right"></i>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn d-lg-none" id="menuBtn"><i class="bi bi-list"></i></button>
+      <div class="crumbs">
+        <span class="text-muted">Painel</span>
+        <i class="bi bi-chevron-right small"></i>
+        <span>Dashboard</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn"><i class="bi bi-search"></i></button>
+        <button class="icon-btn"><i class="bi bi-bell"></i><span class="dot"></span></button>
+        <button class="icon-btn"><i class="bi bi-arrows-fullscreen"></i></button>
+        <div class="divider-v"></div>
+        <div class="user-chip">
+          <div class="avatar sm">FL</div>
+          <div class="d-none d-sm-block">
+            <div class="fw-semibold small">Fábio Lima</div>
+            <div class="text-muted xsmall">fabio@easyphoto</div>
+          </div>
+          <i class="bi bi-chevron-down small text-muted"></i>
+        </div>
+      </div>
+    </header>
+
+    <section class="content">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">Dashboard</h1>
+          <p class="page-sub">Visão geral dos pedidos e desempenho do portal</p>
+        </div>
+        <div class="page-actions">
+          <div class="btn-group">
+            <button class="btn btn-soft active">Hoje</button>
+            <button class="btn btn-soft">7 dias</button>
+            <button class="btn btn-soft">30 dias</button>
+          </div>
+          <button class="btn btn-primary"><i class="bi bi-download me-1"></i>Exportar</button>
+        </div>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="row g-3 mt-1">
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="kpi kpi-1">
+            <div class="kpi-head">
+              <span class="kpi-label">Total de Pedidos</span>
+              <span class="kpi-ico"><i class="bi bi-bag"></i></span>
+            </div>
+            <div class="kpi-value">1.284</div>
+            <div class="kpi-foot">
+              <span class="trend up"><i class="bi bi-arrow-up-right"></i> 12,4%</span>
+              <a href="pedidos.html">Ver detalhes <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="kpi kpi-2">
+            <div class="kpi-head">
+              <span class="kpi-label">Novos Pedidos</span>
+              <span class="kpi-ico"><i class="bi bi-lightning-charge"></i></span>
+            </div>
+            <div class="kpi-value">36</div>
+            <div class="kpi-foot">
+              <span class="trend up"><i class="bi bi-arrow-up-right"></i> 5,1%</span>
+              <a href="#">Ver detalhes <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="kpi kpi-3">
+            <div class="kpi-head">
+              <span class="kpi-label">Pedidos Finalizados</span>
+              <span class="kpi-ico"><i class="bi bi-check2-circle"></i></span>
+            </div>
+            <div class="kpi-value">1.192</div>
+            <div class="kpi-foot">
+              <span class="trend up"><i class="bi bi-arrow-up-right"></i> 8,7%</span>
+              <a href="#">Ver detalhes <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="kpi kpi-4">
+            <div class="kpi-head">
+              <span class="kpi-label">Receita do mês</span>
+              <span class="kpi-ico"><i class="bi bi-currency-dollar"></i></span>
+            </div>
+            <div class="kpi-value">R$ 48,2k</div>
+            <div class="kpi-foot">
+              <span class="trend down"><i class="bi bi-arrow-down-right"></i> 2,3%</span>
+              <a href="#">Ver detalhes <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart + Side panel -->
+      <div class="row g-3 mt-1">
+        <div class="col-12 col-xl-8">
+          <div class="card panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">Pedidos por usuário</h2>
+                <p class="panel-sub">Volume de pedidos processados nos últimos 12 meses</p>
+              </div>
+              <div class="d-flex gap-2">
+                <select class="form-select form-select-sm">
+                  <option>Últimos 12 meses</option>
+                  <option>Últimos 6 meses</option>
+                  <option>Este ano</option>
+                </select>
+                <button class="icon-btn"><i class="bi bi-three-dots"></i></button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <canvas id="ordersChart" height="110"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-xl-4">
+          <div class="card panel h-100">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">Status dos pedidos</h2>
+                <p class="panel-sub">Distribuição atual</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="donut-wrap">
+                <canvas id="statusChart"></canvas>
+                <div class="donut-center">
+                  <div class="donut-value">1.284</div>
+                  <div class="donut-label">Total</div>
+                </div>
+              </div>
+              <ul class="legend">
+                <li><span class="sw" style="background:#e20909"></span>Novos<b>36</b></li>
+                <li><span class="sw" style="background:#f59e0b"></span>Em produção<b>56</b></li>
+                <li><span class="sw" style="background:#22c55e"></span>Finalizados<b>1.192</b></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent orders + Top labs -->
+      <div class="row g-3 mt-1 mb-4">
+        <div class="col-12 col-xl-8">
+          <div class="card panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">Pedidos recentes</h2>
+                <p class="panel-sub">Últimas movimentações do portal</p>
+              </div>
+              <a href="pedidos.html" class="link-arrow">Ver todos <i class="bi bi-arrow-right"></i></a>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-modern align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Cliente</th>
+                    <th>Laboratório</th>
+                    <th>Itens</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="text-muted">#10245</td>
+                    <td><div class="cell-user"><div class="avatar xs">AC</div>Ana Costa</div></td>
+                    <td>Imagem Centro</td>
+                    <td>24</td>
+                    <td class="fw-semibold">R$ 189,00</td>
+                    <td><span class="chip chip-green">Finalizado</span></td>
+                    <td class="text-end"><button class="icon-btn sm"><i class="bi bi-three-dots"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">#10244</td>
+                    <td><div class="cell-user"><div class="avatar xs">RM</div>Rafael Mota</div></td>
+                    <td>Foto Sul</td>
+                    <td>12</td>
+                    <td class="fw-semibold">R$ 96,50</td>
+                    <td><span class="chip chip-amber">Em produção</span></td>
+                    <td class="text-end"><button class="icon-btn sm"><i class="bi bi-three-dots"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">#10243</td>
+                    <td><div class="cell-user"><div class="avatar xs">JS</div>Julia Silva</div></td>
+                    <td>Imagem Centro</td>
+                    <td>8</td>
+                    <td class="fw-semibold">R$ 64,00</td>
+                    <td><span class="chip chip-blue">Novo</span></td>
+                    <td class="text-end"><button class="icon-btn sm"><i class="bi bi-three-dots"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">#10242</td>
+                    <td><div class="cell-user"><div class="avatar xs">PL</div>Pedro Lopes</div></td>
+                    <td>Studio Norte</td>
+                    <td>42</td>
+                    <td class="fw-semibold">R$ 312,00</td>
+                    <td><span class="chip chip-green">Finalizado</span></td>
+                    <td class="text-end"><button class="icon-btn sm"><i class="bi bi-three-dots"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">#10241</td>
+                    <td><div class="cell-user"><div class="avatar xs">MB</div>Marina B.</div></td>
+                    <td>Foto Sul</td>
+                    <td>6</td>
+                    <td class="fw-semibold">R$ 48,00</td>
+                    <td><span class="chip chip-red">Cancelado</span></td>
+                    <td class="text-end"><button class="icon-btn sm"><i class="bi bi-three-dots"></i></button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-xl-4">
+          <div class="card panel h-100">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">Top laboratórios</h2>
+                <p class="panel-sub">Volume no mês</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <ul class="rank">
+                <li>
+                  <div class="rank-info"><div class="avatar sq">IC</div><div><div class="fw-semibold">Imagem Centro</div><div class="xsmall text-muted">São Paulo</div></div></div>
+                  <div class="rank-bar"><div class="bar" style="--w:92%"></div><span>92%</span></div>
+                </li>
+                <li>
+                  <div class="rank-info"><div class="avatar sq">FS</div><div><div class="fw-semibold">Foto Sul</div><div class="xsmall text-muted">Curitiba</div></div></div>
+                  <div class="rank-bar"><div class="bar" style="--w:74%"></div><span>74%</span></div>
+                </li>
+                <li>
+                  <div class="rank-info"><div class="avatar sq">SN</div><div><div class="fw-semibold">Studio Norte</div><div class="xsmall text-muted">Fortaleza</div></div></div>
+                  <div class="rank-bar"><div class="bar" style="--w:58%"></div><span>58%</span></div>
+                </li>
+                <li>
+                  <div class="rank-info"><div class="avatar sq">PX</div><div><div class="fw-semibold">Pixel Lab</div><div class="xsmall text-muted">Porto Alegre</div></div></div>
+                  <div class="rank-bar"><div class="bar" style="--w:41%"></div><span>41%</span></div>
+                </li>
+                <li>
+                  <div class="rank-info"><div class="avatar sq">RV</div><div><div class="fw-semibold">Revela+</div><div class="xsmall text-muted">Recife</div></div></div>
+                  <div class="rank-bar"><div class="bar" style="--w:27%"></div><span>27%</span></div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="{{asset('assets/js/app.js')}}"></script>
+</body>
+</html>

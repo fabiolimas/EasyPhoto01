@@ -53,7 +53,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/enviar/{id}',[ImageUploadController::class, 'showUploadForm'])->name('enviar-fotos');
     Route::post('/upload', [ImageUploadController::class, 'uploadImage'])->name('upload.image');
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/home/{dia?}', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
     //PedidosClientes

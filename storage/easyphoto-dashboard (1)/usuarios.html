@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EasyPhoto — Usuários</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="assets/styles.css" rel="stylesheet">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo"><i class="bi bi-camera-fill"></i></div>
+      <div>
+        <div class="brand-name">EasyPhoto</div>
+        <div class="brand-sub">Portal de vendas</div>
+      </div>
+    </div>
+    <div class="sidebar-search">
+      <i class="bi bi-search"></i>
+      <input type="text" placeholder="Buscar no painel...">
+      <kbd>⌘K</kbd>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-group-label">Principal</div>
+      <a href="index.html" class="nav-item"><i class="bi bi-grid-1x2"></i><span>Dashboard</span></a>
+      <a href="pedidos.html" class="nav-item"><i class="bi bi-bag-check"></i><span>Pedidos</span><span class="badge-count">12</span></a>
+      <div class="nav-group-label">Módulos</div>
+      <a href="usuarios.html" class="nav-item active"><i class="bi bi-person"></i><span>Usuários</span></a>
+      <a href="#" class="nav-item"><i class="bi bi-people"></i><span>Clientes</span></a>
+      <a href="#" class="nav-item"><i class="bi bi-building"></i><span>Laboratórios</span></a>
+      <a href="#" class="nav-item"><i class="bi bi-truck"></i><span>Formas de Entrega</span></a>
+      <div class="nav-group-label">Revelação</div>
+      <a href="#" class="nav-item"><i class="bi bi-images"></i><span>Revelar</span></a>
+      <a href="#" class="nav-item"><i class="bi bi-gear"></i><span>Configurações</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="avatar">FL</div>
+        <div class="user-meta">
+          <div class="user-name">Fábio Lima</div>
+          <div class="user-role">Administrador</div>
+        </div>
+        <i class="bi bi-box-arrow-right"></i>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn d-lg-none" id="menuBtn"><i class="bi bi-list"></i></button>
+      <div class="crumbs">
+        <span class="text-muted">Painel</span>
+        <i class="bi bi-chevron-right small"></i>
+        <span>Usuários</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn"><i class="bi bi-search"></i></button>
+        <button class="icon-btn"><i class="bi bi-bell"></i><span class="dot"></span></button>
+        <button class="icon-btn"><i class="bi bi-arrows-fullscreen"></i></button>
+        <div class="divider-v"></div>
+        <div class="user-chip">
+          <div class="avatar sm">FL</div>
+          <div class="d-none d-sm-block">
+            <div class="fw-semibold small">Fábio Lima</div>
+            <div class="text-muted xsmall">fabio@easyphoto</div>
+          </div>
+          <i class="bi bi-chevron-down small text-muted"></i>
+        </div>
+      </div>
+    </header>
+
+    <section class="content">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">Usuários</h1>
+          <p class="page-sub">Controle de acesso e permissões do sistema</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-soft"><i class="bi bi-upload me-1"></i>Importar</button>
+          <button class="btn btn-primary"><i class="bi bi-person-plus me-1"></i>Novo usuário</button>
+        </div>
+      </div>
+
+      <div class="row g-3 mt-1">
+        <div class="col-6 col-xl-3">
+          <div class="kpi kpi-1">
+            <div class="kpi-head"><span class="kpi-label">Total</span><span class="kpi-ico"><i class="bi bi-people"></i></span></div>
+            <div class="kpi-value">248</div>
+          </div>
+        </div>
+        <div class="col-6 col-xl-3">
+          <div class="kpi kpi-3">
+            <div class="kpi-head"><span class="kpi-label">Ativos</span><span class="kpi-ico"><i class="bi bi-check-circle"></i></span></div>
+            <div class="kpi-value">214</div>
+          </div>
+        </div>
+        <div class="col-6 col-xl-3">
+          <div class="kpi kpi-2">
+            <div class="kpi-head"><span class="kpi-label">Pendentes</span><span class="kpi-ico"><i class="bi bi-hourglass-split"></i></span></div>
+            <div class="kpi-value">18</div>
+          </div>
+        </div>
+        <div class="col-6 col-xl-3">
+          <div class="kpi kpi-4">
+            <div class="kpi-head"><span class="kpi-label">Administradores</span><span class="kpi-ico"><i class="bi bi-shield-lock"></i></span></div>
+            <div class="kpi-value">6</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card panel mt-3 mb-4">
+        <div class="panel-head flex-wrap gap-2">
+          <div class="filter-tabs">
+            <button class="ftab active">Todos <span>248</span></button>
+            <button class="ftab">Administradores <span>6</span></button>
+            <button class="ftab">Operadores <span>32</span></button>
+            <button class="ftab">Clientes <span>210</span></button>
+          </div>
+          <div class="d-flex gap-2">
+            <div class="input-icon">
+              <i class="bi bi-search"></i>
+              <input type="text" class="form-control form-control-sm" placeholder="Buscar usuário...">
+            </div>
+            <button class="icon-btn"><i class="bi bi-funnel"></i></button>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-modern align-middle mb-0">
+            <thead>
+              <tr>
+                <th style="width:32px"><input type="checkbox" class="form-check-input"></th>
+                <th>Usuário</th>
+                <th>Cargo</th>
+                <th>Laboratório</th>
+                <th>Último acesso</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="usersTbody"></tbody>
+          </table>
+        </div>
+        <div class="panel-foot">
+          <div class="text-muted small">Mostrando <b>1–8</b> de <b>248</b> usuários</div>
+          <nav>
+            <ul class="pagination pagination-sm mb-0">
+              <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-chevron-left"></i></a></li>
+              <li class="page-item active"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#"><i class="bi bi-chevron-right"></i></a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  const users = [
+    ['Fábio Lima','FL','fabio@easyphoto.com.br','Administrador','purple','Matriz','hoje, 13:42','green','Ativo'],
+    ['Ana Costa','AC','ana.costa@easyphoto.com.br','Operador','blue','Imagem Centro','hoje, 11:20','green','Ativo'],
+    ['Rafael Mota','RM','rafael.mota@fotosul.com','Operador','blue','Foto Sul','ontem, 18:04','green','Ativo'],
+    ['Julia Silva','JS','julia@studionorte.com','Cliente','gray','Studio Norte','hoje, 09:15','green','Ativo'],
+    ['Pedro Lopes','PL','pedro.lopes@pixellab.com','Cliente','gray','Pixel Lab','há 3 dias','amber','Pendente'],
+    ['Marina Barbosa','MB','marina@revelamais.com','Operador','blue','Revela+','há 1 semana','green','Ativo'],
+    ['Carlos Dias','CD','carlos.dias@easyphoto.com.br','Administrador','purple','Matriz','há 2h','green','Ativo'],
+    ['Beatriz Souza','BS','beatriz@imagemcentro.com','Cliente','gray','Imagem Centro','há 1 mês','red','Inativo'],
+  ];
+  document.getElementById('usersTbody').innerHTML = users.map(u => `
+    <tr>
+      <td><input type="checkbox" class="form-check-input"></td>
+      <td>
+        <div class="cell-user">
+          <div class="avatar sm">${u[1]}</div>
+          <div>
+            <div class="fw-semibold">${u[0]}</div>
+            <div class="xsmall text-muted">${u[2]}</div>
+          </div>
+        </div>
+      </td>
+      <td><span class="tag tag-${u[4]}">${u[3]}</span></td>
+      <td>${u[5]}</td>
+      <td class="text-muted">${u[6]}</td>
+      <td><span class="chip chip-${u[7]}">${u[8]}</span></td>
+      <td class="text-end">
+        <button class="icon-btn sm" title="Editar"><i class="bi bi-pencil"></i></button>
+        <button class="icon-btn sm" title="Mais"><i class="bi bi-three-dots"></i></button>
+      </td>
+    </tr>
+  `).join('');
+</script>
+</body>
+</html>
