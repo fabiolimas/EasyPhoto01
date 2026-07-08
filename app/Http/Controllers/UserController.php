@@ -2,15 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Cliente;
+use App\Models\Pedido;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function usuarios(){
+    public function usuarios(Request $request){
         $usuarios= User::all();
-        return view('painel.usuario.usuarios', compact('usuarios'));
+        $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')
+              ->where('created_at','>', Carbon::now()->subDays($request->dia))
+                //->whereYear('created_at', Carbon::now()->year)
+                ->where('laboratorio_id', auth()->user()->laboratorio_id)
+                ->count();
+        return view('painel.usuario.usuarios', compact('pedidosPendentes','usuarios'));
     }
 
     public function usuario(){

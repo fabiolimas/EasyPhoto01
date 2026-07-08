@@ -17,7 +17,7 @@
       <div class="brand-logo"><i class="bi bi-camera-fill"></i></div>
       <div>
         <div class="brand-name">EasyPhoto</div>
-        <div class="brand-sub">Portal de vendas</div>
+        <div class="brand-sub">Dashboard</div>
       </div>
     </div>
 @php

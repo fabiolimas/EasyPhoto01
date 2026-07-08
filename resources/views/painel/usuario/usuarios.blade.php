@@ -1,39 +1,88 @@
-@extends('adminlte::page')
+@extends('layouts.painel')
 
-@section('title', 'Dashboard')
 
-@section('content_header')
-    <h1>Usuários</h1>
-@stop
 
 @section('content')
-<a href="{{route('usuario')}}" class="btn btn-success">Adicionar</a>
-<hr>
-<input type="text" name="busca" id="busca" class="form-control" placeholder="Buscar...">
-<div class="row table-responsive">
-<table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Nome</th>
-        <th scope="col">Email</th>
-        <th scope="col">Permissão</th>
-        <th scope="col">Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-        @foreach($usuarios as $usuario)
-      <tr>
-        <th scope="row">{{$usuario->id}}</th>
-        <td>{{$usuario->name}}</td>
-        <td>{{$usuario->email}}</td>
-        <td>{{$usuario->nivel}}</td>
-        <td><a href="{{route('edit-user', $usuario->id)}}"title="Editar" class="btn btn-success"><i class="fas fa-edit"></i></a> | <a href="{{route("destroy-user", $usuario->id)}}"title="Excluir" class="btn btn-danger"><i class="fas fa-trash"></i></a></td>
-      </tr>
-      @endforeach
-    </tbody>
-  </table>
-</div>
+    <section class="content">
+        <div class="page-head">
+            <div>
+                <h1 class="page-title">Usuários</h1>
+                <p class="page-sub">Controle de acesso e permissões do sistema</p>
+            </div>
+            <div class="page-actions">
+
+                <a href="{{ route('usuario') }}" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i>Novo usuário</a>
+            </div>
+        </div>
+
+        {{-- <div class="row g-3 mt-1">
+            <div class="col-6 col-xl-4">
+                <div class="kpi kpi-1">
+                    <div class="kpi-head"><span class="kpi-label">Total</span><span class="kpi-ico"><i
+                                class="bi bi-people"></i></span></div>
+                    <div class="kpi-value">248</div>
+                </div>
+            </div>
+            <div class="col-6 col-xl-4">
+                <div class="kpi kpi-3">
+                    <div class="kpi-head"><span class="kpi-label">Ativos</span><span class="kpi-ico"><i
+                                class="bi bi-check-circle"></i></span></div>
+                    <div class="kpi-value">214</div>
+                </div>
+            </div>
+
+            <div class="col-6 col-xl-4">
+                <div class="kpi kpi-4">
+                    <div class="kpi-head"><span class="kpi-label">Administradores</span><span class="kpi-ico"><i
+                                class="bi bi-shield-lock"></i></span></div>
+                    <div class="kpi-value">6</div>
+                </div>
+            </div>
+        </div> --}}
+        <div class="card panel mt-3 mb-4">
+            <div class="panel-head flex-wrap gap-2">
+
+                <div class="d-flex gap-2">
+                    <div class="input-icon">
+                        <i class="bi bi-search"></i>
+                        <input type="text" id="busca" name="busca" class="form-control form-control-sm"
+                            placeholder="Buscar usuário...">
+                    </div>
+                    <button class="icon-btn"><i class="bi bi-funnel"></i></button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-modern align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Permissão</th>
+                            <th scope="col">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($usuarios as $usuario)
+                            <tr>
+                                <th scope="row">{{ $usuario->id }}</th>
+                                <td>{{ $usuario->name }}</td>
+                                <td>{{ $usuario->email }}</td>
+                                <td><span
+                                        class="tag @if ($usuario->nivel == 'administrador') tag-purple @elseif($usuario->nivel == 'laboratorio') tag-blue @else tag-gray @endif">{{ $usuario->nivel }}</span>
+                                </td>
+                                <td><a href="{{ route('edit-user', $usuario->id) }}"title="Editar"
+                                        class="btn btn-success"><i class="bi bi-pencil"></i></a> | <a
+                                        href="{{ route('destroy-user', $usuario->id) }}"title="Excluir"
+                                        class="btn btn-danger"><i class="bi bi-trash"></i></a></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+
+    </section>
 
 @stop
 
@@ -43,5 +92,7 @@
 @stop
 
 @section('js')
-    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+    <script>
+        console.log("Hi, I'm using the Laravel-AdminLTE package!");
+    </script>
 @stop
