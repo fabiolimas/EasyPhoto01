@@ -99,11 +99,16 @@ class UserController extends Controller
 
     }
 
-    public function clientes(){
+    public function clientes(Request $request){
 
     $clientes=Cliente::paginate(30);
+    $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')
+            ->where('created_at', '>', Carbon::now()->subDays($request->dia))
+            //->whereYear('created_at', Carbon::now()->year)
+            ->where('laboratorio_id', auth()->user()->laboratorio_id)
+            ->count();
 
-    return view('painel.clientes.index', compact('clientes'));
+    return view('painel.clientes.index', compact('pedidosPendentes','clientes'));
     }
 
     public function editCliente(Request $request){

@@ -18,32 +18,32 @@ class PedidoController extends Controller
     /**
      * Display a listing of the resource.
      */
-   public function index()
-{
-    $laboratorios = Laboratorio::all();
-      $hoje = Carbon::now();
+    public function index()
+    {
+        $laboratorios = Laboratorio::all();
+        $hoje = Carbon::now();
         $totalPedidos = 0;
 
         $meses = $hoje->copy()->subMonths(6);
 
-    // $query = Pedido::query();
+        // $query = Pedido::query();
 
-    // if (auth()->user()->nivel != 'administrador') {
-    //     $query->where('laboratorio_id', auth()->user()->laboratorio_id);
-    // }
+        // if (auth()->user()->nivel != 'administrador') {
+        //     $query->where('laboratorio_id', auth()->user()->laboratorio_id);
+        // }
 
-    // $pedidos = $query->orderBy('created_at', 'DESC')->paginate(20);
+        // $pedidos = $query->orderBy('created_at', 'DESC')->paginate(20);
 
 
-    // return view('painel.pedido.pedidos', compact('pedidos', 'laboratorios'));
-    if (auth()->user()->nivel == 'laboratorio') {
+        // return view('painel.pedido.pedidos', compact('pedidos', 'laboratorios'));
+        if (auth()->user()->nivel == 'laboratorio') {
 
 
             $totalCancelados = 0;
             $pedidos = Pedido::where('laboratorio_id', auth()->user()->laboratorio_id)
                 // ->whereMonth('created_at', Carbon::now()->month)
                 //->whereYear('created_at', Carbon::now()->year)
-                 ->orderBY('id', 'Desc')
+                ->orderBY('id', 'Desc')
                 ->paginate(25);
             foreach ($pedidos as $ped) {
                 $totalPedidos += $ped->total;
@@ -88,7 +88,7 @@ class PedidoController extends Controller
                 ->orderBy('users.name', 'asc')
                 ->groupBy('pedidos.user_id', 'users.name')
                 ->get();
-            return view('painel.pedido.pedidos', compact('laboratorios','totalPedidos', 'pedidos_recentes', 'pedidosCancelados', 'pedidos', 'pedidosPendentes', 'pedidosConcluidos', 'clientes'));
+            return view('painel.pedido.pedidos', compact('laboratorios', 'totalPedidos', 'pedidos_recentes', 'pedidosCancelados', 'pedidos', 'pedidosPendentes', 'pedidosConcluidos', 'clientes'));
         } else {
 
             $clientes = User::join('pedidos', 'pedidos.user_id', '=', 'users.id')
@@ -107,9 +107,8 @@ class PedidoController extends Controller
 
 
 
-            $pedidos = Pedido::
-                orderBY('id', 'Desc')
-             ->paginate(25);
+            $pedidos = Pedido::orderBY('id', 'Desc')
+                ->paginate(25);
 
             foreach ($pedidos as $pda) {
                 $totalPedidos += $pda->total;
@@ -126,110 +125,105 @@ class PedidoController extends Controller
 
                 ->count();
 
-            return view('painel.pedido.pedidos', compact('laboratorios','totalPedidos', 'pedidosCancelados',  'pedidos', 'pedidosPendentes', 'pedidosConcluidos', 'clientes'));
+            return view('painel.pedido.pedidos', compact('laboratorios', 'totalPedidos', 'pedidosCancelados',  'pedidos', 'pedidosPendentes', 'pedidosConcluidos', 'clientes'));
         }
-}
+    }
 
 
 
 
     public function detalhePedido(Request $request)
     {
-        $pedido=Pedido::find($request->id);
-        $itensPedido=PedidoItem::where('pedido_id', $pedido->id)->get();
-        $totalImagens=0;
-        $totalPedido=0;
+        $pedido = Pedido::find($request->id);
+        $itensPedido = PedidoItem::where('pedido_id', $pedido->id)->get();
+        $totalImagens = 0;
+        $totalPedido = 0;
 
-         $payment=Payment::where('pedido_id', $pedido->id)
-        ->where('payment_id','<>', null)
-        ->first();
+        $payment = Payment::where('pedido_id', $pedido->id)
+            ->where('payment_id', '<>', null)
+            ->first();
 
-        $user=User::find($pedido->user_id);
- $cliente=Cliente::where('user_id',$user->id)->first();
+        $user = User::find($pedido->user_id);
+        $cliente = Cliente::where('user_id', $user->id)->first();
 
-$pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')
-              ->where('created_at','>', Carbon::now()->subDays($request->dia))
-                //->whereYear('created_at', Carbon::now()->year)
-                ->where('laboratorio_id', auth()->user()->laboratorio_id)
-                ->count();
+        $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')
+            ->where('created_at', '>', Carbon::now()->subDays($request->dia))
+            //->whereYear('created_at', Carbon::now()->year)
+            ->where('laboratorio_id', auth()->user()->laboratorio_id)
+            ->count();
 
-        foreach($itensPedido as $item){
-            $totalImagens+=$item->quantidade;
-
+        foreach ($itensPedido as $item) {
+            $totalImagens += $item->quantidade;
         }
-        $laboratorio=Laboratorio::find($pedido->laboratorio_id);
+        $laboratorio = Laboratorio::find($pedido->laboratorio_id);
 
 
-        return view('painel.pedido.detalhes-pedido', compact('pedidosPendentes','payment','cliente','user','totalPedido','laboratorio','pedido','itensPedido','totalImagens'));
+        return view('painel.pedido.detalhes-pedido', compact('pedidosPendentes', 'payment', 'cliente', 'user', 'totalPedido', 'laboratorio', 'pedido', 'itensPedido', 'totalImagens'));
     }
 
-    public function buscaPedidos(Request $request){
+    public function buscaPedidos(Request $request)
+    {
 
-        $busca=$request->busca;
-        $loja=$request->loja;
-        $status=$request->status;
+        $busca = $request->busca;
+        $loja = $request->loja;
+        $status = $request->status;
 
-        if(auth()->user()->nivel=='Adminstrador'){
-            if($busca == ''){
-                $pedidos=Pedido::paginate(30);
-            }else{
+        if (auth()->user()->nivel == 'Adminstrador') {
+            if ($busca == '') {
+                $pedidos = Pedido::paginate(30);
+            } else {
 
-                $pedidos=Pedido::where('cliente', 'like','%'.$busca.'%')
-                ->orWhere('id', 'like', '%'.$busca.'%')
-                ->orWhere('status','like','%'.$status.'%')
+                $pedidos = Pedido::where('cliente', 'like', '%' . $busca . '%')
+                    ->orWhere('id', 'like', '%' . $busca . '%')
+                    ->orWhere('status', 'like', '%' . $status . '%')
 
-                ->paginate(30);
+                    ->paginate(30);
             }
+        } else {
 
-        }else{
+            if ($busca == '') {
+                $pedidos = Pedido::where('laboratorio_id', auth()->user()->laboratorio_id)->paginate(30);
+            } else {
 
-            if($busca == ''){
-                $pedidos=Pedido::where('laboratorio_id', auth()->user()->laboratorio_id)->paginate(30);
-            }else{
-
-                $pedidos=Pedido::where('cliente', 'like','%'.$busca.'%')
-                ->orWhere('id', 'like', '%'.$busca.'%')
-                ->orWhere('status','like','%'.$status.'%')
-                ->where('laboratorio_id', auth()->user()->laboratorio_id)
-                ->paginate(30);
+                $pedidos = Pedido::where('cliente', 'like', '%' . $busca . '%')
+                    ->orWhere('id', 'like', '%' . $busca . '%')
+                    ->orWhere('status', 'like', '%' . $status . '%')
+                    ->where('laboratorio_id', auth()->user()->laboratorio_id)
+                    ->paginate(30);
             }
-
         }
 
 
 
 
 
-        if($pedidos->count()>=1){
+        if ($pedidos->count() >= 1) {
             return view('painel.buscas.busca_pedidos', compact('pedidos'));
-
-        }else{
-            return response()->json(['result'=>'Nenhum pedido encontrado!']);
+        } else {
+            return response()->json(['result' => 'Nenhum pedido encontrado!']);
         }
-
     }
 
-    public function buscaPedidosLab(Request $request){
+    public function buscaPedidosLab(Request $request)
+    {
 
 
-        $loja=$request->loja;
+        $loja = $request->loja;
 
-        if($loja == ''){
-            $pedidos=Pedido::paginate(30);
-        }else{
+        if ($loja == '') {
+            $pedidos = Pedido::paginate(30);
+        } else {
 
-            $pedidos=Pedido::where('laboratorio_id', $loja)->paginate(30);
+            $pedidos = Pedido::where('laboratorio_id', $loja)->paginate(30);
         }
 
 
 
-        if($pedidos->count()>=1){
+        if ($pedidos->count() >= 1) {
             return view('painel.buscas.busca_pedidos', compact('pedidos'));
-
-        }else{
-            return response()->json(['result'=>'Nenhum pedido encontrado!']);
+        } else {
+            return response()->json(['result' => 'Nenhum pedido encontrado!']);
         }
-
     }
 
     /**
@@ -237,9 +231,9 @@ $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')
      */
     public function alteraStatus(Request $request)
     {
-        $pedido=Pedido::find($request->id);
-        $pedido->update(['status'=>'Finalizado']);
-        return redirect()->back()->with('success','Status do pedido atualizado com sucesso!');
+        $pedido = Pedido::find($request->id);
+        $pedido->update(['status' => 'Finalizado']);
+        return redirect()->back()->with('success', 'Status do pedido atualizado com sucesso!');
     }
 
 

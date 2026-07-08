@@ -1,18 +1,35 @@
-@extends('adminlte::page')
+@extends('layouts.painel')
 
-@section('title', 'Clientes')
 
-@section('content_header')
-    <h1>Clientes</h1>
-@stop
 
 @section('content')
+<section class="content">
+        <div class="page-head">
+            <div>
+                <h1 class="page-title">Clientes</h1>
+                <p class="page-sub">Gerencie e acompanhe clientes do portal</p>
+            </div>
+            <div class="page-actions">
 
-<hr>
-<input type="text" name="busca" id="busca" class="form-control" placeholder="Buscar...">
-<div class="row table-responsive">
-<table class="table">
-    <thead>
+                {{-- <a href="{{route('')}}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Novo cliente</a> --}}
+            </div>
+        </div>
+
+<div class="card panel mt-3 mb-4">
+            <div class="panel-head flex-wrap gap-2">
+
+                <div class="d-flex gap-2">
+                    <div class="input-icon">
+                        <i class="bi bi-search"></i>
+                        <input type="text" id="busca" name="busca" class="form-control form-control-sm"
+                            placeholder="Buscar usuário...">
+                    </div>
+                    <button class="icon-btn"><i class="bi bi-funnel"></i></button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-modern align-middle mb-0">
+<thead>
       <tr>
         <th scope="col">#</th>
         <th scope="col">Nome</th>
@@ -31,10 +48,11 @@
         <td>{{$cliente->email}}</td>
         <td>{{$cliente->telefone}}</td>
         <td>{{$cliente->cidade}}</td>
-        <td><a href="{{route('edit-cliente', $cliente->id)}}"title="Editar" class="btn btn-success"><i class="fas fa-edit"></i></a> </td>
+        <td><a href="{{route('edit-cliente', $cliente->id)}}"title="Editar" class="btn btn-success"><i class="bi bi-pencil-square"></i></a> </td>
       </tr>
       @endforeach
     </tbody>
+
   </table>
 </div>
 
