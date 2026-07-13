@@ -88,14 +88,14 @@
           @if ($pedido->status_pagamento === 'pendente' && !empty($cliente?->cpf))
                     <div class="col-md-3  offset-md-3 d-flex mt-2">
                         <a href="{{ route('pagamento.escolha', $pedido->id) }}" class="btn btn-success">
-                            <i class="bi bi-bag"></i> Finalizar Compra
+                            <i class="bi bi-bag"></i> Fazer Pagamento
                         </a>
                     </div>
                 @elseif(empty($cliente?->cpf))
                     <div class="col-md-3  offset-md-3 d-flex mt-2">
 
                         <a href="{{ route('meus-dados', ['id' => Auth::user()->id]) }}" class="btn btn-warning">
-                            <i class="bi bi-floppy"></i> Finalizar Cadastro
+                            <i class="bi bi-floppy"></i> Fazer Pagamento
                         </a>
                     </div>
                 @endif
