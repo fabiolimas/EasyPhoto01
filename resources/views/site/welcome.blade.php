@@ -357,7 +357,7 @@
           success: function (data) {
             if (data.images) {
               alert('Imagens enviadas com sucesso');
-              window.location.href = '/detalhe-pedido/' + data.pedido;
+              window.location.href = '/pagamento/escolha/' + data.pedido;
             }
           },
           error: function (error) {
