@@ -56,10 +56,18 @@
                         <td class="">Status do pedido: <span
                                 class="@if ($pedido->status == 'Finalizado') text-success @else text-danger @endif"><b>{{ $pedido->status }}</b>
                         </td>
-                        <td>ID Pagamento: @if ($payment->payment_id != null)
-                                {{ $payment->payment_id }}
+
+
+                        <td>ID Pagamento: @if ($payment != null)
+
+                            {{$paymentId = $payment->payment_id}}
+                                {{-- {{ $payment->payment_id }} --}}
                             @else
-                            @endif <a href="{{ route('consultar.pagamento', $payment->payment_id) }}"
+
+
+                            {{$paymentId=''}}
+
+                            @endif <a href="{{ route('consultar.pagamento', $paymentId) }}"
                                 class="btn btn-success" title="Verificar Pagamento"><i class="bi bi-search"></i></a></td>
                     </tr>
 
