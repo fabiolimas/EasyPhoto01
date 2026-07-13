@@ -62,6 +62,7 @@ Route::get('/meus-dados/{id}', [SiteController::class, 'meusDados'])->name('meus
 Route::put('/editar-cliente/{id}',[UserController::class, 'editarCliente'])->name('editar-cliente');
 Route::get('/detalhe-pedido/{id}', [SiteController::class, 'detalhePedido'])->name('detalhe-pedido');
 Route::get('/busca-pedido', [SiteController::class, 'buscaPedidos'])->name('busca-pedidos');
+Route::get('/cancelar-pedido/{id}', [SiteController::class, 'cancelarPedido'])->name('cancelar-pedido');
 
 //Usuarios
 Route::get('/usuarios', [App\Http\Controllers\UserController::class, 'usuarios'])->name('usuarios');

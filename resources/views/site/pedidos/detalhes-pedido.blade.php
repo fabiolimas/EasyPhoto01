@@ -77,15 +77,22 @@
 
 
         </div>
+         <div class="col-md-3  offset-sd-2">
+            <a href="{{ route('cancelar-pedido', $pedido->id) }}" class="btn btn-warning">
+                            <i class="bi bi-x-circle"></i> Cancelar Pedido
+                        </a>
+
+
+        </div>
 
           @if ($pedido->status_pagamento === 'pendente' && !empty($cliente?->cpf))
-                    <div class="col-md-3  offset-md-4 d-flex mt-2">
+                    <div class="col-md-3  offset-md-3 d-flex mt-2">
                         <a href="{{ route('pagamento.escolha', $pedido->id) }}" class="btn btn-success">
                             <i class="bi bi-bag"></i> Finalizar Compra
                         </a>
                     </div>
                 @elseif(empty($cliente?->cpf))
-                    <div class="col-md-3  offset-md-4 d-flex mt-2">
+                    <div class="col-md-3  offset-md-3 d-flex mt-2">
 
                         <a href="{{ route('meus-dados', ['id' => Auth::user()->id]) }}" class="btn btn-warning">
                             <i class="bi bi-floppy"></i> Finalizar Cadastro

@@ -86,6 +86,14 @@ class SiteController extends Controller
 
     }
 
+    public function cancelarPedido(Request $request, $id){
+
+    $pedido=Pedido::find($id);
+
+    $pedido->update(['status'=>'Cancelado']);
+    return redirect()->back()->with('success','Pedido Cancelado com sucesso!');
+    }
+
     /**
      * Store a newly created resource in storage.
      */
