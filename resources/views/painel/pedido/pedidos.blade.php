@@ -126,6 +126,9 @@
                                         <button type="button" class="icon-btn sm " data-bs-toggle="dropdown">
                                             <i class="bi bi-three-dots"></i>
                                         </button>
+                                        @if($pedido->status == 'Cancelado')
+
+                                        @else
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item"
                                                     href="{{ route('download-files', $pedido->id) }}">Baixar</a></li>
@@ -133,6 +136,7 @@
                                                     href="{{ route('altera-status', $pedido->id) }}">Finalizar</a></li>
 
                                         </ul>
+                                        @endif
                                     </div>
                                 </td>
 

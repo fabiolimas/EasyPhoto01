@@ -78,6 +78,9 @@
         </div>
 
         <div class="row btnAcoes mb-3 mt-3">
+            @if($pedido->status == 'Cancelado')
+
+            @else
             @if ($pedido->status == 'Finalizado')
                 <div class="col-md-2 col-sd-6 d-flex justify-content-start">
                     <a href="{{ route('altera-status', $pedido->id) }}" class="btn btn-dark disabled w-100 mt-2"> <i class="bi bi-check-circle"></i> Finalizar</a>
@@ -91,6 +94,7 @@
                 <a href="{{ route('download-files', $pedido->id) }}" class="btn btn-success w-100 mt-2">
                     <i class="bi bi-download"></i> Baixar</a>
             </div>
+            @endif
             <div class="col-md-8 d-flex justify-content-end">
                 <button class="btn btn-danger w-100 mt-2" data-bs-toggle="modal" data-bs-target="#modalPedido"><i class="bi bi-images"></i> Visualizar Fotos</a>
             </div>
