@@ -61,14 +61,16 @@
                         <td>ID Pagamento: @if ($payment != null)
 
                             {{$paymentId = $payment->payment_id}}
+                            <a href="{{ route('consultar.pagamento', $paymentId) }}"
+                                class="btn btn-success" title="Verificar Pagamento"><i class="bi bi-search"></i></a></td>
                                 {{-- {{ $payment->payment_id }} --}}
                             @else
 
 
                             {{$paymentId=''}}
 
-                            @endif <a href="{{ route('consultar.pagamento', $paymentId) }}"
-                                class="btn btn-success" title="Verificar Pagamento"><i class="bi bi-search"></i></a></td>
+                            @endif
+
                     </tr>
 
                 </table>
