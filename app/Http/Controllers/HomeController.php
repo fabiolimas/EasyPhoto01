@@ -98,6 +98,7 @@ class HomeController extends Controller
                 ->whereMonth('created_at', Carbon::now()->month)
                 //->whereYear('created_at', Carbon::now()->year)
                 ->get();
+
             foreach ($pedidos as $ped) {
                 $totalPedidos += $ped->total;
             }

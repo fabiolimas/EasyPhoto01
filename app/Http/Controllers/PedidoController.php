@@ -176,6 +176,7 @@ class PedidoController extends Controller
                 $pedidos = Pedido::where('cliente', 'like', '%' . $busca . '%')
                     ->orWhere('id', 'like', '%' . $busca . '%')
                     ->orWhere('status', 'like', '%' . $status . '%')
+                    ->orderBy('id','desc')
 
                     ->paginate(30);
             }
@@ -189,6 +190,7 @@ class PedidoController extends Controller
                     ->orWhere('id', 'like', '%' . $busca . '%')
                     ->orWhere('status', 'like', '%' . $status . '%')
                     ->where('laboratorio_id', auth()->user()->laboratorio_id)
+                     ->orderBy('id','desc')
                     ->paginate(30);
             }
         }
@@ -211,10 +213,14 @@ class PedidoController extends Controller
         $loja = $request->loja;
 
         if ($loja == '') {
-            $pedidos = Pedido::paginate(30);
+            $pedidos = Pedido::orderBy('id','desc')
+
+            ->paginate(30);
         } else {
 
-            $pedidos = Pedido::where('laboratorio_id', $loja)->paginate(30);
+            $pedidos = Pedido::where('laboratorio_id', $loja)
+             ->orderBy('id','desc')
+            ->paginate(30);
         }
 
 
