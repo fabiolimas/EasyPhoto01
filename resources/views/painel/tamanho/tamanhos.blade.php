@@ -14,7 +14,7 @@
             </div>
             <div class="page-actions">
 
-                <a href="{{ route('tamanho') }}" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i>Novo tamanho</a>
+                <a href="{{ route('tamanho') }}" class="btn btn-primary"><i class="bi bi-plus-square"></i> Novo tamanho</a>
             </div>
         </div>
 

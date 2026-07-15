@@ -13,7 +13,7 @@
             </div>
             <div class="page-actions">
 
-                <a href="{{ route('laboratorio') }}" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i>Novo
+                <a href="{{ route('laboratorio') }}" class="btn btn-primary"><i class="bi bi-plus-square"></i> Novo
                     laboratório</a>
             </div>
         </div>
