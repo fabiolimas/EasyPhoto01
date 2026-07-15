@@ -48,7 +48,7 @@
         <td>{{$cliente->email}}</td>
         <td>{{$cliente->telefone}}</td>
         <td>{{$cliente->cidade}}</td>
-        <td><a href="{{route('edit-cliente', $cliente->id)}}"title="Editar" class="btn btn-success"><i class="bi bi-pencil-square"></i></a> </td>
+        <td><a href="{{route('edit-cliente', $cliente->id)}}"title="Editar" class="btn btn-success"><i class="bi bi-pencil"></i></a> </td>
       </tr>
       @endforeach
     </tbody>

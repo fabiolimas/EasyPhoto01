@@ -1,49 +1,64 @@
-@extends('adminlte::page')
+@extends('layouts.painel')
 
 @section('title', 'Dashboard')
 
-@section('content_header')
-    <h1>Laboratórios</h1>
-@stop
 
 @section('content')
-<a href="{{route('laboratorio')}}" class="btn btn-success">Adicionar</a>
-<hr>
-<div class="row">
 
-<input type="text" name="busca" id="busca" class="form-control" placeholder="Buscar...">
-</div>
-<div class="row table-responsive mt-2">
-<table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Nome</th>
-        <th scope="col">Endereço</th>
-         <th scope="col">Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-        @foreach($laboratorios as $laboratorio)
-      <tr>
-        <th scope="row">{{$laboratorio->id}}</th>
-        <td>{{$laboratorio->nome}}</td>
-        <td>{{$laboratorio->endereco}}</td>
+    <section class="content">
+        <div class="page-head">
+            <div>
+                <h1 class="page-title">Laboratórios</h1>
+                <p class="page-sub">Controle de laboratórios</p>
+            </div>
+            <div class="page-actions">
 
-        <td><a href="{{route('edit-lab', $laboratorio->id)}}" title="Editar" class="btn btn-success"><i class="fas fa-edit"></i></a> | <a href="{{route("destroy-lab", $laboratorio->id)}}" title="Excluir" class="btn btn-danger"><i class="fas fa-trash"></i></a></td>
-      </tr>
-      @endforeach
-    </tbody>
-  </table>
-</div>
+                <a href="{{ route('laboratorio') }}" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i>Novo
+                    laboratório</a>
+            </div>
+        </div>
 
-@stop
+        <div class="row mt-1">
 
-@section('css')
-    {{-- Add here extra stylesheets --}}
-    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
-@stop
+            <input type="text" name="busca" id="busca" class="form-control" placeholder="Buscar...">
+        </div>
+        <div class="row table-responsive mt-2">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Endereço</th>
+                        <th scope="col">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($laboratorios as $laboratorio)
+                        <tr>
+                            <th scope="row">{{ $laboratorio->id }}</th>
+                            <td>{{ $laboratorio->nome }}</td>
+                            <td>{{ $laboratorio->endereco }}</td>
 
-@section('js')
-    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
-@stop
+                            <td><a href="{{ route('edit-lab', $laboratorio->id) }}" title="Editar"
+                                    class="btn btn-success"><i class="bi bi-pencil"></i></a> | <a
+                                    href="{{ route('destroy-lab', $laboratorio->id) }}" title="Excluir"
+                                    class="btn btn-danger"><i class="bi bi-trash"></i></a></td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    @stop
+
+    @section('css')
+        {{-- Add here extra stylesheets --}}
+        {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+    @stop
+
+    @section('js')
+        <script>
+            console.log("Hi, I'm using the Laravel-AdminLTE package!");
+        </script>
+    @stop

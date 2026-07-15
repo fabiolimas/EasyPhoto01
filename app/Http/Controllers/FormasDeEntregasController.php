@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FormasEntrega;
 use App\Models\Laboratorio;
+use App\Models\Pedido;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -13,15 +14,15 @@ class FormasDeEntregasController extends Controller
 
    $formas=FormasEntrega::all();
 
-
-   return view('painel.formas_de_entrega.index', compact('formas'));
+      $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')->count();
+   return view('painel.formas_de_entrega.index', compact('formas','pedidosPendentes'));
    }
 
    public function create(){
 
    $laboratorios=Laboratorio::all();
-
-    return view('painel.formas_de_entrega.create', compact('laboratorios'));
+$pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')->count();
+    return view('painel.formas_de_entrega.create', compact('laboratorios','pedidosPendentes'));
    }
 
    public function edit($id){
@@ -30,9 +31,9 @@ class FormasDeEntregasController extends Controller
     $laboratorio=Laboratorio::find($forma->local_relacionado);
 
     $laboratorios=Laboratorio::all();
+$pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')->count();
 
-
-   return view('painel.formas_de_entrega.edit', compact('laboratorio','forma','laboratorios'));
+   return view('painel.formas_de_entrega.edit', compact('laboratorio','forma','laboratorios','pedidosPendentes'));
    }
 
    public function store(Request $request){

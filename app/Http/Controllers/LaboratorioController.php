@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Laboratorio;
+use App\Models\Pedido;
 use Illuminate\Http\Request;
 
 class LaboratorioController extends Controller
@@ -14,7 +15,8 @@ class LaboratorioController extends Controller
     {
 
         $laboratorios=Laboratorio::all();
-     return view('painel.laboratorio.laboratorios',compact('laboratorios'));
+           $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')->count();
+     return view('painel.laboratorio.laboratorios',compact('laboratorios','pedidosPendentes'));
     }
 
     /**
@@ -22,9 +24,9 @@ class LaboratorioController extends Controller
      */
     public function create()
     {
+$pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')->count();
 
-
-    return view('painel.laboratorio.laboratorio');
+    return view('painel.laboratorio.laboratorio', compact('pedidosPendentes'));
     }
 
     /**
@@ -55,8 +57,9 @@ class LaboratorioController extends Controller
     public function edit(Request $request)
     {
         $laboratorio=Laboratorio::find($request->id);
+        $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')->count();
 
-        return view('painel.laboratorio.edit', compact('laboratorio'));
+        return view('painel.laboratorio.edit', compact('laboratorio','pedidosPendentes'));
     }
 
     /**

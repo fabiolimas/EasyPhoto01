@@ -40,6 +40,7 @@
       <a href="{{route('clientes')}}" class="nav-item @if(Route::is('clientes')) active @endif"><i class="bi bi-people"></i><span>Clientes</span></a>
       <a href="{{route('laboratorios')}}" class="nav-item @if(Route::is('laboratorios')) active @endif"><i class="bi bi-building"></i><span>Laboratórios</span></a>
       <a href="{{route('formas-de-entrega')}}" class="nav-item @if(Route::is('formas-de-entrega')) active @endif"><i class="bi bi-truck"></i><span>Formas de Entrega</span></a>
+      <a href="{{route('tamanhos')}}" class="nav-item @if(Route::is('tamanhos')) active @endif"><i class="bi bi-image"></i><span>Tamanhos de Fotos</span></a>
 
       <div class="nav-group-label">Revelação</div>
       <a href="{{route('lab')}}" class="nav-item @if(Route::is('lab')) active @endif"><i class="bi bi-images"></i><span>Revelar</span></a>

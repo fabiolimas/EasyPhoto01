@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pedido;
 use App\Models\Tamanho;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,8 @@ class TamanhoController extends Controller
     public function index()
     {
         $tamanhos=Tamanho::all();
-        return view('painel.tamanho.tamanhos',compact('tamanhos'));
+         $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')->count();
+        return view('painel.tamanho.tamanhos',compact('tamanhos','pedidosPendentes'));
     }
 
     /**
@@ -21,7 +23,9 @@ class TamanhoController extends Controller
      */
     public function create()
     {
-        return view('painel.tamanho.tamanho');
+
+   $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')->count();
+        return view('painel.tamanho.tamanho',compact('pedidosPendentes'));
     }
 
     /**
@@ -52,8 +56,9 @@ class TamanhoController extends Controller
     public function edit(Request $request)
     {
         $tamanho=Tamanho::find($request->id);
+        $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')->count();
 
-        return view('painel.tamanho.edit', compact('tamanho'));
+        return view('painel.tamanho.edit', compact('tamanho','pedidosPendentes'));
     }
 
     /**

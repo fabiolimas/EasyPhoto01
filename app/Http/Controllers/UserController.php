@@ -20,9 +20,11 @@ class UserController extends Controller
         return view('painel.usuario.usuarios', compact('pedidosPendentes','usuarios'));
     }
 
-    public function usuario(){
+    public function usuario(Request $request){
 
-        return view('painel.usuario.usuario');
+          $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')->count();
+
+        return view('painel.usuario.usuario', compact('pedidosPendentes'));
     }
 
     public function store(Request $request){
@@ -39,8 +41,9 @@ class UserController extends Controller
     public function edit(Request $request){
 
         $usuario=User::find($request->id);
+          $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')->count();
 
-        return view('painel.usuario.edit', compact('usuario'));
+        return view('painel.usuario.edit', compact('usuario','pedidosPendentes'));
     }
 
     public function update(Request $request){
@@ -114,9 +117,9 @@ class UserController extends Controller
     public function editCliente(Request $request){
 
             $cliente=Cliente::find($request->id);
+  $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')->count();
 
-
-    return view ('painel.clientes.edit', compact('cliente'));
+    return view ('painel.clientes.edit', compact('cliente','pedidosPendentes'));
 
 
     }
