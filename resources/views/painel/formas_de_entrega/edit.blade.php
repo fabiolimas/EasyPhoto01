@@ -16,63 +16,76 @@
             </div>
         </div>
         @include('components.alerts')
-        <div class="col-md-6">
-            <form id="registerForm" method ="post" action="{{ route('update-forma-de-entrega', $forma->id) }}" class="row g-3 mt-1">
-                @csrf
-                @method('put')
 
-                <div class="row">
-                    <label for="nome">Descrição</label>
-                    <input type="text" name="nome" class="form-control mb-3" value="{{ $forma->nome }}">
-                    <label for="valor">Valor R$</label>
-                    <input type="text" name="valor" class="form-control mb-3"
-                        value="{{ number_format($forma->valor, 2, ',', '.') }}">
-                    <label for="local">Local Relacionado</label>
-                    <select class="form-select mb-3" name='local_relacionado' id="local">
-                        <option value="{{ $laboratorio->id }}">{{ $laboratorio->nome }}</option>
-                        @foreach ($laboratorios as $lab)
-                            <option value="{{ $lab->id }}">{{ $lab->nome }}</option>
-                        @endforeach
-
-                    </select>
-                    <label for="tipo_entrega">Tipo de entrega</label>
-                    <select name="tipo_entrega" class="form-select mb-3" id="tipo_entrega">
-                        <option value="{{ $forma->tipo_entrega }}">{{ $forma->tipo_entrega }}</option>
-                        <option value="Motoboy">Motoboy</option>
-                        <option value="Retirar na loja">Retirar na loja</option>
-                    </select>
-                    <div class="form-group">
-                        <button type="submit" id="salvar" class="btn btn-dark">Salvar</button>
+        <form id="registerForm" method ="post" action="{{ route('update-forma-de-entrega', $forma->id) }}"
+            class="row g-3 mt-1">
+            @csrf
+            @method('put')
+            <div class="col-12 col-xl-8">
+                <div class="card panel">
+                    <div class="panel-head">
+                        <div>
+                            <div class="fw-semibold">Dados da forma de entrega</div>
+                            <div class="xsmall text-muted">Informações sobre a forma de entrega</div>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                    <div class="panel-body">
+                        <div class="row g-3">
+                            <div class="row">
+                                <label for="nome">Descrição</label>
+                                <input type="text" name="nome" class="form-control mb-3" value="{{ $forma->nome }}">
+                                <label for="valor">Valor R$</label>
+                                <input type="text" name="valor" class="form-control mb-3"
+                                    value="{{ number_format($forma->valor, 2, ',', '.') }}">
+                                <label for="local">Local Relacionado</label>
+                                <select class="form-select mb-3" name='local_relacionado' id="local">
+                                    <option value="{{ $laboratorio->id }}">{{ $laboratorio->nome }}</option>
+                                    @foreach ($laboratorios as $lab)
+                                        <option value="{{ $lab->id }}">{{ $lab->nome }}</option>
+                                    @endforeach
+
+                                </select>
+                                <label for="tipo_entrega">Tipo de entrega</label>
+                                <select name="tipo_entrega" class="form-select mb-3" id="tipo_entrega">
+                                    <option value="{{ $forma->tipo_entrega }}">{{ $forma->tipo_entrega }}</option>
+                                    <option value="Motoboy">Motoboy</option>
+                                    <option value="Retirar na loja">Retirar na loja</option>
+                                </select>
+                                <div class="form-group">
+                                    <button type="submit" id="salvar" class="btn btn-dark">Salvar</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        </form>
+
     </section>
-    @stop
+@stop
 
-    @section('css')
-        {{-- Add here extra stylesheets --}}
-        {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
-    @stop
+@section('css')
+    {{-- Add here extra stylesheets --}}
+    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+@stop
 
-    @section('js')
+@section('js')
 
-        <script>
-            $('document').ready(function() {
+    <script>
+        $('document').ready(function() {
 
-                if ($("#nivel_acesso") == 'laboratorio') {
-                    $("$laboratorio_id").css('display', 'none');
-                } else {
+            if ($("#nivel_acesso") == 'laboratorio') {
+                $("$laboratorio_id").css('display', 'none');
+            } else {
+                $("#laboratorio_id").css('display', 'flex');
+            }
+
+            $("#nivel_acesso").change(function() {
+
+                if ($("#nivel_acesso").val() == 'laboratorio') {
                     $("#laboratorio_id").css('display', 'flex');
                 }
 
-                $("#nivel_acesso").change(function() {
-
-                    if ($("#nivel_acesso").val() == 'laboratorio') {
-                        $("#laboratorio_id").css('display', 'flex');
-                    }
-
-                });
             });
-        </script>
-    @stop
+        });
+    </script>
+@stop

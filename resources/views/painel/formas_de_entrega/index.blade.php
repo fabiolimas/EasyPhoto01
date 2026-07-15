@@ -11,8 +11,8 @@
             </div>
            <div class="page-actions">
 
-                <a href="{{ route('forma-de-entrega') }}" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i>Novo
-                    laboratório</a>
+                <a href="{{ route('forma-de-entrega') }}" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i>Nova
+                    forma de entrega</a>
             </div>
         </div>
         @include('components.alerts')
