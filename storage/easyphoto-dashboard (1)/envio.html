@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EasyPhoto - Envio de Imagens</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-dark: #141414;
+      --bg-card: #1c1c1c;
+      --bg-elevated: #242424;
+      --border-dark: #2a2a2a;
+      --red-primary: #e10b1e;
+      --red-hover: #c00a1a;
+      --red-glow: rgba(225, 11, 30, 0.35);
+      --text-light: #f5f5f5;
+      --text-muted: #9a9a9a;
+    }
+    * { font-family: 'Poppins', sans-serif; }
+    body {
+      background: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      padding-bottom: 120px;
+    }
+
+    /* Navbar */
+    .navbar-custom {
+      background: #fff;
+      border-bottom: 3px solid var(--red-primary);
+      padding: 0.85rem 1.5rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    }
+    .navbar-brand-logo {
+      font-weight: 800;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      color: #141414;
+    }
+    .navbar-brand-logo span { color: var(--red-primary); }
+    .btn-store-switch {
+      background: linear-gradient(135deg, var(--red-primary), var(--red-hover));
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 0.5rem 1.1rem;
+      font-weight: 500;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 12px var(--red-glow);
+      transition: all 0.25s ease;
+    }
+    .btn-store-switch:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px var(--red-glow);
+      color: #fff;
+    }
+    .user-menu {
+      color: #141414;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0.5rem 0.8rem;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .user-menu:hover { background: rgba(0,0,0,0.05); }
+
+    /* Store header */
+    .store-header {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dark);
+      border-left: 4px solid var(--red-primary);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .store-header i {
+      color: var(--red-primary);
+      font-size: 1.4rem;
+    }
+    .store-header strong { color: #fff; font-weight: 600; }
+    .store-header span { color: var(--text-muted); font-size: 0.95rem; }
+
+    /* Image cards */
+    .image-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dark);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .image-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--red-primary);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.45), 0 0 0 1px var(--red-glow);
+    }
+    .image-card-thumb {
+      aspect-ratio: 1 / 1;
+      background: #0a0a0a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .image-card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    /* Máscara de corte: mostra a área que será impressa */
+    .crop-mask {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 2px dashed rgba(255,255,255,0.95);
+      box-shadow: 0 0 0 9999px rgba(0,0,0,0.55);
+      pointer-events: none;
+      transition: width 0.25s ease, height 0.25s ease;
+      box-sizing: border-box;
+    }
+    .crop-mask::after {
+      content: attr(data-size);
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      background: var(--red-primary);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+    .image-card-body {
+      padding: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      background: var(--bg-elevated);
+      border-top: 1px solid var(--border-dark);
+    }
+    .form-select-dark, .form-control-dark {
+      background: #0f0f0f;
+      border: 1px solid var(--border-dark);
+      color: var(--text-light);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .form-select-dark:focus, .form-control-dark:focus {
+      background: #0f0f0f;
+      border-color: var(--red-primary);
+      color: #fff;
+      box-shadow: 0 0 0 0.2rem var(--red-glow);
+      outline: none;
+    }
+    .qty-input { width: 60px; text-align: center; }
+    .size-select { width: 90px; }
+    .price-tag {
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-left: auto;
+    }
+    .btn-delete {
+      background: linear-gradient(135deg, var(--red-primary), var(--red-hover));
+      border: none;
+      color: #fff;
+      border-radius: 8px;
+      width: 38px;
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s;
+      box-shadow: 0 3px 10px var(--red-glow);
+    }
+    .btn-delete:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 14px var(--red-glow);
+      color: #fff;
+    }
+
+    /* Empty state */
+    .empty-upload {
+      border: 2px dashed var(--border-dark);
+      border-radius: 14px;
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--text-muted);
+      transition: all 0.3s;
+      cursor: pointer;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .empty-upload:hover {
+      border-color: var(--red-primary);
+      color: var(--red-primary);
+      background: rgba(225, 11, 30, 0.05);
+    }
+    .empty-upload i { font-size: 2.5rem; margin-bottom: 0.5rem; }
+
+    /* Bottom action bar */
+    .action-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(135deg, rgba(225,11,30,0.95), rgba(192,10,26,0.95));
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding: 1rem 1.5rem;
+      box-shadow: 0 -8px 24px rgba(0,0,0,0.4);
+      z-index: 1000;
+    }
+    .action-bar-inner {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .btn-action {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      border-radius: 10px;
+      padding: 0.65rem 1.2rem;
+      font-weight: 500;
+      font-size: 0.92rem;
+      transition: all 0.25s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-action:hover {
+      background: rgba(255,255,255,0.25);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    .btn-action-dark {
+      background: #1c1c1c;
+      border: 1px solid #1c1c1c;
+    }
+    .btn-action-dark:hover { background: #000; }
+    .btn-action-primary {
+      background: #fff;
+      color: var(--red-primary);
+      border-color: #fff;
+      font-weight: 600;
+    }
+    .btn-action-primary:hover {
+      background: #f5f5f5;
+      color: var(--red-primary);
+    }
+    .total-badge {
+      background: rgba(0,0,0,0.35);
+      color: #fff;
+      padding: 0.65rem 1.5rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.5px;
+    }
+    .total-badge small {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 400;
+      opacity: 0.8;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 768px) {
+      .action-bar-inner { justify-content: center; }
+      .total-badge { order: -1; width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-custom">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      <a class="navbar-brand-logo text-decoration-none" href="#">
+        EASY<span>PHOTO</span>
+      </a>
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn-store-switch">
+          <i class="bi bi-arrow-left-right"></i> Mudar Loja
+        </button>
+        <div class="user-menu dropdown">
+          <span data-bs-toggle="dropdown" role="button">
+            <i class="bi bi-person-circle me-1"></i> Fábio Lima
+            <i class="bi bi-caret-down-fill small"></i>
+          </span>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Meu Perfil</a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-clock-history me-2"></i>Pedidos</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-box-arrow-right me-2"></i>Sair</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <div class="container py-4">
+
+    <!-- Store info -->
+    <div class="store-header">
+      <i class="bi bi-shop"></i>
+      <div>
+        <strong>Jacobina</strong>
+        <span class="ms-2">- Av. Orlando Oliveira Pires, 206 - Jacobina/BA</span>
+      </div>
+    </div>
+
+    <!-- Image grid -->
+    <div class="row g-3" id="imageGrid">
+
+      <!-- Card 1 -->
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="image-card">
+          <div class="image-card-thumb">
+            <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400" alt="Foto 1">
+            <div class="crop-mask" data-size="15x10"></div>
+          </div>
+          <div class="image-card-body">
+            <select class="form-select form-select-sm form-select-dark size-select">
+              <option>15x10</option>
+              <option>20x15</option>
+              <option>25x18</option>
+            </select>
+            <input type="number" class="form-control form-control-sm form-control-dark qty-input" value="1" min="1">
+            <span class="price-tag">R$ 2,00</span>
+            <button class="btn-delete" title="Remover">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="image-card">
+          <div class="image-card-thumb">
+            <img src="https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=400" alt="Foto 2">
+            <div class="crop-mask" data-size="15x10"></div>
+          </div>
+          <div class="image-card-body">
+            <select class="form-select form-select-sm form-select-dark size-select">
+              <option>15x10</option>
+              <option>20x15</option>
+              <option>25x18</option>
+            </select>
+            <input type="number" class="form-control form-control-sm form-control-dark qty-input" value="1" min="1">
+            <span class="price-tag">R$ 2,00</span>
+            <button class="btn-delete" title="Remover">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="image-card">
+          <div class="image-card-thumb">
+            <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400" alt="Foto 3">
+            <div class="crop-mask" data-size="15x10"></div>
+          </div>
+          <div class="image-card-body">
+            <select class="form-select form-select-sm form-select-dark size-select">
+              <option>15x10</option>
+              <option>20x15</option>
+              <option>25x18</option>
+            </select>
+            <input type="number" class="form-control form-control-sm form-control-dark qty-input" value="1" min="1">
+            <span class="price-tag">R$ 2,00</span>
+            <button class="btn-delete" title="Remover">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add new -->
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <label for="fileInput" class="empty-upload h-100 mb-0">
+          <i class="bi bi-cloud-arrow-up"></i>
+          <strong>Adicionar imagens</strong>
+          <small class="mt-1">Clique ou arraste aqui</small>
+        </label>
+        <input type="file" id="fileInput" multiple accept="image/*" hidden>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom action bar -->
+  <div class="action-bar">
+    <div class="container-fluid">
+      <div class="action-bar-inner">
+        <label for="fileInput" class="btn-action mb-0">
+          <i class="bi bi-images"></i> Adicionar imagens
+        </label>
+
+        <div class="total-badge">
+          <small>Total</small>
+          R$ 6,00
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap">
+          <button class="btn-action btn-action-dark">
+            <i class="bi bi-chat-left-text"></i> Observação
+          </button>
+          <button class="btn-action btn-action-dark">
+            <i class="bi bi-truck"></i> Forma de Entrega
+          </button>
+          <button class="btn-action btn-action-primary">
+            <i class="bi bi-cart-check"></i> Enviar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Calcula e aplica a máscara de corte com base no tamanho da imagem e no tamanho de impressão escolhido
+    function updateCropMask(card) {
+      const img = card.querySelector('.image-card-thumb img');
+      const thumb = card.querySelector('.image-card-thumb');
+      const mask = card.querySelector('.crop-mask');
+      const select = card.querySelector('.size-select');
+      if (!img || !mask || !select) return;
+      if (!img.naturalWidth || !img.naturalHeight) return;
+
+      const parts = select.value.toLowerCase().split('x').map(v => parseFloat(v));
+      if (parts.length !== 2 || !parts[0] || !parts[1]) return;
+      let [a, b] = parts;
+
+      const cw = thumb.clientWidth;
+      const ch = thumb.clientHeight;
+      const imgRatio = img.naturalWidth / img.naturalHeight;
+
+      // Tamanho renderizado da imagem dentro do container (object-fit: contain)
+      let renderedW, renderedH;
+      if (imgRatio > cw / ch) {
+        renderedW = cw;
+        renderedH = cw / imgRatio;
+      } else {
+        renderedH = ch;
+        renderedW = ch * imgRatio;
+      }
+
+      // Orienta o corte na mesma orientação da imagem (paisagem/retrato)
+      let longSide = Math.max(a, b);
+      let shortSide = Math.min(a, b);
+      let printW, printH;
+      if (imgRatio >= 1) { printW = longSide; printH = shortSide; }
+      else { printW = shortSide; printH = longSide; }
+      const cropRatio = printW / printH;
+
+      // Inscreve o retângulo de corte na imagem renderizada
+      let mw, mh;
+      if (cropRatio > renderedW / renderedH) {
+        mw = renderedW;
+        mh = renderedW / cropRatio;
+      } else {
+        mh = renderedH;
+        mw = renderedH * cropRatio;
+      }
+
+      mask.style.width = mw + 'px';
+      mask.style.height = mh + 'px';
+      mask.setAttribute('data-size', select.value);
+    }
+
+    function initCard(card) {
+      const img = card.querySelector('.image-card-thumb img');
+      const select = card.querySelector('.size-select');
+      if (!img || !select) return;
+      const run = () => updateCropMask(card);
+      if (img.complete) run(); else img.addEventListener('load', run);
+      select.addEventListener('change', run);
+    }
+
+    document.querySelectorAll('.image-card').forEach(initCard);
+    window.addEventListener('resize', () => {
+      document.querySelectorAll('.image-card').forEach(updateCropMask);
+    });
+  </script>
+</body>
+</html>

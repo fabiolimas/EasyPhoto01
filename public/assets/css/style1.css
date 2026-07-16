@@ -127,3 +127,129 @@ div#modalLab .modal-content {
     #progressModal .close{position:absolute;top:1rem;right:1.5rem;color:#fff;font-size:1.8rem;cursor:pointer;background:none;border:none}
 
     @media(max-width:768px){.action-bar-inner{justify-content:center}.total-badge{order:-1;width:100%;text-align:center}}
+ /* Image cards */
+    .image-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dark);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .image-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--red-primary);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.45), 0 0 0 1px var(--red-glow);
+    }
+    .image-card-thumb {
+      aspect-ratio: 1 / 1;
+      background: #0a0a0a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .image-card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    /* Máscara de corte: mostra a área que será impressa */
+    .crop-mask {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 2px dashed rgba(255,255,255,0.95);
+      box-shadow: 0 0 0 9999px rgba(0,0,0,0.55);
+      pointer-events: none;
+      transition: width 0.25s ease, height 0.25s ease;
+      box-sizing: border-box;
+    }
+    .crop-mask::after {
+      content: attr(data-size);
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      background: var(--red-primary);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+    .image-card-body {
+      padding: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      background: var(--bg-elevated);
+      border-top: 1px solid var(--border-dark);
+    }
+    .form-select-dark, .form-control-dark {
+      background: #0f0f0f;
+      border: 1px solid var(--border-dark);
+      color: var(--text-light);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .form-select-dark:focus, .form-control-dark:focus {
+      background: #0f0f0f;
+      border-color: var(--red-primary);
+      color: #fff;
+      box-shadow: 0 0 0 0.2rem var(--red-glow);
+      outline: none;
+    }
+    .qty-input { width: 60px; text-align: center; }
+    .size-select { width: 90px; }
+    .price-tag {
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-left: auto;
+    }
+    .btn-delete {
+      background: linear-gradient(135deg, var(--red-primary), var(--red-hover));
+      border: none;
+      color: #fff;
+      border-radius: 8px;
+      width: 38px;
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s;
+      box-shadow: 0 3px 10px var(--red-glow);
+    }
+    .btn-delete:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 14px var(--red-glow);
+      color: #fff;
+    }
+
+    /* Empty state */
+    .empty-upload {
+      border: 2px dashed var(--border-dark);
+      border-radius: 14px;
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--text-muted);
+      transition: all 0.3s;
+      cursor: pointer;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .empty-upload:hover {
+      border-color: var(--red-primary);
+      color: var(--red-primary);
+      background: rgba(225, 11, 30, 0.05);
+    }
+    .empty-upload i { font-size: 2.5rem; margin-bottom: 0.5rem; }
