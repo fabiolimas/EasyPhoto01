@@ -92,7 +92,7 @@ function gerarParcelas() {
     let select = document.getElementById('parcelas');
     select.innerHTML = '';
 
-    for (let i = 1; i <= 12; i++) {
+    for (let i = 1; i <= 3; i++) {
         let valor = (total / i).toFixed(2);
         let option = document.createElement('option');
         option.value = i;
