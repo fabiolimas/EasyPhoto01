@@ -70,6 +70,7 @@ Route::get('/usuario',[UserController::class, 'usuario'])->name('usuario');
 Route::post('/usuario',[UserController::class, 'store'])->name('store-user');
 Route::get('/usuario/{id}',[UserController::class, 'destroy'])->name('destroy-user');
 Route::get('/edit-usuario/{id}',[UserController::class, 'edit'])->name('edit-user');
+Route::get('/busca-usuarios/',[UserController::class, 'buscaUsuarios'])->name('busca-usuarios');
 Route::post('/edit-usuario/{id}',[UserController::class, 'update'])->name('update-user');
 
 //Clientes
@@ -78,6 +79,7 @@ Route::get('/usuario',[UserController::class, 'usuario'])->name('usuario');
 Route::post('/usuario',[UserController::class, 'store'])->name('store-user');
 Route::get('/usuario/{id}',[UserController::class, 'destroy'])->name('destroy-user');
 Route::get('/edit-cliente/{id}',[UserController::class, 'editCliente'])->name('edit-cliente');
+Route::get('/busca-clientes/',[UserController::class, 'buscaClientes'])->name('busca-clientes');
 Route::post('/edit-usuario/{id}',[UserController::class, 'update'])->name('update-user');
 
 
@@ -96,6 +98,7 @@ Route::get('/tamanho',[TamanhoController::class, 'create'])->name('tamanho');
 Route::post('/tamanho',[TamanhoController::class, 'store'])->name('store-tamanho');
 Route::get('/tamanho/{id}',[TamanhoController::class, 'destroy'])->name('destroy-tamanho');
 Route::get('/edit-tamanho/{id}',[TamanhoController::class, 'edit'])->name('edit-tamanho');
+Route::get('/busca-tamanhos/',[TamanhoController::class, 'buscaTamanhos'])->name('busca-tamanhos');
 Route::post('/edit-tamanho/{id}',[TamanhoController::class, 'update'])->name('update-tamanho');
 
 //Pedidos

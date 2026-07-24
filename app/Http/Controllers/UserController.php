@@ -125,5 +125,22 @@ class UserController extends Controller
     }
 
 
+    function buscaClientes(Request $request){
+         $busca = $request->busca;
+
+         $clientes=Cliente::where('nome','like','%'.$busca.'%')->paginate(30);
+
+         return view('painel.buscas.busca_clientes', compact('clientes'));
+
+    }
+    function buscaUsuarios(Request $request){
+         $busca = $request->busca;
+
+         $usuarios=User::where('name','like','%'.$busca.'%')->paginate(30);
+
+         return view('painel.buscas.busca_usuarios', compact('usuarios'));
+
+    }
+
 
 }

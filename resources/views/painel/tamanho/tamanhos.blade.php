@@ -21,6 +21,8 @@
         <hr>
         <input type="text" name="busca" id="busca" class="form-control" placeholder="Buscar...">
 
+        <div class="table-responsive result">
+
         <table class="table mt-2">
             <thead>
                 <tr>
@@ -44,7 +46,58 @@
                 @endforeach
             </tbody>
         </table>
+        </div>
     </section>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+
+        $(document).ready(function() {
+
+
+
+
+            var busca = $("#busca");
+            var result = $(".result");
+
+            var status='';
+
+
+            busca.keyup(function() {
+
+
+
+                $.ajax({
+                    url: "{{ route('busca-tamanhos') }}", // Arquivo PHP que processará a busca
+                    type: "get",
+                    data: {
+                        busca: busca.val(),
+
+
+                    }, // Dados a serem enviados para o servidor
+                    success: function(response) {
+
+                        result.html(response);
+                        result.html(response.result);
+                    },
+                    error: function(result) {
+                        console.log(result);
+                    }
+
+
+
+                });
+            });
+
+
+
+        });
+    </script>
     @stop
 
     @section('css')

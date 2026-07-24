@@ -51,7 +51,7 @@
                     <button class="icon-btn"><i class="bi bi-funnel"></i></button>
                 </div>
             </div>
-            <div class="table-responsive">
+            <div class="table-responsive result">
                 <table class="table table-modern align-middle mb-0">
                     <thead>
                         <tr>
@@ -83,6 +83,57 @@
 
 
     </section>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+
+        $(document).ready(function() {
+
+
+
+
+            var busca = $("#busca");
+            var result = $(".result");
+
+            var status='';
+
+
+            busca.keyup(function() {
+
+
+
+                $.ajax({
+                    url: "{{ route('busca-usuarios') }}", // Arquivo PHP que processará a busca
+                    type: "get",
+                    data: {
+                        busca: busca.val(),
+
+
+                    }, // Dados a serem enviados para o servidor
+                    success: function(response) {
+
+                        result.html(response);
+                        result.html(response.result);
+                    },
+                    error: function(result) {
+                        console.log(result);
+                    }
+
+
+
+                });
+            });
+
+
+
+        });
+    </script>
 
 @stop
 

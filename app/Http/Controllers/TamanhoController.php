@@ -85,4 +85,13 @@ class TamanhoController extends Controller
 
         return redirect()->back()->with("success", 'Tamanho excluido com sucesso');
     }
+
+    function buscaTamanhos(Request $request){
+         $busca = $request->busca;
+
+         $tamanhos=Tamanho::where('nome','like','%'.$busca.'%')->paginate(30);
+
+         return view('painel.buscas.busca_tamanhos', compact('tamanhos'));
+
+    }
 }

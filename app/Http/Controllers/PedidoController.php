@@ -177,7 +177,6 @@ class PedidoController extends Controller
                     ->orWhere('id', 'like', '%' . $busca . '%')
                     ->orWhere('status', 'like', '%' . $status . '%')
                     ->orderBy('id','desc')
-
                     ->paginate(30);
             }
         } else {
