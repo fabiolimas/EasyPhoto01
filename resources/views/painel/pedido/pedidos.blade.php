@@ -70,14 +70,14 @@
                     </div>
                     @can('is_admin')
                         <select class="form-select form-select-sm" style="width:auto" name="laboratorio" id="loja">
-                            <option>Todos laboratórios</option>
+                            <option value="99">Todos laboratórios</option>
                             @foreach ($laboratorios as $laboratorio)
                                 <option value="{{ $laboratorio->id }}">{{ $laboratorio->nome }}</option>
                             @endforeach
                         </select>
                     @endcan
                        <select class="form-select form-select-sm" style="width:auto" name="status" id="status">
-                            <option>Status do pedido</option>
+                            <option value="99">Status do pedido</option>
                                 <option value="Aguardando Impressão">Aguardando Impressão</option>
                                 <option value="Finalizado">Finalizado</option>
                                 <option value="Cancelado">Cancelado</option>

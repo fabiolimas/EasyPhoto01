@@ -215,10 +215,12 @@ class PedidoController extends Controller
 
         if($loja){
 
-         if ($loja == '') {
+
+         if ($loja == 99) {
             $pedidos = Pedido::orderBy('id','desc')
 
             ->paginate(30);
+
         } else {
 
             $pedidos = Pedido::where('laboratorio_id', $loja)
@@ -228,7 +230,7 @@ class PedidoController extends Controller
 
         }elseif($status){
 
-         if ($status == '') {
+         if ($status == 99) {
             $pedidos = Pedido::orderBy('id','desc')
 
             ->paginate(30);
@@ -240,12 +242,12 @@ class PedidoController extends Controller
         }
         }
 
-
-        if ($pedidos->count() >= 1) {
-            return view('painel.buscas.busca_pedidos', compact('pedidos'));
-        } else {
-            return response()->json(['result' => 'Nenhum pedido encontrado!']);
-        }
+ return view('painel.buscas.busca_pedidos', compact('pedidos'));
+        // if ($pedidos->count() >= 1) {
+        //     return view('painel.buscas.busca_pedidos', compact('pedidos'));
+        // } else {
+        //     return response()->json(['result' => 'Nenhum pedido encontrado!']);
+        // }
     }
 
     /**
