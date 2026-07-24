@@ -7,6 +7,7 @@
         <th scope="col">Data</th>
         <th scope="col">Obs.</th>
         <th scope="col">Status</th>
+           <th scope="col">Status Pagamento</th>
 
          <th scope="col">Ações</th>
       </tr>
@@ -29,9 +30,14 @@
 
         <td>{{date('d/m/Y H:i', strtotime($pedido->created_at))}}</td>
         <td>{{$pedido->observacao}}</td>
-        <td class="@if($pedido->status == 'Finalizado') text-success @else text-danger @endif">{{$pedido->status}}</td>
+        <td class="">
+                        <span
+                                        class="chip @if ($pedido->status == 'Finalizado') chip-green @elseif($pedido->status == 'Aguardando Impressão') chip-amber @else chip-red @endif ">{{ $pedido->status }}</span></td>
+                         <td >
+                       <span class="chip @if ($pedido->status_pagamento == 'pendente') chip-red @else chip-green @endif">
+                                        {{ $pedido->status_pagamento }}</span></td>
 
-        <td><a href="{{route('detalhe-pedido', $pedido->id)}}" class="btn btn-danger"><i class="far fa-images"></i> Visualizar</a></td>
+        <td><a href="{{route('detalhe-pedido', $pedido->id)}}" class="btn btn-danger"><i class="bi bi-images"></i> Visualizar</a></td>
 
       </tr>
       @endforeach
