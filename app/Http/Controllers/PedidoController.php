@@ -194,24 +194,28 @@ class PedidoController extends Controller
             }
         }
 
+        return view('painel.buscas.busca_pedidos', compact('pedidos'));
 
 
 
-
-        if ($pedidos->count() >= 1) {
-            return view('painel.buscas.busca_pedidos', compact('pedidos'));
-        } else {
-            return response()->json(['result' => 'Nenhum pedido encontrado!']);
-        }
+        // if ($pedidos->count() >= 1) {
+        //     return view('painel.buscas.busca_pedidos', compact('pedidos'));
+        // } else {
+        //     return response()->json(['result' => 'Nenhum pedido encontrado!']);
+        // }
     }
 
     public function buscaPedidosLab(Request $request)
     {
 
-
         $loja = $request->loja;
+        $status=$request->status;
 
-        if ($loja == '') {
+
+
+        if($loja){
+
+         if ($loja == '') {
             $pedidos = Pedido::orderBy('id','desc')
 
             ->paginate(30);
@@ -222,6 +226,19 @@ class PedidoController extends Controller
             ->paginate(30);
         }
 
+        }elseif($status){
+
+         if ($status == '') {
+            $pedidos = Pedido::orderBy('id','desc')
+
+            ->paginate(30);
+        } else {
+
+            $pedidos = Pedido::where('status', $status)
+             ->orderBy('id','desc')
+            ->paginate(30);
+        }
+        }
 
 
         if ($pedidos->count() >= 1) {

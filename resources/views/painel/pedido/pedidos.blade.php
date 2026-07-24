@@ -76,6 +76,12 @@
                             @endforeach
                         </select>
                     @endcan
+                       <select class="form-select form-select-sm" style="width:auto" name="status" id="status">
+                            <option>Status do pedido</option>
+                                <option value="Aguardando Impressão">Aguardando Impressão</option>
+                                <option value="Finalizado">Finalizado</option>
+                                <option value="Cancelado">Cancelado</option>
+                        </select>
                     <button class="icon-btn"><i class="bi bi-funnel"></i></button>
                 </div>
             </div>
@@ -209,6 +215,30 @@
                     type: "get",
                     data: {
                         loja: $('#loja').val(),
+
+
+                    }, // Dados a serem enviados para o servidor
+                    success: function(response) {
+
+                        result.html(response);
+                        result.html(response.result);
+                    },
+                    error: function(result) {
+                        console.log(result);
+                    }
+
+
+
+                });
+            });
+
+            $('#status').change(function() {
+
+                $.ajax({
+                    url: "{{ route('busca-pedidos-admin-lab') }}",
+                    type: "get",
+                    data: {
+                        status: $('#status').val(),
 
 
                     }, // Dados a serem enviados para o servidor
