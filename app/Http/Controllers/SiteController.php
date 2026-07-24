@@ -17,7 +17,7 @@ class SiteController extends Controller
      */
     public function pedidoCliente()
     {
-       $pedidos=Pedido::where('user_id',auth()->id())->paginate(30);
+       $pedidos=Pedido::where('user_id',auth()->id())->orderBy('id', 'desc')->paginate(30);
 
 
 
@@ -69,11 +69,12 @@ class SiteController extends Controller
         $busca=$request->busca;
 
             if($busca == ''){
-                $pedidos=Pedido::where('user_id', auth()->user()->id)->paginate(30);
+                $pedidos=Pedido::where('user_id', auth()->user()->id)->orderBy('id', 'desc')->paginate(30);
             }else{
 
                 $pedidos=Pedido::where('id', 'like', '%'.$busca.'%')
                 ->where('user_id', auth()->user()->id)
+                ->orderBy('id', 'desc')
                 ->paginate(30);
             }
 
