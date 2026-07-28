@@ -153,252 +153,24 @@
   <script>
 
 
-    // $(function () {
-    //   const modalEscolha = new bootstrap.Modal(document.getElementById('modalEscolha'));
-    //     let precodesc=0;
-    //   const cropSizes = [
-    //     @foreach ($tamanhos as $tamanho)
-    //       {
-    //         width: {{ $tamanho->largura }},
-    //         height: {{ $tamanho->altura }},
-    //         @if ($cliente->desconto > 1)
-
-
-
-    //           price: {{$tamanho->preco * $desconto}}
-
-
-    //         @else
-    //           price: {{ $tamanho->preco }}
-    //         @endif
-    //       },
-    //     @endforeach
-    //   ];
-
-    //   $('#imageInput').on('change', function () {
-    //     const files = Array.from(this.files);
-    //     handleFiles(files);
-    //   });
-
-    //   $('#salvarObservacao').on('click', function () {
-    //     $('#observacao_input').val($('#observacao_text').val());
-    //   });
-
-    //   $('#processButton').on('click', function () {
-    //     if (!selecionado) {
-    //       new bootstrap.Modal(document.getElementById('modalAviso')).show();
-    //       return;
-    //     }
-
-    //     const formData = new FormData($('#uploadForm')[0]);
-    //     let sizeArray = [], quantityArray = [], priceArray = [];
-    //     let imagesProcessed = 0;
-    //     const images = $('#imageContainer img');
-
-    //     if (images.length === 0) return;
-
-    //     images.each(function (i, img) {
-    //       fetch(img.src).then(res => res.blob()).then(blob => {
-    //         formData.append('images[]', blob, 'image_' + i + '.jpg');
-
-    //         const wrapper = $(img).closest('.image-wrapper');
-    //         const size = JSON.parse(wrapper.find('.size-select').val());
-    //         const quantity = wrapper.find('.quantity-input').val();
-    //         const price = wrapper.find('.price-inputv').val();
-
-    //         sizeArray.push(size);
-    //         quantityArray.push(quantity);
-    //         priceArray.push(price);
-
-    //         imagesProcessed++;
-    //         if (imagesProcessed === images.length) {
-    //           formData.append('tamanhos', JSON.stringify(sizeArray));
-    //           formData.append('quantidades', JSON.stringify(quantityArray));
-    //           formData.append('precos', JSON.stringify(priceArray));
-    //           uploadImages(formData);
-    //         }
-    //       });
-    //     });
-    //   });
-
-    //   let selecionado = false;
-
-    //   $(document).on('change', '.entregainput', function () {
-    //     selecionado = true;
-    //     $('#processButton').removeClass('disabled');
-
-    //     let entregaId = $('input[name="entrega"]:checked').val();
-
-    //     $.ajax({
-    //       url: '/buscar-entrega/' + entregaId,
-    //       type: 'GET',
-    //       dataType: 'json',
-    //       success: function (response) {
-    //         $('#val_entrega').val(response.valor);
-    //         $('#forma_entrega').val(response.nome);
-    //         updateTotalPedido();
-    //       },
-    //       error: function () {
-    //         console.error('Erro ao buscar valor da entrega');
-    //       }
-    //     });
-    //   });
-
-    //   function handleFiles(files) {
-    //     if (files.length < 1) {
-    //       modalEscolha.show();
-    //       return;
-    //     }
-
-    //     files.forEach(function (file) {
-    //       const reader = new FileReader();
-    //       reader.onload = function (e) {
-    //         const $col = $('<div>').addClass('col-12 col-sm-6 col-md-4 col-lg-3 image-wrapper');
-    //         const $card = $('<div>').addClass('image-card');
-    //         const $thumb = $('<div>').addClass('image-card-thumb');
-    //         const $mascarathumb = $('<div>').addClass('crop-mask');
-    //         const $img = $('<img>').attr('src', e.target.result);
-
-    //         $thumb.append($img);
-    //         $thumb.append($mascarathumb);
-
-    //         const $atributos = $('<div>').addClass('atributos');
-
-    //         const $sizeLabel = $('<label>').text('Tamanho');
-    //         const $sizeSelect = $('<select>').addClass('size-select').on('change', function () {
-    //           updatePrice($col, $(this).val());
-    //         });
-    //         cropSizes.forEach(function (size, index) {
-    //           const $option = $('<option>').val(JSON.stringify(size)).text(size.height + 'x' + size.width);
-    //           if (index === 0) $option.prop('selected', true);
-    //           $sizeSelect.append($option);
-    //         });
-
-    //         const $qtyLabel = $('<label>').text('Quantidade');
-    //         const $qtyInput = $('<input>').addClass('quantity-input').attr({
-    //           type: 'number', min: '1', value: '1'
-    //         });
-
-    //         const $priceSpan = $('<span>').addClass('price-input');
-    //         const $priceInput = $('<input>').addClass('price-inputv').attr({ type: 'hidden', readonly: true });
-    //         const $subtotal = $('<div>').addClass('item-total mt-2');
-
-    //         const $deleteBtn = $('<button>').attr('type', 'button')
-    //           .addClass('btn btn-danger btn-sm')
-    //           .html('<i class="bi bi-trash3"></i> Remover')
-    //           .on('click', function () {
-    //             $col.remove();
-    //             updateTotalPedido();
-    //           });
-
-    //         const $controls = $('<div>').addClass('image-controls').append($deleteBtn);
-
-    //         $atributos.append(
-    //           $('<div class="w-100 d-flex gap-2 align-items-center flex-wrap"></div>').append(
-    //             $sizeSelect, $qtyInput, $priceSpan, $priceInput
-    //           ),
-    //           $subtotal,
-    //           $controls
-    //         );
-
-    //         $card.append($thumb, $atributos);
-    //         $col.append($card);
-    //         $('#imageContainer').append($col);
-
-    //         updatePrice($col, $sizeSelect.val());
-    //       };
-    //       reader.readAsDataURL(file);
-    //     });
-    //   }
-
-    //   function updatePrice(wrapper, size) {
-    //     const parsedSize = JSON.parse(size);
-    //     const price = parsedSize.price;
-    //     wrapper.find('.price-input').html(price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
-    //     wrapper.find('.price-inputv').val(price);
-    //     updateTotalPedido();
-    //   }
-
-    //   $(document).on('input', '.quantity-input', function () {
-    //     const wrapper = $(this).closest('.image-wrapper');
-    //     const size = wrapper.find('.size-select').val();
-    //     updatePrice(wrapper, size);
-    //   });
-
-    //   function updateTotalPedido() {
-    //     let total = 0;
-    //     const valor_entrega = parseFloat($('#val_entrega').val()) || 0;
-    //     $('#imageContainer .image-wrapper').each(function () {
-    //       const price = parseFloat($(this).find('.price-inputv').val()) || 0;
-    //       const quantity = parseInt($(this).find('.quantity-input').val()) || 1;
-    //       total += price * quantity;
-    //     });
-    //     total += valor_entrega;
-    //     $('#input_total').val(total);
-    //     $('#total_pedido').html(total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
-    //   }
-
-    //   function uploadImages(formData) {
-    //     $('#progressModal').css('display', 'flex');
-
-    //     $.ajax({
-    //       url: '{{ route('upload.image') }}',
-    //       method: 'POST',
-    //       headers: { 'X-CSRF-TOKEN': $('input[name="_token"]').val() },
-    //       data: formData,
-    //       processData: false,
-    //       contentType: false,
-    //       xhr: function () {
-    //         const xhr = new window.XMLHttpRequest();
-    //         xhr.upload.addEventListener('progress', function (evt) {
-    //           if (evt.lengthComputable) {
-    //             const percent = (evt.loaded / evt.total) * 100;
-    //             $('#uploadProgress').val(percent);
-    //             if (percent === 100) $('#progressModal').hide();
-    //           }
-    //         }, false);
-    //         return xhr;
-    //       },
-    //       success: function (data) {
-    //         if (data.images) {
-    //           alert('Imagens enviadas com sucesso');
-    //           window.location.href = '/pagamento/escolha/' + data.pedido;
-    //         }
-    //       },
-    //       error: function (error) {
-    //         console.error('Erro:', error);
-    //         $('#progressModal').hide();
-    //       }
-    //     });
-    //   }
-
-    //   $(document).on('click', '#progressModal .close', function () {
-    //     $('#progressModal').hide();
-    //   });
-    //   $(window).on('click', function (event) {
-    //     if (event.target === document.getElementById('progressModal')) {
-    //       $('#progressModal').hide();
-    //     }
-    //   });
-    // });
-
-    $(function () {
+       $(function () {
   const modalEscolha = new bootstrap.Modal(document.getElementById('modalEscolha'));
   let precodesc = 0;
   const cropSizes = [
     @foreach ($tamanhos as $tamanho)
-      {
+    {
+        nome: '{{ $tamanho->nome }}',
         width: {{ $tamanho->largura }},
         height: {{ $tamanho->altura }},
-        @if ($cliente->desconto > 1)
-          price: {{ $tamanho->preco * $desconto }}
-        @else
-          price: {{ $tamanho->preco }}
-        @endif
-      },
+        price: {{ round(
+            $cliente->desconto > 0
+                ? $tamanho->preco * (1 - ($cliente->desconto / 100))
+                : $tamanho->preco,
+            2
+        ) }}
+    },
     @endforeach
-  ];
-
+];
   $('#imageInput').on('change', function () {
     const files = Array.from(this.files);
     handleFiles(files);
@@ -482,7 +254,8 @@
       const parsed = JSON.parse(sel.value);
       a = parseFloat(parsed.width);
       b = parseFloat(parsed.height);
-      label = parsed.height + 'x' + parsed.width;
+      label = parsed.nome;
+
     } catch (e) {
       const parts = sel.value.toLowerCase().split('x').map(v => parseFloat(v));
       a = parts[0]; b = parts[1];
@@ -564,7 +337,7 @@
           updateCropMask($card);
         });
         cropSizes.forEach(function (size, index) {
-          const $option = $('<option>').val(JSON.stringify(size)).text(size.height + 'x' + size.width);
+          const $option = $('<option>').val(JSON.stringify(size)).text(size.nome);
           if (index === 0) $option.prop('selected', true);
           $sizeSelect.append($option);
         });
