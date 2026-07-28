@@ -137,7 +137,7 @@
                 @endphp
                   <tr>
                     <td class="text-muted">#{{$recente->id}}</td>
-                    <td><div class="cell-user"><div class="avatar xs">{{$iniciais}}</div>{{$recente->cliente}}</div></td>
+                    <td><div class="cell-user"><div class="avatar xs">{{$iniciais}}</div> {{ mb_convert_case($recente->cliente, MB_CASE_TITLE, "UTF-8") }}</div></td>
                     <td>{{$recente->labNome}}</td>
                     <td>{{$recente->observacao}}</td>
                     <td class="fw-semibold">{{number_format($recente->total,2, ',','.')}}</td>
