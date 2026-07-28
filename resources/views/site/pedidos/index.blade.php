@@ -49,7 +49,7 @@
             @foreach ($pedidos as $pedido)
                 <tr>
                     <th scope="row">{{ $pedido->id }}</th>
-                    <td>{{ $pedido->cliente }}</td>
+                    <td>{{ mb_convert_case($pedido->cliente, MB_CASE_TITLE, "UTF-8") }}</td>
                     @switch($pedido->laboratorio_id)
                         @case(1)
                             <td>Jacobina</td>

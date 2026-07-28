@@ -37,7 +37,7 @@
         <div class="row detalhesPedido">
             <table class="table table-striped mb-3 mt-3">
                 <tr>
-                    <td>Cliente: <b>{{ $pedido->cliente }}</b></td>
+                    <td>Cliente: <b>{{ mb_convert_case($pedido->cliente, MB_CASE_TITLE, "UTF-8") }}</b></td>
                     <td>Telefone: <b>{{ $cliente->telefone }}</b></td>
                 </tr>
                 <tr>

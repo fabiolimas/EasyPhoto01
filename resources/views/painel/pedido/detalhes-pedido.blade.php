@@ -27,7 +27,7 @@
             <div class="row detalhesPedido table-responsive">
                 <table class="table table-striped mb-3 mt-3">
                     <tr>
-                        <td>Cliente: <b>{{ $pedido->cliente }}</b>
+                        <td>Cliente: <b>{{ mb_convert_case($pedido->cliente, MB_CASE_TITLE, "UTF-8") }}</b>
                             <i class="bi bi-search m-2" data-bs-toggle="modal" data-bs-target="#dadosCliente"
                                 style="cursor:pointer"></i>
                         </td>
