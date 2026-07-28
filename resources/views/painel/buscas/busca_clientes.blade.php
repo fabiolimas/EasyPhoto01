@@ -16,7 +16,7 @@
         @foreach($clientes as $cliente)
       <tr>
         <th scope="row">{{$cliente->id}}</th>
-        <td>{{$cliente->nome}}</td>
+        <td>{{ mb_convert_case($cliente->nome, MB_CASE_TITLE, "UTF-8") }}</td>
         <td>{{$cliente->email}}</td>
         <td>{{$cliente->telefone}}</td>
         <td>{{$cliente->cidade}}</td>

@@ -26,7 +26,7 @@
                                         href="{{ route('detalhes-pedidos-admin', $pedido->id) }}">{{ $pedido->id }}</th>
                                 <td>
                                     <div class="cell-user">
-                                        <div class="avatar xs">{{ $iniciais }}</div>{{ $pedido->cliente }}
+                                        <div class="avatar xs">{{ $iniciais }}</div>{{ mb_convert_case($pedido->cliente, MB_CASE_TITLE, "UTF-8") }}
                                     </div>
                                 </td>
                                 <td>{{ date('d/m/Y H:i', strtotime($pedido->created_at)) }}</td>
