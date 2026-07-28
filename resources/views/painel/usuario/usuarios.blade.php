@@ -4,6 +4,7 @@
 
 @section('content')
     <section class="content">
+        @include('components.alerts')
         <div class="page-head">
             <div>
                 <h1 class="page-title">Usuários</h1>
@@ -66,7 +67,7 @@
                         @foreach ($usuarios as $usuario)
                             <tr>
                                 <th scope="row">{{ $usuario->id }}</th>
-                                <td>{{ $usuario->name }}</td>
+                                <td>{{ mb_convert_case($usuario->name, MB_CASE_TITLE, "UTF-8") }}</td>
                                 <td>{{ $usuario->email }}</td>
                                 <td><span
                                         class="tag @if ($usuario->nivel == 'administrador') tag-purple @elseif($usuario->nivel == 'laboratorio') tag-blue @else tag-gray @endif">{{ $usuario->nivel }}</span>

@@ -29,6 +29,23 @@ class UserController extends Controller
 
     public function store(Request $request){
 
+        $verifyUser=User::where('email',$request->email)->count();
+
+
+        if($verifyUser >=1){
+return redirect()->route('usuarios')->with('error', 'Usuario já possui cadastro');
+
+        }else{
+$usuario= new User();
+
+            $usuario->fill($request->all());
+            $usuario->password = bcrypt($request->password);
+            $usuario->save();
+
+        return redirect()->route('usuarios')->with('success', 'Usuario adicionado com sucesso');
+
+        }
+
             $usuario= new User();
 
             $usuario->fill($request->all());
@@ -49,7 +66,7 @@ class UserController extends Controller
     public function update(Request $request){
         $usuario = User::find($request->id);
 
-        $usuario->update(['name'=>$request->name,'email'=>$request->email,'nivel'=>$request->nivel,'laboratorio_id'=>$request->laboratorio_id]);
+        $usuario->update(['name'=>mb_convert_case($request->name, MB_CASE_TITLE, "UTF-8"),'email'=>$request->email,'nivel'=>$request->nivel,'laboratorio_id'=>$request->laboratorio_id]);
 
         if ($request->has('password') && $request->password != '') :
             $usuario->password = bcrypt($request->password);
@@ -74,7 +91,7 @@ class UserController extends Controller
         $cliente=Cliente::find($request->id);
         $usuario=User::find($cliente->user_id);
         $cliente->update([
-            'nome'=>$request->nome,
+            'nome'=>mb_convert_case($request->nome, MB_CASE_TITLE, "UTF-8"),
             'cpf'=>$request->cpf,
             'telefone'=>$request->telefone,
             'endereco'=>$request->endereco,

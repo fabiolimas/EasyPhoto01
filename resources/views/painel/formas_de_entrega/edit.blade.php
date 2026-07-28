@@ -6,6 +6,7 @@
 
 @section('content')
     <section class="content">
+        @include('components.alerts')
         <div class="page-head">
             <div>
                 <h1 class="page-title">Editar Forma de Entrega</h1>

@@ -5,6 +5,7 @@
 
 @section('content')
     <section class="content">
+        @include('components.alerts')
         <div class="page-head">
             <div>
                 <h1 class="page-title">Pedidos</h1>

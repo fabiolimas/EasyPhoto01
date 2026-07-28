@@ -7,6 +7,7 @@
 @stop
 
 @section('content')
+@include('components.alerts')
 <div class="col-md-6">
     <form method="post" action="{{route('update-tamanho', $tamanho->id)}}">
         @csrf
