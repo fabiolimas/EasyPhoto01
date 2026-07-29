@@ -29,10 +29,13 @@ body{
     padding: 2px;
 }
 .imagemPedido {
-    width: 104px;
-    margin: 9px;
+    /* width: 104px; */
+    /* margin: 9px; */
     border: 1px solid #ccc;
     padding: 6px;
+}
+.modal{
+    --bs-modal-width: 58% !important;
 }
 a{color:inherit;text-decoration:none}
 .xsmall{font-size:11px}

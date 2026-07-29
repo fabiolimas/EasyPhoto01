@@ -195,11 +195,12 @@
 
                                             <div class="row">
 
+
                                                 @foreach ($itensPedido as $item)
-                                                    <div class="imagemPedido">
+                                                    <div class="imagemPedido col-md-4">
                                                         <img src="{{ Storage::url($item->caminho) }}"
                                                             alt="Selecionar imagens" title="Selecionar Imagens"
-                                                            class="w-100" style="cursor: pointer">
+                                                            class="w-100" style="cursor: pointer" data-bs-target="#modalMiniatura-{{ $loop->index + 1 }}">
                                                     </div>
                                                 @endforeach
 
