@@ -37,7 +37,7 @@
         <div class="row detalhesPedido">
             <table class="table table-striped mb-3 mt-3">
                 <tr>
-                    <td>Cliente: <b>{{ mb_convert_case($pedido->cliente, MB_CASE_TITLE, "UTF-8") }}</b></td>
+                    <td>Cliente: <b>{{ mb_convert_case($pedido->cliente, MB_CASE_TITLE, 'UTF-8') }}</b></td>
                     <td>Telefone: <b>{{ $cliente->telefone }}</b></td>
                 </tr>
                 <tr>
@@ -64,7 +64,7 @@
                     <td class="">Status do pedido: <span
                             class="@if ($pedido->status == 'Finalizado') text-success @else text-danger @endif"><b>{{ $pedido->status }}</b>
                     </td>
-                    {{-- <td>ID Pagamento: @if($payment->payment_id != null){{$payment->payment_id}}@else @endif</td> --}}
+                    {{-- <td>ID Pagamento: @if ($payment->payment_id != null){{$payment->payment_id}}@else @endif</td> --}}
                 </tr>
 
             </table>
@@ -77,28 +77,28 @@
 
 
         </div>
-         <div class="col-md-3  offset-sd-2">
+        <div class="col-md-3  offset-sd-2">
             <a href="{{ route('cancelar-pedido', $pedido->id) }}" class="btn btn-warning">
-                            <i class="bi bi-x-circle"></i> Cancelar Pedido
-                        </a>
+                <i class="bi bi-x-circle"></i> Cancelar Pedido
+            </a>
 
 
         </div>
 
-          @if ($pedido->status_pagamento === 'pendente' && !empty($cliente?->cpf))
-                    <div class="col-md-3  offset-md-3 d-flex mt-2">
-                        <a href="{{ route('pagamento.escolha', $pedido->id) }}" class="btn btn-success">
-                            <i class="bi bi-bag"></i> Fazer Pagamento
-                        </a>
-                    </div>
-                @elseif(empty($cliente?->cpf))
-                    <div class="col-md-3  offset-md-3 d-flex mt-2">
+        @if ($pedido->status_pagamento === 'pendente' && !empty($cliente?->cpf))
+            <div class="col-md-3  offset-md-3 d-flex mt-2">
+                <a href="{{ route('pagamento.escolha', $pedido->id) }}" class="btn btn-success">
+                    <i class="bi bi-bag"></i> Fazer Pagamento
+                </a>
+            </div>
+        @elseif(empty($cliente?->cpf))
+            <div class="col-md-3  offset-md-3 d-flex mt-2">
 
-                        <a href="{{ route('meus-dados', ['id' => Auth::user()->id]) }}" class="btn btn-warning">
-                            <i class="bi bi-floppy"></i> Fazer Pagamento
-                        </a>
-                    </div>
-                @endif
+                <a href="{{ route('meus-dados', ['id' => Auth::user()->id]) }}" class="btn btn-warning">
+                    <i class="bi bi-floppy"></i> Fazer Pagamento
+                </a>
+            </div>
+        @endif
 
     </div>
     <hr>
@@ -158,9 +158,9 @@
                                         {{-- <div class="modal-footer">
 
 
-                            <button type="button" class="btn btn-danger">Selecionar imagens</button>
+                                        <button type="button" class="btn btn-danger">Selecionar imagens</button>
 
-                         </div> --}}
+                                            </div> --}}
                                     </div>
                                 </div>
                             </div>
@@ -178,45 +178,7 @@
 
 
                         {{-- Modal Visualização --}}
-                        <div class="modal fade" id="modalPedido" tabindex="-1" aria-labelledby="exampleModalLabel"
-                            aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Pedido #{{ $pedido->id }}
-                                        </h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
 
-
-                                        <div class="contentModalLab mt-3">
-
-                                            <div class="row">
-
-
-                                                @foreach ($itensPedido as $item)
-                                                    <div class="imagemPedido col-md-4">
-                                                        <img src="{{ Storage::url($item->caminho) }}"
-                                                            alt="Selecionar imagens" title="Selecionar Imagens"
-                                                            class="w-100" style="cursor: pointer" data-bs-target="#modalMiniatura-{{ $loop->index + 1 }}">
-                                                    </div>
-                                                @endforeach
-
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{-- <div class="modal-footer">
-
-
-                            <button type="button" class="btn btn-danger">Selecionar imagens</button>
-
-                         </div> --}}
-                                </div>
-                            </div>
-                        </div>
 
                     </tr>
                 @endforeach
@@ -245,6 +207,45 @@
 
             </tbody>
         </table>
+
+        <div class="modal fade" id="modalPedido" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Pedido #{{ $pedido->id }}
+                        </h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+
+                        <div class="contentModalLab mt-3">
+
+                            <div class="row">
+
+
+                                @foreach ($itensPedido as $item)
+                                    <div class="imagemPedido col-md-4">
+                                        <img src="{{ Storage::url($item->caminho) }}" alt="{{$item->nome}}"
+                                            title="{{$item->nome}}" class="w-100" style="cursor: pointer">
+                                    </div>
+
+
+                                @endforeach
+
+
+                            </div>
+                        </div>
+                    </div>
+                    {{-- <div class="modal-footer">
+
+
+                            <button type="button" class="btn btn-danger">Selecionar imagens</button>
+
+                         </div> --}}
+                </div>
+            </div>
+        </div>
 
 
     </div>
