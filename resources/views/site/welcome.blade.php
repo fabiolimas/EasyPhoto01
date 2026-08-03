@@ -23,6 +23,22 @@
      <input type="hidden" name="laboratorio_id" id="laboratorio_id" value="{{ $laboratorio->id }}">
      <input type="file" id="imageInput" name="images[]" multiple accept="image/*" style="visibility: hidden">
       {{-- Grid de imagens --}}
+      <div class="d-flex align-items-center gap-3 mb-3" id="bulkActions" style="display:none!important;">
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="selectAllImages">
+        <label class="form-check-label" for="selectAllImages">
+            Selecionar todas
+        </label>
+    </div>
+
+    <select id="bulkSizeSelect" class="form-select" style="max-width:250px;">
+        <option value="">Alterar tamanho das selecionadas</option>
+    </select>
+
+    <span id="selectedCount" class="text-muted">
+        0 selecionadas
+    </span>
+</div>
       <div class="row g-3" id="imageContainer">
         {{-- <div class="col-12 col-sm-6 col-md-4 col-lg-3">
           <label for="imageInput" class="empty-upload h-100 mb-0">
@@ -171,6 +187,13 @@
     },
     @endforeach
 ];
+cropSizes.forEach(function(size){
+    $('#bulkSizeSelect').append(
+        $('<option>')
+            .val(JSON.stringify(size))
+            .text(size.nome)
+    );
+});
   $('#imageInput').on('change', function () {
     const files = Array.from(this.files);
     handleFiles(files);
@@ -318,6 +341,7 @@
       modalEscolha.show();
       return;
     }
+    const $card = $('<div>').addClass('image-card');
 
     files.forEach(function (file) {
       const reader = new FileReader();
@@ -327,6 +351,59 @@
         const $thumb = $('<div>').addClass('image-card-thumb');
         const $mask  = $('<div>').addClass('crop-mask');
         const $img   = $('<img>').attr('src', e.target.result);
+        const $check = $(`
+<label class="select-image">
+    <input type="checkbox" class="image-selector">
+</label>
+`);
+
+$card.append($check);
+
+function updateSelectedCount(){
+
+    let total = $('.image-selector:checked').length;
+
+    $('#selectedCount').text(total + ' selecionadas');
+
+    $('#bulkActions').toggle($('.image-wrapper').length > 0);
+
+}
+$(document).on('change','#selectAllImages',function(){
+
+    let checked = $(this).is(':checked');
+
+    $('.image-selector')
+        .prop('checked',checked)
+        .trigger('change');
+
+});
+$(document).on('change','.image-selector',function(){
+
+    $(this)
+        .closest('.image-wrapper')
+        .toggleClass('selected',$(this).is(':checked'));
+
+    updateSelectedCount();
+
+});
+$('#bulkSizeSelect').on('change',function(){
+
+    let value = $(this).val();
+
+    if(!value) return;
+
+    $('.image-selector:checked').each(function(){
+
+        let wrapper = $(this).closest('.image-wrapper');
+
+        wrapper.find('.size-select')
+            .val(value)
+            .trigger('change');
+
+    });
+
+});
+
 
         $thumb.append($img).append($mask);
 

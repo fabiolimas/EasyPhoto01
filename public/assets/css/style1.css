@@ -61,6 +61,24 @@
     color: #000;
 
 }
+.image-card{
+    position:relative;
+}
+
+.select-image {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 20;
+    background: #c70b1c;
+    border-radius: 14%;
+    padding: 3px;
+}
+
+.image-wrapper.selected{
+    border:3px solid #0d6efd;
+    border-radius:10px;
+}
 .modal{
     --bs-modal-width: 58% !important;
 }
