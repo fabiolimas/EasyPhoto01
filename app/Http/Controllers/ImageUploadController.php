@@ -149,7 +149,7 @@ public function downloadFiles(Request $request)
     $pedidoItems = PedidoItem::where('pedido_id', $pedido->id)->get();
 
     // Nome do arquivo .zip
-    $zipFileName = 'pedido_' . $pedido->id . '.zip';
+    $zipFileName = $pedido->cliente.'.zip';
     $zipFilePath = storage_path('app/public/uploads/' . $zipFileName);
 
     // Criar um novo arquivo zip e adicionar os arquivos
