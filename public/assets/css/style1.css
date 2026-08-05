@@ -23,7 +23,11 @@
     .image-card{background:var(--bg-card);border:1px solid var(--border-dark);border-radius:14px;overflow:hidden;transition:all .3s ease}
     .image-card:hover{transform:translateY(-4px);border-color:var(--red-primary);box-shadow:0 12px 28px rgba(0,0,0,.45),0 0 0 1px var(--red-glow)}
     .image-card-thumb{aspect-ratio:1/1;background:#0a0a0a;display:flex;align-items:center;justify-content:center;overflow:hidden}
-    .image-card-thumb img{width:100%!important;height:100%!important;object-fit:cover;margin:0!important}
+    .image-card-thumb img{
+    position:absolute;
+    left:50%;
+    top:50%;
+}
     .image-card-body,.atributos{padding:.85rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;background:var(--bg-elevated);border-top:1px solid var(--border-dark)}
     .form-select-dark,.form-control-dark,.size-select,.quantity-input{background:#0f0f0f;border:1px solid var(--border-dark);color:var(--text-light);border-radius:8px;font-size:.9rem;padding:.35rem .6rem}
     .form-select-dark:focus,.form-control-dark:focus,.size-select:focus,.quantity-input:focus{background:#0f0f0f;border-color:var(--red-primary);color:#fff;box-shadow:0 0 0 .2rem var(--red-glow);outline:none}
@@ -79,6 +83,7 @@
     border:3px solid #0d6efd;
     border-radius:10px;
 }
+
 .modal{
     --bs-modal-width: 58% !important;
 }
@@ -184,17 +189,22 @@ div#modalLab .modal-content {
       display: block;
     }
     /* Máscara de corte: mostra a área que será impressa */
-    .crop-mask {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border: 2px dashed rgba(255,255,255,0.95);
-      box-shadow: 0 0 0 9999px rgba(0,0,0,0.55);
-      pointer-events: none;
-      transition: width 0.25s ease, height 0.25s ease;
-      box-sizing: border-box;
-    }
+   .crop-mask{
+
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    cursor:move;
+
+    pointer-events:auto;
+
+    z-index:10;
+
+}
     .crop-mask::after {
       content: attr(data-size);
       position: absolute;
@@ -280,3 +290,39 @@ div#modalLab .modal-content {
       background: rgba(225, 11, 30, 0.05);
     }
     .empty-upload i { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.image-card-thumb{
+
+    position:relative;
+    overflow:hidden;
+
+}
+
+.image-card-thumb img{
+
+    position:absolute;
+    left:50%;
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    user-select:none;
+    -webkit-user-drag:none;
+
+}
+
+.crop-mask{
+
+    position:absolute;
+    left:50%;
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    border:2px dashed #fff;
+    box-shadow:0 0 0 9999px rgba(0,0,0,.45);
+
+    cursor:move;
+
+    pointer-events:auto;
+
+}

@@ -320,6 +320,14 @@ cropSizes.forEach(function(size){
 
     mask.style.width  = mw + 'px';
     mask.style.height = mh + 'px';
+    const state = $card.data('maskState');
+
+if(state){
+
+    state.x = 0;
+    state.y = 0;
+
+}
     mask.setAttribute('data-size', label);
   }
 
@@ -329,6 +337,130 @@ cropSizes.forEach(function(size){
     const run = () => updateCropMask($card);
     if (img.complete) run(); else img.addEventListener('load', run);
   }
+  // =============================
+// Editor visual da máscara
+// =============================
+function initMaskEditor($card){
+
+    const thumb = $card.find('.image-card-thumb');
+    const mask  = $card.find('.crop-mask');
+
+    const state = {
+        x:0,
+        y:0,
+        dragging:false,
+        startX:0,
+        startY:0,
+        zoom:1
+    };
+
+    $card.data('maskState',state);
+
+    function update(){
+
+        mask.css({
+            transform:
+            `translate(calc(-50% + ${state.x}px),
+                       calc(-50% + ${state.y}px))
+             scale(${state.zoom})`
+        });
+
+    }
+
+    update();
+
+    mask.on('mousedown',function(e){
+
+        e.preventDefault();
+
+        state.dragging=true;
+
+        state.startX=e.clientX-state.x;
+        state.startY=e.clientY-state.y;
+
+    });
+
+    $(document).on('mousemove.mask',function(e){
+
+        if(!state.dragging) return;
+
+        state.x=e.clientX-state.startX;
+        state.y=e.clientY-state.startY;
+
+        limitar();
+
+        update();
+
+    });
+
+    $(document).on('mouseup.mask',function(){
+
+        state.dragging=false;
+
+    });
+
+    mask.on('wheel',function(e){
+
+        e.preventDefault();
+
+        if(e.originalEvent.deltaY<0){
+
+            state.zoom+=0.05;
+
+        }else{
+
+            state.zoom-=0.05;
+
+        }
+
+        state.zoom=Math.max(.5,Math.min(3,state.zoom));
+
+        limitar();
+
+        update();
+
+    });
+
+    function limitar(){
+
+    const img = thumb.find('img')[0];
+
+    if(!img.naturalWidth) return;
+
+    const boxW = thumb.width();
+    const boxH = thumb.height();
+
+    const imgRatio = img.naturalWidth / img.naturalHeight;
+    const boxRatio = boxW / boxH;
+
+    let renderW;
+    let renderH;
+
+    // tamanho REAL da imagem dentro do contain
+    if(imgRatio > boxRatio){
+
+        renderW = boxW;
+        renderH = boxW / imgRatio;
+
+    }else{
+
+        renderH = boxH;
+        renderW = boxH * imgRatio;
+
+    }
+
+    const mw = mask.outerWidth() * state.zoom;
+    const mh = mask.outerHeight() * state.zoom;
+
+    const maxX = (renderW - mw) / 2;
+    const maxY = (renderH - mh) / 2;
+
+    state.x = Math.max(-maxX, Math.min(maxX, state.x));
+    state.y = Math.max(-maxY, Math.min(maxY, state.y));
+
+}
+
+}
 
   $(window).on('resize', function () {
     $('#imageContainer .image-wrapper .image-card').each(function () {
@@ -447,12 +579,17 @@ $('#bulkSizeSelect').on('change',function(){
         $col.append($card);
         $('#imageContainer').append($col);
 
-        updatePrice($col, $sizeSelect.val());
-        initCropMask($card);
+     updatePrice($col, $sizeSelect.val());
+
+initCropMask($card);
+
+initMaskEditor($card);
       };
       reader.readAsDataURL(file);
     });
   }
+
+
 
   function updatePrice(wrapper, size) {
     const parsedSize = JSON.parse(size);
