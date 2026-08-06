@@ -105,7 +105,7 @@ class ImageUploadController extends Controller
 
 
         // Definir o caminho da imagem
-        $imagePath = 'uploads/' . $pedido->id . '/' . $size['width'] . 'x' . $size['height'] . '/' . $quantity;
+        $imagePath = 'uploads/pedido_' . $pedido->id . '/Foto_' . $size['width'] . 'x' . $size['height'] . '/' . $quantity;
         $fullImagePath = storage_path('app/public/' . $imagePath);
 
         // Criar a estrutura de pastas se não existir
