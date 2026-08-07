@@ -21,6 +21,17 @@
         <input type="hidden" name="laboratorio_id" id="laboratorio_id" value="{{ $laboratorio->id }}">
         <input type="file" id="imageInput" name="images[]" multiple accept="image/*" style="visibility: hidden">
         {{-- Grid de imagens --}}
+        <div id="bulkProgressContainer" style="display:none; margin-bottom:15px;">
+            <div class="d-flex justify-content-between mb-1">
+                <small>Atualizando tamanhos...</small>
+                <small id="bulkProgressText">0%</small>
+            </div>
+
+            <div class="progress" style="height:18px;">
+                <div id="bulkProgressBar" class="progress-bar" role="progressbar" style="width:0%;">
+                </div>
+            </div>
+        </div>
         <div class="d-flex align-items-center gap-3 mb-3" id="bulkActions" style="display:none!important;">
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="selectAllImages">
@@ -170,6 +181,247 @@
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
+         // ===== Máscara de corte =====
+            function updateCropMask($card) {
+                const img = $card.find('.image-card-thumb img')[0];
+                const thumb = $card.find('.image-card-thumb')[0];
+                const mask = $card.find('.crop-mask')[0];
+                const sel = $card.find('.size-select')[0];
+                if (!img || !thumb || !mask || !sel) return;
+                if (!img.naturalWidth || !img.naturalHeight) return;
+
+                let a, b, label;
+                try {
+                    const parsed = JSON.parse(sel.value);
+                    a = parseFloat(parsed.width);
+                    b = parseFloat(parsed.height);
+                    label = parsed.nome;
+
+                } catch (e) {
+                    const parts = sel.value.toLowerCase().split('x').map(v => parseFloat(v));
+                    a = parts[0];
+                    b = parts[1];
+                    label = sel.value;
+                }
+                if (!a || !b) return;
+
+                const cw = thumb.clientWidth;
+                const ch = thumb.clientHeight;
+                const imgRatio = img.naturalWidth / img.naturalHeight;
+
+                // Tamanho renderizado (object-fit: contain)
+                let renderedW, renderedH;
+                if (imgRatio > cw / ch) {
+                    renderedW = cw;
+                    renderedH = cw / imgRatio;
+                } else {
+                    renderedH = ch;
+                    renderedW = ch * imgRatio;
+                }
+
+                // Orienta o corte conforme paisagem/retrato da foto
+                const longSide = Math.max(a, b);
+                const shortSide = Math.min(a, b);
+                let printW, printH;
+                if (imgRatio >= 1) {
+                    printW = longSide;
+                    printH = shortSide;
+                } else {
+                    printW = shortSide;
+                    printH = longSide;
+                }
+                const cropRatio = printW / printH;
+
+                // Inscreve o retângulo de corte na imagem renderizada
+                let mw, mh;
+                if (cropRatio > renderedW / renderedH) {
+                    mw = renderedW;
+                    mh = renderedW / cropRatio;
+                } else {
+                    mh = renderedH;
+                    mw = renderedH * cropRatio;
+                }
+
+                mask.style.width = mw + 'px';
+                mask.style.height = mh + 'px';
+                const state = $card.data('maskState');
+
+                if (state) {
+
+                    state.x = 0;
+                    state.y = 0;
+
+                }
+                mask.setAttribute('data-size', label);
+            }
+
+            function updateTotalPedido() {
+                let total = 0;
+                const valor_entrega = parseFloat($('#val_entrega').val()) || 0;
+                $('#imageContainer .image-wrapper').each(function() {
+                    const price = parseFloat($(this).find('.price-inputv').val()) || 0;
+                    const quantity = parseInt($(this).find('.quantity-input').val()) || 1;
+                    total += price * quantity;
+                });
+                total += valor_entrega;
+                $('#input_total').val(total);
+                $('#total_pedido').html(total.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                }));
+            }
+
+        function updateSelectedSizesWithProgress(value) {
+
+            if (!value) return;
+
+            const parsedSize = JSON.parse(value);
+            const price = parsedSize.price;
+
+            const selected = $('.image-selector:checked').toArray();
+
+            if (selected.length === 0) {
+                $('#bulkSizeSelect').val('');
+                return;
+            }
+
+            const total = selected.length;
+            let processed = 0;
+
+            // Mostra o progresso
+            $('#bulkProgressContainer').show();
+            $('#bulkProgressBar')
+                .css('width', '0%')
+                .attr('aria-valuenow', 0);
+
+            $('#bulkProgressText').text('0%');
+
+            // Desabilita o select durante o processamento
+            $('#bulkSizeSelect').prop('disabled', true);
+
+            // Quantidade de imagens processadas por ciclo
+            const batchSize = 20;
+
+            function processBatch() {
+
+                const end = Math.min(
+                    processed + batchSize,
+                    total
+                );
+
+                for (let i = processed; i < end; i++) {
+
+                    const $selector = $(selected[i]);
+                    const $wrapper = $selector.closest('.image-wrapper');
+                    const $card = $wrapper.find('.image-card');
+
+                    /*
+                     * 1. ALTERA O TAMANHO
+                     */
+                    $wrapper
+                        .find('.size-select')
+                        .val(value);
+
+                    /*
+                     * 2. ATUALIZA O PREÇO
+                     *
+                     * Não usamos updatePrice() aqui porque ela
+                     * chama updateTotalPedido() para cada imagem.
+                     */
+                    $wrapper
+                        .find('.price-input')
+                        .html(
+                            price.toLocaleString('pt-BR', {
+                                style: 'currency',
+                                currency: 'BRL'
+                            })
+                        );
+
+                    $wrapper
+                        .find('.price-inputv')
+                        .val(price);
+
+                    /*
+                     * 3. ATUALIZA A MÁSCARA DE CORTE
+                     */
+                    if ($card.length) {
+                        updateCropMask($card);
+                    }
+
+                    processed++;
+                }
+
+                /*
+                 * 4. ATUALIZA O PROGRESSO
+                 */
+                const percent = Math.round(
+                    (processed / total) * 100
+                );
+
+                $('#bulkProgressBar')
+                    .css('width', percent + '%')
+                    .attr('aria-valuenow', percent);
+
+                $('#bulkProgressText')
+                    .text(percent + '%');
+
+                /*
+                 * 5. CONTINUA PROCESSANDO
+                 */
+                if (processed < total) {
+
+                    requestAnimationFrame(processBatch);
+
+                } else {
+
+                    /*
+                     * 6. RECALCULA O TOTAL APENAS UMA VEZ
+                     */
+                    updateTotalPedido();
+
+                    /*
+                     * 7. LIBERA O SELECT
+                     */
+                    $('#bulkSizeSelect').prop(
+                        'disabled',
+                        false
+                    );
+
+                    /*
+                     * 8. MOSTRA CONCLUÍDO
+                     */
+                    $('#bulkProgressText').text(
+                        'Concluído'
+                    );
+
+                    $('#bulkProgressBar')
+                        .css('width', '100%')
+                        .attr('aria-valuenow', 100);
+
+                    /*
+                     * 9. LIMPA O SELECT
+                     */
+                    $('#bulkSizeSelect').val('');
+
+                    /*
+                     * 10. ESCONDE A BARRA
+                     */
+                    setTimeout(function() {
+
+                        $('#bulkProgressContainer').fadeOut(300);
+
+                    }, 1000);
+                }
+            }
+
+            /*
+             * Inicia o processamento
+             */
+            requestAnimationFrame(processBatch);
+        }
+
+
+
         $(function() {
             const modalEscolha = new bootstrap.Modal(document.getElementById('modalEscolha'));
             let precodesc = 0;
@@ -296,79 +548,7 @@
                 });
             });
 
-            // ===== Máscara de corte =====
-            function updateCropMask($card) {
-                const img = $card.find('.image-card-thumb img')[0];
-                const thumb = $card.find('.image-card-thumb')[0];
-                const mask = $card.find('.crop-mask')[0];
-                const sel = $card.find('.size-select')[0];
-                if (!img || !thumb || !mask || !sel) return;
-                if (!img.naturalWidth || !img.naturalHeight) return;
 
-                let a, b, label;
-                try {
-                    const parsed = JSON.parse(sel.value);
-                    a = parseFloat(parsed.width);
-                    b = parseFloat(parsed.height);
-                    label = parsed.nome;
-
-                } catch (e) {
-                    const parts = sel.value.toLowerCase().split('x').map(v => parseFloat(v));
-                    a = parts[0];
-                    b = parts[1];
-                    label = sel.value;
-                }
-                if (!a || !b) return;
-
-                const cw = thumb.clientWidth;
-                const ch = thumb.clientHeight;
-                const imgRatio = img.naturalWidth / img.naturalHeight;
-
-                // Tamanho renderizado (object-fit: contain)
-                let renderedW, renderedH;
-                if (imgRatio > cw / ch) {
-                    renderedW = cw;
-                    renderedH = cw / imgRatio;
-                } else {
-                    renderedH = ch;
-                    renderedW = ch * imgRatio;
-                }
-
-                // Orienta o corte conforme paisagem/retrato da foto
-                const longSide = Math.max(a, b);
-                const shortSide = Math.min(a, b);
-                let printW, printH;
-                if (imgRatio >= 1) {
-                    printW = longSide;
-                    printH = shortSide;
-                } else {
-                    printW = shortSide;
-                    printH = longSide;
-                }
-                const cropRatio = printW / printH;
-
-                // Inscreve o retângulo de corte na imagem renderizada
-                let mw, mh;
-                if (cropRatio > renderedW / renderedH) {
-                    mw = renderedW;
-                    mh = renderedW / cropRatio;
-                } else {
-                    mh = renderedH;
-                    mw = renderedH * cropRatio;
-                }
-
-                mask.style.width = mw + 'px';
-                mask.style.height = mh + 'px';
-                const state = $card.data('maskState');
-
-                if (state) {
-
-                    state.x = 0;
-                    state.y = 0;
-
-                }
-                mask.setAttribute('data-size', label);
-            }
 
             function initCropMask($card) {
                 const img = $card.find('.image-card-thumb img')[0];
@@ -545,87 +725,47 @@
                                 $('.image-wrapper').length > 0 ? 'flex' : 'none'
                             );
                         }
-                        $(document).on('change', '#selectAllImages', function () {
+                        $(document).on('change', '#selectAllImages', function() {
 
-    const checked = this.checked;
+                            const checked = this.checked;
 
-    // Faz tudo em uma única operação
-    $('.image-selector').prop('checked', checked);
+                            // Faz tudo em uma única operação
+                            $('.image-selector').prop('checked', checked);
 
-    // Atualiza visualmente todas de uma vez
-    $('.image-wrapper').toggleClass('selected', checked);
+                            // Atualiza visualmente todas de uma vez
+                            $('.image-wrapper').toggleClass('selected', checked);
 
-    // Atualiza contador somente uma vez
-    $('#selectedCount').text(
-        checked
-            ? $('.image-selector').length + ' selecionadas'
-            : '0 selecionadas'
-    );
+                            // Atualiza contador somente uma vez
+                            $('#selectedCount').text(
+                                checked ?
+                                $('.image-selector').length + ' selecionadas' :
+                                '0 selecionadas'
+                            );
 
-});
-                       $(document).on('change', '.image-selector', function () {
+                        });
+                        $(document).on('change', '.image-selector', function() {
 
-    const $wrapper = $(this).closest('.image-wrapper');
+                            const $wrapper = $(this).closest('.image-wrapper');
 
-    $wrapper.toggleClass('selected', this.checked);
+                            $wrapper.toggleClass('selected', this.checked);
 
-    updateSelectedCount();
+                            updateSelectedCount();
 
-});
+                        });
                         $('#bulkSizeSelect').on('change', function() {
 
-                            let value = $(this).val();
+                            const value = this.value;
 
-                            if (!value) return;
+                            if (!value) {
+                                return;
+                            }
 
-                            $('#bulkSizeSelect').on('change', function () {
+                            updateSelectedSizesWithProgress(value);
 
-    const value = this.value;
-
-    if (!value) return;
-
-    const parsedSize = JSON.parse(value);
-    const price = parsedSize.price;
-
-    const $selected = $('.image-selector:checked');
-
-    $selected.each(function () {
-
-        const $wrapper = $(this).closest('.image-wrapper');
-
-        // Atualiza tamanho
-        $wrapper.find('.size-select').val(value);
-
-        // Atualiza preço diretamente
-        $wrapper.find('.price-input').html(
-            price.toLocaleString('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
-            })
-        );
-
-        $wrapper.find('.price-inputv').val(price);
-    });
-
-    // Atualiza o total somente uma vez
-    updateTotalPedido();
-
-    // Atualiza as máscaras somente depois
-    requestAnimationFrame(function () {
-
-        $selected.each(function () {
-
-            const $wrapper = $(this).closest('.image-wrapper');
-            const $card = $wrapper.find('.image-card');
-
-            updateCropMask($card);
-
-        });
-
-    });
-
-});
-
+                            // Permite selecionar novamente o mesmo tamanho
+                            setTimeout(function() {
+                                $('#bulkSizeSelect').val('');
+                            }, 100);
                         });
 
 
@@ -707,57 +847,145 @@
                 updatePrice(wrapper, size);
             });
 
-            function updateTotalPedido() {
-                let total = 0;
-                const valor_entrega = parseFloat($('#val_entrega').val()) || 0;
-                $('#imageContainer .image-wrapper').each(function() {
-                    const price = parseFloat($(this).find('.price-inputv').val()) || 0;
-                    const quantity = parseInt($(this).find('.quantity-input').val()) || 1;
-                    total += price * quantity;
-                });
-                total += valor_entrega;
-                $('#input_total').val(total);
-                $('#total_pedido').html(total.toLocaleString('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL'
-                }));
-            }
+
 
             function uploadImages(formData) {
-                $('#progressModal').css('display', 'flex');
 
-                $.ajax({
-                    url: '{{ route('upload.image') }}',
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': $('input[name="_token"]').val()
-                    },
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    xhr: function() {
-                        const xhr = new window.XMLHttpRequest();
-                        xhr.upload.addEventListener('progress', function(evt) {
-                            if (evt.lengthComputable) {
-                                const percent = (evt.loaded / evt.total) * 100;
-                                $('#uploadProgress').val(percent);
-                                if (percent === 100) $('#progressModal').hide();
-                            }
-                        }, false);
-                        return xhr;
-                    },
-                    success: function(data) {
-                        if (data.images) {
-                            alert('Imagens enviadas com sucesso');
-                            window.location.href = '/pagamento/escolha/' + data.pedido;
-                        }
-                    },
-                    error: function(error) {
-                        console.error('Erro:', error);
-                        $('#progressModal').hide();
+    $('#progressModal').css('display', 'flex');
+
+    $('#uploadProgress')
+        .val(0)
+        .attr('max', 100);
+
+    $('#progressModal h5').text('Enviando imagens...');
+
+    $.ajax({
+        url: '{{ route('upload.image') }}',
+        method: 'POST',
+
+        headers: {
+            'X-CSRF-TOKEN': $('input[name="_token"]').val()
+        },
+
+        data: formData,
+
+        processData: false,
+        contentType: false,
+
+        xhr: function () {
+
+            const xhr = new window.XMLHttpRequest();
+
+            xhr.upload.addEventListener('progress', function (evt) {
+
+                if (evt.lengthComputable) {
+
+                    const percent = Math.round(
+                        (evt.loaded / evt.total) * 100
+                    );
+
+                    $('#uploadProgress').val(percent);
+
+                    /*
+                     * Importante:
+                     * NÃO esconder a barra quando chegar em 100%.
+                     */
+                    if (percent >= 100) {
+
+                        $('#progressModal h5').text(
+                            'Processando imagens...'
+                        );
+
+                    } else {
+
+                        $('#progressModal h5').text(
+                            'Enviando imagens... ' + percent + '%'
+                        );
+
                     }
-                });
-            }
+                }
+
+            }, false);
+
+            return xhr;
+        },
+
+        success: function (data) {
+
+            /*
+             * O servidor terminou o processamento.
+             * Agora sim podemos considerar o envio concluído.
+             */
+
+            $('#uploadProgress').val(100);
+
+            $('#progressModal h5').text(
+                'Imagens enviadas com sucesso!'
+            );
+
+            setTimeout(function () {
+
+                $('#progressModal').hide();
+
+                if (data.images) {
+
+                    alert('Imagens enviadas com sucesso');
+
+                    window.location.href =
+                        '/pagamento/escolha/' + data.pedido;
+                }
+
+            }, 500);
+        },
+
+        error: function (error) {
+
+            console.error('Erro:', error);
+
+            $('#progressModal h5').text(
+                'Erro ao enviar as imagens.'
+            );
+
+            $('#progressModal').hide();
+        }
+    });
+}
+
+            // function uploadImages(formData) {
+            //     $('#progressModal').css('display', 'flex');
+
+            //     $.ajax({
+            //         url: '{{ route('upload.image') }}',
+            //         method: 'POST',
+            //         headers: {
+            //             'X-CSRF-TOKEN': $('input[name="_token"]').val()
+            //         },
+            //         data: formData,
+            //         processData: false,
+            //         contentType: false,
+            //         xhr: function() {
+            //             const xhr = new window.XMLHttpRequest();
+            //             xhr.upload.addEventListener('progress', function(evt) {
+            //                 if (evt.lengthComputable) {
+            //                     const percent = (evt.loaded / evt.total) * 100;
+            //                     $('#uploadProgress').val(percent);
+            //                     if (percent === 100) $('#progressModal').hide();
+            //                 }
+            //             }, false);
+            //             return xhr;
+            //         },
+            //         success: function(data) {
+            //             if (data.images) {
+            //                 alert('Imagens enviadas com sucesso');
+            //                 window.location.href = '/pagamento/escolha/' + data.pedido;
+            //             }
+            //         },
+            //         error: function(error) {
+            //             console.error('Erro:', error);
+            //             $('#progressModal').hide();
+            //         }
+            //     });
+            // }
 
             $(document).on('click', '#progressModal .close', function() {
                 $('#progressModal').hide();
