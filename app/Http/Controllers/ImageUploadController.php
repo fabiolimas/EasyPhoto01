@@ -87,6 +87,21 @@ class ImageUploadController extends Controller
 
     $pedido->save();
 
+$pedidoPath = storage_path('app/public/uploads/pedido_' . $pedido->id);
+
+// Criar pasta do pedido
+if (!file_exists($pedidoPath)) {
+    mkdir($pedidoPath, 0755, true);
+}
+
+// Criar observacao.txt dentro da pasta pedido_
+if (!empty(trim($pedido->observacao))) {
+
+    file_put_contents(
+        $pedidoPath . '/observacao.txt',
+        $pedido->observacao
+    );
+}
     foreach ($images as $index => $image) {
         if (!isset($tamanhos[$index]) || !isset($quantidades[$index]) || !isset($precos[$index])) {
             continue; // Pula a iteração se o índice não existir
@@ -119,13 +134,7 @@ class ImageUploadController extends Controller
         $imageUrl = $imagePath . '/' . $imageName;
         $imageUrls[] = asset('storage/' . $imageUrl);
 
-        // Salvar a observação, se houver
-        if($request->observacao != null){
-            $observacao = $request->observacao;
-            $fp = fopen($fullImagePath . "/observacao.txt", "wb");
-            fwrite($fp, $observacao);
-            fclose($fp);
-        }
+
 
         // Salvar o caminho da imagem e outros dados na tabela pedido_items
         PedidoItem::create([
@@ -149,23 +158,38 @@ public function downloadFiles(Request $request)
     $pedidoItems = PedidoItem::where('pedido_id', $pedido->id)->get();
 
     // Nome do arquivo .zip
-    $zipFileName = $pedido->cliente.'.zip';
+    $zipFileName = $pedido->cliente . '.zip';
     $zipFilePath = storage_path('app/public/uploads/' . $zipFileName);
 
-    // Criar um novo arquivo zip e adicionar os arquivos
+    // Criar um novo arquivo zip
     $zip = new \ZipArchive();
+
     if ($zip->open($zipFilePath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === TRUE) {
+
+        // Adicionar imagens do pedido
         foreach ($pedidoItems as $item) {
+
             $sourcePath = storage_path('app/public/' . $item->caminho);
+
             if (file_exists($sourcePath)) {
-                // Adicionar o arquivo ao zip com o caminho relativo
                 $zip->addFile($sourcePath, $item->caminho);
             }
         }
+
+        // Adicionar observação.txt caso exista
+        $observacaoPath = storage_path('app/public/uploads/pedido_' . $pedido->id . '/observacao.txt');
+
+        if (file_exists($observacaoPath)) {
+            $zip->addFile(
+                $observacaoPath, 'observacao.txt'
+            );
+        }
+
         $zip->close();
 
         // Retornar o arquivo zip para download
         return response()->download($zipFilePath)->deleteFileAfterSend(true);
+
     } else {
         return response()->json(['error' => 'Failed to create the ZIP file.'], 500);
     }
