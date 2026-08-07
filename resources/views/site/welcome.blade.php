@@ -1,46 +1,44 @@
 @extends('layouts.envio')
 
 @section('content')
-
-
     {{-- Loja --}}
     <div class="store-header">
-      <i class="bi bi-shop"></i>
-      <div>
-        <strong>{{ $laboratorio->nome ?? 'Laboratório' }}</strong>
-        <span class="ms-2">- {{ $laboratorio->endereco ?? '' }}</span>
-      </div>
+        <i class="bi bi-shop"></i>
+        <div>
+            <strong>{{ $laboratorio->nome ?? 'Laboratório' }}</strong>
+            <span class="ms-2">- {{ $laboratorio->endereco ?? '' }}</span>
+        </div>
     </div>
 
     <form id="uploadForm" enctype="multipart/form-data">
-      @csrf
+        @csrf
 
-      <input type="hidden" id="val_entrega" name="val_entrega" value="0">
-      <input type="hidden" id="forma_entrega" name="forma_entrega" value="">
-      <input type="hidden" id="input_total" name="total" value="0">
-      <input type="hidden" id="observacao_input" name="observacao" value="">
-   <input type="hidden" name="user_id" id="user_id" value="{{ auth()->id() }}">
-     <input type="hidden" name="laboratorio_id" id="laboratorio_id" value="{{ $laboratorio->id }}">
-     <input type="file" id="imageInput" name="images[]" multiple accept="image/*" style="visibility: hidden">
-      {{-- Grid de imagens --}}
-      <div class="d-flex align-items-center gap-3 mb-3" id="bulkActions" style="display:none!important;">
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="selectAllImages">
-        <label class="form-check-label" for="selectAllImages">
-            Selecionar todas
-        </label>
-    </div>
+        <input type="hidden" id="val_entrega" name="val_entrega" value="0">
+        <input type="hidden" id="forma_entrega" name="forma_entrega" value="">
+        <input type="hidden" id="input_total" name="total" value="0">
+        <input type="hidden" id="observacao_input" name="observacao" value="">
+        <input type="hidden" name="user_id" id="user_id" value="{{ auth()->id() }}">
+        <input type="hidden" name="laboratorio_id" id="laboratorio_id" value="{{ $laboratorio->id }}">
+        <input type="file" id="imageInput" name="images[]" multiple accept="image/*" style="visibility: hidden">
+        {{-- Grid de imagens --}}
+        <div class="d-flex align-items-center gap-3 mb-3" id="bulkActions" style="display:none!important;">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="selectAllImages">
+                <label class="form-check-label" for="selectAllImages">
+                    Selecionar todas
+                </label>
+            </div>
 
-    <select id="bulkSizeSelect" class="form-select" style="max-width:250px;">
-        <option value="">Alterar tamanho das selecionadas</option>
-    </select>
+            <select id="bulkSizeSelect" class="form-select" style="max-width:250px;">
+                <option value="">Alterar tamanho das selecionadas</option>
+            </select>
 
-    <span id="selectedCount" class="text-muted">
-        0 selecionadas
-    </span>
-</div>
-      <div class="row g-3" id="imageContainer">
-        {{-- <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <span id="selectedCount" class="text-muted">
+                0 selecionadas
+            </span>
+        </div>
+        <div class="row g-3" id="imageContainer">
+            {{-- <div class="col-12 col-sm-6 col-md-4 col-lg-3">
           <label for="imageInput" class="empty-upload h-100 mb-0">
             <i class="bi bi-cloud-arrow-up"></i>
             <strong>Adicionar imagens</strong>
@@ -48,621 +46,716 @@
           </label>
 
         </div> --}}
-      </div>
+        </div>
     </form>
-  </div>
-
-  {{-- Modal Observação --}}
-  <div class="modal fade" id="modalObservacao" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title"><i class="bi bi-chat-left-text me-2"></i>Observação</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <textarea id="observacao_text" class="form-control form-control-dark" rows="4" placeholder="Digite uma observação para o pedido..."></textarea>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn-action btn-action-primary" id="salvarObservacao" data-bs-dismiss="modal">Salvar</button>
-        </div>
-      </div>
     </div>
-  </div>
 
-  {{-- Modal Forma de entrega --}}
-  <div class="modal fade" id="modalEntrega" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title"><i class="bi bi-truck me-2"></i>Formas de Entrega</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          @foreach ($entregas as $entrega)
-            <div class="form-check mb-2">
-              <input class="form-check-input entregainput" type="radio" name="entrega" id="entrega{{ $entrega->id }}" value="{{ $entrega->id }}">
-              <label class="form-check-label" for="entrega{{ $entrega->id }}">
-                {{ $entrega->nome }}
-              </label>
+    {{-- Modal Observação --}}
+    <div class="modal fade" id="modalObservacao" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-chat-left-text me-2"></i>Observação</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <textarea id="observacao_text" class="form-control form-control-dark" rows="4"
+                        placeholder="Digite uma observação para o pedido..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-action btn-action-primary" id="salvarObservacao"
+                        data-bs-dismiss="modal">Salvar</button>
+                </div>
             </div>
-          @endforeach
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn-action btn-action-dark" data-bs-dismiss="modal">Fechar</button>
-        </div>
-      </div>
     </div>
-  </div>
 
-  {{-- Modal aviso envio --}}
-  <div class="modal fade" id="modalAviso" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title text-warning"><i class="bi bi-exclamation-triangle me-2"></i>Atenção</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    {{-- Modal Forma de entrega --}}
+    <div class="modal fade" id="modalEntrega" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-truck me-2"></i>Formas de Entrega</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    @foreach ($entregas as $entrega)
+                        <div class="form-check mb-2">
+                            <input class="form-check-input entregainput" type="radio" name="entrega"
+                                id="entrega{{ $entrega->id }}" value="{{ $entrega->id }}">
+                            <label class="form-check-label" for="entrega{{ $entrega->id }}">
+                                {{ $entrega->nome }}
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-action btn-action-dark" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">Selecione uma forma de envio antes de continuar.</div>
-        <div class="modal-footer">
-          <button type="button" class="btn-action btn-action-primary" data-bs-dismiss="modal">Ok</button>
-        </div>
-      </div>
     </div>
-  </div>
 
-  {{-- Modal Escolha de Imagem --}}
-  <div class="modal fade" id="modalEscolha" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Selecionar Imagens</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    {{-- Modal aviso envio --}}
+    <div class="modal fade" id="modalAviso" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-warning"><i class="bi bi-exclamation-triangle me-2"></i>Atenção</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">Selecione uma forma de envio antes de continuar.</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-action btn-action-primary" data-bs-dismiss="modal">Ok</button>
+                </div>
+            </div>
         </div>
-        <div class="modal-body text-center">
-          <label for="imageInput" class="btn-action btn-action-primary">
-            <i class="bi bi-images me-2"></i>Escolher arquivos
-          </label>
-        </div>
-      </div>
     </div>
-  </div>
 
-  {{-- Modal Progresso --}}
-  <div id="progressModal">
-    <button class="close">&times;</button>
-    <div class="progress-box">
-      <h5 class="mb-3">Enviando imagens...</h5>
-      <progress id="uploadProgress" value="0" max="100" style="width:100%;height:18px"></progress>
-    </div>
-  </div>
-
-  {{-- Action bar --}}
-  <div class="action-bar">
-    <div class="container-fluid">
-      <div class="action-bar-inner">
-        <label for="imageInput" class="btn-action mb-0">
-          <i class="bi bi-images"></i> Adicionar imagens
-        </label>
-
-        <div class="total-badge">
-          <small>Total</small>
-          <span id="total_pedido">R$ 0,00</span>
+    {{-- Modal Escolha de Imagem --}}
+    <div class="modal fade" id="modalEscolha" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Selecionar Imagens</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <label for="imageInput" class="btn-action btn-action-primary">
+                        <i class="bi bi-images me-2"></i>Escolher arquivos
+                    </label>
+                </div>
+            </div>
         </div>
-
-        <div class="d-flex gap-2 flex-wrap">
-          <button type="button" class="btn-action btn-action-dark" data-bs-toggle="modal" data-bs-target="#modalObservacao">
-            <i class="bi bi-chat-left-text"></i> Observação
-          </button>
-          <button type="button" class="btn-action btn-action-dark" data-bs-toggle="modal" data-bs-target="#modalEntrega">
-            <i class="bi bi-truck"></i> Forma de Entrega
-          </button>
-          <button type="button" id="processButton" class="btn-action btn-action-primary disabled">
-            <i class="bi bi-cart-check"></i> Enviar
-          </button>
-        </div>
-      </div>
     </div>
-  </div>
 
- <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script>
+    {{-- Modal Progresso --}}
+    <div id="progressModal">
+        <button class="close">&times;</button>
+        <div class="progress-box">
+            <h5 class="mb-3">Enviando imagens...</h5>
+            <progress id="uploadProgress" value="0" max="100" style="width:100%;height:18px"></progress>
+        </div>
+    </div>
+
+    {{-- Action bar --}}
+    <div class="action-bar">
+        <div class="container-fluid">
+            <div class="action-bar-inner">
+                <label for="imageInput" class="btn-action mb-0">
+                    <i class="bi bi-images"></i> Adicionar imagens
+                </label>
+
+                <div class="total-badge">
+                    <small>Total</small>
+                    <span id="total_pedido">R$ 0,00</span>
+                </div>
+
+                <div class="d-flex gap-2 flex-wrap">
+                    <button type="button" class="btn-action btn-action-dark" data-bs-toggle="modal"
+                        data-bs-target="#modalObservacao">
+                        <i class="bi bi-chat-left-text"></i> Observação
+                    </button>
+                    <button type="button" class="btn-action btn-action-dark" data-bs-toggle="modal"
+                        data-bs-target="#modalEntrega">
+                        <i class="bi bi-truck"></i> Forma de Entrega
+                    </button>
+                    <button type="button" id="processButton" class="btn-action btn-action-primary disabled">
+                        <i class="bi bi-cart-check"></i> Enviar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $(function() {
+            const modalEscolha = new bootstrap.Modal(document.getElementById('modalEscolha'));
+            let precodesc = 0;
+            const cropSizes = [
+                @foreach ($tamanhos as $tamanho)
+                    {
+                        nome: '{{ $tamanho->nome }}',
+                        width: {{ $tamanho->largura }},
+                        height: {{ $tamanho->altura }},
+                        price: {{ round($cliente->desconto > 0 ? $tamanho->preco * (1 - $cliente->desconto / 100) : $tamanho->preco, 2) }}
+                    },
+                @endforeach
+            ];
+            cropSizes.forEach(function(size) {
+                $('#bulkSizeSelect').append(
+                    $('<option>')
+                    .val(JSON.stringify(size))
+                    .text(size.nome)
+                );
+            });
+            $('#imageInput').on('change', function() {
+
+                const files = Array.from(this.files);
+                handleFiles(files);
+            });
+
+            $('#salvarObservacao').on('click', function() {
+                $('#observacao_input').val($('#observacao_text').val());
+            });
+
+            $('#processButton').on('click', function() {
+
+                if (!selecionado) {
+                    new bootstrap.Modal(document.getElementById('modalAviso')).show();
+                    return;
+                }
+
+                const formData = new FormData($('#uploadForm')[0]);
+                let sizeArray = [],
+                    quantityArray = [],
+                    priceArray = [];
+                let imagesProcessed = 0;
+                const images = $('#imageContainer img');
 
 
-       $(function () {
-  const modalEscolha = new bootstrap.Modal(document.getElementById('modalEscolha'));
-  let precodesc = 0;
-  const cropSizes = [
-    @foreach ($tamanhos as $tamanho)
-    {
-        nome: '{{ $tamanho->nome }}',
-        width: {{ $tamanho->largura }},
-        height: {{ $tamanho->altura }},
-        price: {{ round(
-            $cliente->desconto > 0
-                ? $tamanho->preco * (1 - ($cliente->desconto / 100))
-                : $tamanho->preco,
-            2
-        ) }}
-    },
-    @endforeach
-];
-cropSizes.forEach(function(size){
-    $('#bulkSizeSelect').append(
-        $('<option>')
-            .val(JSON.stringify(size))
-            .text(size.nome)
-    );
-});
-  $('#imageInput').on('change', function () {
-    const files = Array.from(this.files);
-    handleFiles(files);
-  });
 
-  $('#salvarObservacao').on('click', function () {
-    $('#observacao_input').val($('#observacao_text').val());
-  });
+                if (images.length === 0) return;
 
-  $('#processButton').on('click', function () {
-    if (!selecionado) {
-      new bootstrap.Modal(document.getElementById('modalAviso')).show();
-      return;
-    }
+                images.each(function(i, img) {
 
-    const formData = new FormData($('#uploadForm')[0]);
-    let sizeArray = [], quantityArray = [], priceArray = [];
-    let imagesProcessed = 0;
-    const images = $('#imageContainer img');
+                    fetch(img.src)
+                        .then(res => res.blob())
+                        .then(blob => {
 
-    if (images.length === 0) return;
+                            // Recupera o nome original da imagem
+                            const originalName = $(img).data('filename') ||
+                                $(img).attr('data-filename') ||
+                                ('image_' + i + '.jpg');
 
-    images.each(function (i, img) {
-      fetch(img.src).then(res => res.blob()).then(blob => {
-        formData.append('images[]', blob, 'image_' + i + '.jpg');
+                            // Envia usando o nome original
+                            formData.append('images[]', blob, originalName);
 
-        const wrapper = $(img).closest('.image-wrapper');
-        const size = JSON.parse(wrapper.find('.size-select').val());
-        const quantity = wrapper.find('.quantity-input').val();
-        const price = wrapper.find('.price-inputv').val();
+                            const wrapper = $(img).closest('.image-wrapper');
 
-        sizeArray.push(size);
-        quantityArray.push(quantity);
-        priceArray.push(price);
+                            const size = JSON.parse(
+                                wrapper.find('.size-select').val()
+                            );
 
-        imagesProcessed++;
-        if (imagesProcessed === images.length) {
-          formData.append('tamanhos', JSON.stringify(sizeArray));
-          formData.append('quantidades', JSON.stringify(quantityArray));
-          formData.append('precos', JSON.stringify(priceArray));
-          uploadImages(formData);
-        }
-      });
-    });
-  });
+                            const quantity = wrapper.find('.quantity-input').val();
+                            const price = wrapper.find('.price-inputv').val();
 
-  let selecionado = false;
+                            sizeArray.push(size);
+                            quantityArray.push(quantity);
+                            priceArray.push(price);
 
-  $(document).on('change', '.entregainput', function () {
-    selecionado = true;
-    $('#processButton').removeClass('disabled');
+                            imagesProcessed++;
 
-    let entregaId = $('input[name="entrega"]:checked').val();
+                            if (imagesProcessed === images.length) {
 
-    $.ajax({
-      url: '/buscar-entrega/' + entregaId,
-      type: 'GET',
-      dataType: 'json',
-      success: function (response) {
-        $('#val_entrega').val(response.valor);
-        $('#forma_entrega').val(response.nome);
-        updateTotalPedido();
-      },
-      error: function () {
-        console.error('Erro ao buscar valor da entrega');
-      }
-    });
-  });
+                                formData.append(
+                                    'tamanhos',
+                                    JSON.stringify(sizeArray)
+                                );
 
-  // ===== Máscara de corte =====
-  function updateCropMask($card) {
-    const img   = $card.find('.image-card-thumb img')[0];
-    const thumb = $card.find('.image-card-thumb')[0];
-    const mask  = $card.find('.crop-mask')[0];
-    const sel   = $card.find('.size-select')[0];
-    if (!img || !thumb || !mask || !sel) return;
-    if (!img.naturalWidth || !img.naturalHeight) return;
+                                formData.append(
+                                    'quantidades',
+                                    JSON.stringify(quantityArray)
+                                );
 
-    let a, b, label;
-    try {
-      const parsed = JSON.parse(sel.value);
-      a = parseFloat(parsed.width);
-      b = parseFloat(parsed.height);
-      label = parsed.nome;
+                                formData.append(
+                                    'precos',
+                                    JSON.stringify(priceArray)
+                                );
 
-    } catch (e) {
-      const parts = sel.value.toLowerCase().split('x').map(v => parseFloat(v));
-      a = parts[0]; b = parts[1];
-      label = sel.value;
-    }
-    if (!a || !b) return;
+                                uploadImages(formData);
+                            }
+                        });
+                });
+            });
 
-    const cw = thumb.clientWidth;
-    const ch = thumb.clientHeight;
-    const imgRatio = img.naturalWidth / img.naturalHeight;
 
-    // Tamanho renderizado (object-fit: contain)
-    let renderedW, renderedH;
-    if (imgRatio > cw / ch) {
-      renderedW = cw;
-      renderedH = cw / imgRatio;
-    } else {
-      renderedH = ch;
-      renderedW = ch * imgRatio;
-    }
+            //   $('#processButton').on('click', function () {
+            //     if (!selecionado) {
+            //       new bootstrap.Modal(document.getElementById('modalAviso')).show();
+            //       return;
+            //     }
 
-    // Orienta o corte conforme paisagem/retrato da foto
-    const longSide  = Math.max(a, b);
-    const shortSide = Math.min(a, b);
-    let printW, printH;
-    if (imgRatio >= 1) { printW = longSide;  printH = shortSide; }
-    else               { printW = shortSide; printH = longSide;  }
-    const cropRatio = printW / printH;
+            //     const formData = new FormData($('#uploadForm')[0]);
+            //     let sizeArray = [], quantityArray = [], priceArray = [];
+            //     let imagesProcessed = 0;
+            //     const images = $('#imageContainer img');
 
-    // Inscreve o retângulo de corte na imagem renderizada
-    let mw, mh;
-    if (cropRatio > renderedW / renderedH) {
-      mw = renderedW;
-      mh = renderedW / cropRatio;
-    } else {
-      mh = renderedH;
-      mw = renderedH * cropRatio;
-    }
+            //     if (images.length === 0) return;
 
-    mask.style.width  = mw + 'px';
-    mask.style.height = mh + 'px';
-    const state = $card.data('maskState');
+            //     images.each(function (i, img) {
+            //       fetch(img.src).then(res => res.blob()).then(blob => {
+            //         formData.append('images[]', blob, 'image_' + i + '.jpg');
 
-if(state){
+            //         const wrapper = $(img).closest('.image-wrapper');
+            //         const size = JSON.parse(wrapper.find('.size-select').val());
+            //         const quantity = wrapper.find('.quantity-input').val();
+            //         const price = wrapper.find('.price-inputv').val();
 
-    state.x = 0;
-    state.y = 0;
+            //         sizeArray.push(size);
+            //         quantityArray.push(quantity);
+            //         priceArray.push(price);
 
-}
-    mask.setAttribute('data-size', label);
-  }
+            //         imagesProcessed++;
+            //         if (imagesProcessed === images.length) {
+            //           formData.append('tamanhos', JSON.stringify(sizeArray));
+            //           formData.append('quantidades', JSON.stringify(quantityArray));
+            //           formData.append('precos', JSON.stringify(priceArray));
+            //           uploadImages(formData);
+            //         }
+            //       });
+            //     });
+            //   });
 
-  function initCropMask($card) {
-    const img = $card.find('.image-card-thumb img')[0];
-    if (!img) return;
-    const run = () => updateCropMask($card);
-    if (img.complete) run(); else img.addEventListener('load', run);
-  }
-  // =============================
-// Editor visual da máscara
-// =============================
-function initMaskEditor($card){
+            let selecionado = false;
 
-    const thumb = $card.find('.image-card-thumb');
-    const mask  = $card.find('.crop-mask');
+            $(document).on('change', '.entregainput', function() {
+                selecionado = true;
+                $('#processButton').removeClass('disabled');
 
-    const state = {
-        x:0,
-        y:0,
-        dragging:false,
-        startX:0,
-        startY:0,
-        zoom:1
-    };
+                let entregaId = $('input[name="entrega"]:checked').val();
 
-    $card.data('maskState',state);
+                $.ajax({
+                    url: '/buscar-entrega/' + entregaId,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        $('#val_entrega').val(response.valor);
+                        $('#forma_entrega').val(response.nome);
+                        updateTotalPedido();
+                    },
+                    error: function() {
+                        console.error('Erro ao buscar valor da entrega');
+                    }
+                });
+            });
 
-    function update(){
+            // ===== Máscara de corte =====
+            function updateCropMask($card) {
+                const img = $card.find('.image-card-thumb img')[0];
+                const thumb = $card.find('.image-card-thumb')[0];
+                const mask = $card.find('.crop-mask')[0];
+                const sel = $card.find('.size-select')[0];
+                if (!img || !thumb || !mask || !sel) return;
+                if (!img.naturalWidth || !img.naturalHeight) return;
 
-        mask.css({
-            transform:
-            `translate(calc(-50% + ${state.x}px),
+                let a, b, label;
+                try {
+                    const parsed = JSON.parse(sel.value);
+                    a = parseFloat(parsed.width);
+                    b = parseFloat(parsed.height);
+                    label = parsed.nome;
+
+                } catch (e) {
+                    const parts = sel.value.toLowerCase().split('x').map(v => parseFloat(v));
+                    a = parts[0];
+                    b = parts[1];
+                    label = sel.value;
+                }
+                if (!a || !b) return;
+
+                const cw = thumb.clientWidth;
+                const ch = thumb.clientHeight;
+                const imgRatio = img.naturalWidth / img.naturalHeight;
+
+                // Tamanho renderizado (object-fit: contain)
+                let renderedW, renderedH;
+                if (imgRatio > cw / ch) {
+                    renderedW = cw;
+                    renderedH = cw / imgRatio;
+                } else {
+                    renderedH = ch;
+                    renderedW = ch * imgRatio;
+                }
+
+                // Orienta o corte conforme paisagem/retrato da foto
+                const longSide = Math.max(a, b);
+                const shortSide = Math.min(a, b);
+                let printW, printH;
+                if (imgRatio >= 1) {
+                    printW = longSide;
+                    printH = shortSide;
+                } else {
+                    printW = shortSide;
+                    printH = longSide;
+                }
+                const cropRatio = printW / printH;
+
+                // Inscreve o retângulo de corte na imagem renderizada
+                let mw, mh;
+                if (cropRatio > renderedW / renderedH) {
+                    mw = renderedW;
+                    mh = renderedW / cropRatio;
+                } else {
+                    mh = renderedH;
+                    mw = renderedH * cropRatio;
+                }
+
+                mask.style.width = mw + 'px';
+                mask.style.height = mh + 'px';
+                const state = $card.data('maskState');
+
+                if (state) {
+
+                    state.x = 0;
+                    state.y = 0;
+
+                }
+                mask.setAttribute('data-size', label);
+            }
+
+            function initCropMask($card) {
+                const img = $card.find('.image-card-thumb img')[0];
+                if (!img) return;
+                const run = () => updateCropMask($card);
+                if (img.complete) run();
+                else img.addEventListener('load', run);
+            }
+            // =============================
+            // Editor visual da máscara
+            // =============================
+            function initMaskEditor($card) {
+
+                const thumb = $card.find('.image-card-thumb');
+                const mask = $card.find('.crop-mask');
+
+                const state = {
+                    x: 0,
+                    y: 0,
+                    dragging: false,
+                    startX: 0,
+                    startY: 0,
+                    zoom: 1
+                };
+
+                $card.data('maskState', state);
+
+                function update() {
+
+                    mask.css({
+                        transform: `translate(calc(-50% + ${state.x}px),
                        calc(-50% + ${state.y}px))
              scale(${state.zoom})`
-        });
+                    });
 
-    }
+                }
 
-    update();
+                update();
 
-    mask.on('mousedown',function(e){
+                mask.on('mousedown', function(e) {
 
-        e.preventDefault();
+                    e.preventDefault();
 
-        state.dragging=true;
+                    state.dragging = true;
 
-        state.startX=e.clientX-state.x;
-        state.startY=e.clientY-state.y;
+                    state.startX = e.clientX - state.x;
+                    state.startY = e.clientY - state.y;
 
-    });
+                });
 
-    $(document).on('mousemove.mask',function(e){
+                $(document).on('mousemove.mask', function(e) {
 
-        if(!state.dragging) return;
+                    if (!state.dragging) return;
 
-        state.x=e.clientX-state.startX;
-        state.y=e.clientY-state.startY;
+                    state.x = e.clientX - state.startX;
+                    state.y = e.clientY - state.startY;
 
-        limitar();
+                    limitar();
 
-        update();
+                    update();
 
-    });
+                });
 
-    $(document).on('mouseup.mask',function(){
+                $(document).on('mouseup.mask', function() {
 
-        state.dragging=false;
+                    state.dragging = false;
 
-    });
+                });
 
-    mask.on('wheel',function(e){
+                mask.on('wheel', function(e) {
 
-        e.preventDefault();
+                    e.preventDefault();
 
-        if(e.originalEvent.deltaY<0){
+                    if (e.originalEvent.deltaY < 0) {
 
-            state.zoom+=0.05;
+                        state.zoom += 0.05;
 
-        }else{
+                    } else {
 
-            state.zoom-=0.05;
+                        state.zoom -= 0.05;
 
-        }
+                    }
 
-        state.zoom=Math.max(.5,Math.min(3,state.zoom));
+                    state.zoom = Math.max(.5, Math.min(3, state.zoom));
 
-        limitar();
+                    limitar();
 
-        update();
+                    update();
 
-    });
+                });
 
-    function limitar(){
+                function limitar() {
 
-    const img = thumb.find('img')[0];
+                    const img = thumb.find('img')[0];
 
-    if(!img.naturalWidth) return;
+                    if (!img.naturalWidth) return;
 
-    const boxW = thumb.width();
-    const boxH = thumb.height();
+                    const boxW = thumb.width();
+                    const boxH = thumb.height();
 
-    const imgRatio = img.naturalWidth / img.naturalHeight;
-    const boxRatio = boxW / boxH;
+                    const imgRatio = img.naturalWidth / img.naturalHeight;
+                    const boxRatio = boxW / boxH;
 
-    let renderW;
-    let renderH;
+                    let renderW;
+                    let renderH;
 
-    // tamanho REAL da imagem dentro do contain
-    if(imgRatio > boxRatio){
+                    // tamanho REAL da imagem dentro do contain
+                    if (imgRatio > boxRatio) {
 
-        renderW = boxW;
-        renderH = boxW / imgRatio;
+                        renderW = boxW;
+                        renderH = boxW / imgRatio;
 
-    }else{
+                    } else {
 
-        renderH = boxH;
-        renderW = boxH * imgRatio;
+                        renderH = boxH;
+                        renderW = boxH * imgRatio;
 
-    }
+                    }
 
-    const mw = mask.outerWidth() * state.zoom;
-    const mh = mask.outerHeight() * state.zoom;
+                    const mw = mask.outerWidth() * state.zoom;
+                    const mh = mask.outerHeight() * state.zoom;
 
-    const maxX = (renderW - mw) / 2;
-    const maxY = (renderH - mh) / 2;
+                    const maxX = (renderW - mw) / 2;
+                    const maxY = (renderH - mh) / 2;
 
-    state.x = Math.max(-maxX, Math.min(maxX, state.x));
-    state.y = Math.max(-maxY, Math.min(maxY, state.y));
+                    state.x = Math.max(-maxX, Math.min(maxX, state.x));
+                    state.y = Math.max(-maxY, Math.min(maxY, state.y));
 
-}
+                }
 
-}
+            }
 
-  $(window).on('resize', function () {
-    $('#imageContainer .image-wrapper .image-card').each(function () {
-      updateCropMask($(this));
-    });
-  });
+            $(window).on('resize', function() {
+                $('#imageContainer .image-wrapper .image-card').each(function() {
+                    updateCropMask($(this));
+                });
+            });
 
-  function handleFiles(files) {
-    if (files.length < 1) {
-      modalEscolha.show();
-      return;
-    }
-    const $card = $('<div>').addClass('image-card');
+            function handleFiles(files) {
+                if (files.length < 1) {
+                    modalEscolha.show();
+                    return;
+                }
+                const $card = $('<div>').addClass('image-card');
 
-    files.forEach(function (file) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const $col   = $('<div>').addClass('col-12 col-sm-6 col-md-4 col-lg-3 image-wrapper');
-        const $card  = $('<div>').addClass('image-card');
-        const $thumb = $('<div>').addClass('image-card-thumb');
-        const $mask  = $('<div>').addClass('crop-mask');
-        const $img   = $('<img>').attr('src', e.target.result);
-        const $check = $(`
-<label class="select-image">
-    <input type="checkbox" class="image-selector">
-</label>
+                files.forEach(function(file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const $col = $('<div>').addClass(
+                            'col-12 col-sm-6 col-md-4 col-lg-3 image-wrapper');
+                        const $card = $('<div>').addClass('image-card');
+                        const $thumb = $('<div>').addClass('image-card-thumb');
+                        const $mask = $('<div>').addClass('crop-mask');
+                        // const $img = $('<img>').attr('src', e.target.result);
+                        const $img = $('<img>')
+    .attr('src', e.target.result)
+    .attr('data-filename', file.name);
+                        const $check = $(`
+                            <label class="select-image">
+                                <input type="checkbox" class="image-selector">
+                            </label>
 `);
 
-$card.append($check);
+                        $card.append($check);
 
-function updateSelectedCount(){
+                        function updateSelectedCount() {
 
-    let total = $('.image-selector:checked').length;
+                            let total = $('.image-selector:checked').length;
 
-    $('#selectedCount').text(total + ' selecionadas');
+                            $('#selectedCount').text(total + ' selecionadas');
 
-    $('#bulkActions').toggle($('.image-wrapper').length > 0);
+                            $('#bulkActions').toggle($('.image-wrapper').length > 0);
 
-}
-$(document).on('change','#selectAllImages',function(){
+                        }
+                        $(document).on('change', '#selectAllImages', function() {
 
-    let checked = $(this).is(':checked');
+                            let checked = $(this).is(':checked');
 
-    $('.image-selector')
-        .prop('checked',checked)
-        .trigger('change');
+                            $('.image-selector')
+                                .prop('checked', checked)
+                                .trigger('change');
 
-});
-$(document).on('change','.image-selector',function(){
+                        });
+                        $(document).on('change', '.image-selector', function() {
 
-    $(this)
-        .closest('.image-wrapper')
-        .toggleClass('selected',$(this).is(':checked'));
+                            $(this)
+                                .closest('.image-wrapper')
+                                .toggleClass('selected', $(this).is(':checked'));
 
-    updateSelectedCount();
+                            updateSelectedCount();
 
-});
-$('#bulkSizeSelect').on('change',function(){
+                        });
+                        $('#bulkSizeSelect').on('change', function() {
 
-    let value = $(this).val();
+                            let value = $(this).val();
 
-    if(!value) return;
+                            if (!value) return;
 
-    $('.image-selector:checked').each(function(){
+                            $('.image-selector:checked').each(function() {
 
-        let wrapper = $(this).closest('.image-wrapper');
+                                let wrapper = $(this).closest('.image-wrapper');
 
-        wrapper.find('.size-select')
-            .val(value)
-            .trigger('change');
+                                wrapper.find('.size-select')
+                                    .val(value)
+                                    .trigger('change');
 
-    });
+                            });
 
-});
+                        });
 
 
-        $thumb.append($img).append($mask);
+                        $thumb.append($img).append($mask);
 
-        const $atributos = $('<div>').addClass('atributos');
+                        const $atributos = $('<div>').addClass('atributos');
 
-        const $sizeSelect = $('<select>').addClass('size-select').on('change', function () {
-          updatePrice($col, $(this).val());
-          updateCropMask($card);
+                        const $sizeSelect = $('<select>').addClass('size-select').on('change',
+                        function() {
+                            updatePrice($col, $(this).val());
+                            updateCropMask($card);
+                        });
+                        cropSizes.forEach(function(size, index) {
+                            const $option = $('<option>').val(JSON.stringify(size)).text(size
+                                .nome);
+                            if (index === 0) $option.prop('selected', true);
+                            $sizeSelect.append($option);
+                        });
+
+                        const $qtyInput = $('<input>').addClass('quantity-input').attr({
+                            type: 'number',
+                            min: '1',
+                            value: '1'
+                        });
+
+                        const $priceSpan = $('<span>').addClass('price-input');
+                        const $priceInput = $('<input>').addClass('price-inputv').attr({
+                            type: 'hidden',
+                            readonly: true
+                        });
+                        const $subtotal = $('<div>').addClass('item-total mt-2');
+
+                        const $deleteBtn = $('<button>').attr('type', 'button')
+                            .addClass('btn btn-danger btn-sm')
+                            .html('<i class="bi bi-trash3"></i> Remover')
+                            .on('click', function() {
+                                $col.remove();
+                                updateTotalPedido();
+                            });
+
+                        const $controls = $('<div>').addClass('image-controls').append($deleteBtn);
+
+                        $atributos.append(
+                            $('<div>').append($sizeSelect, $qtyInput, $priceSpan, $priceInput),
+                            $subtotal,
+                            $controls
+                        );
+
+                        $card.append($thumb, $atributos);
+                        $col.append($card);
+                        $('#imageContainer').append($col);
+
+                        updatePrice($col, $sizeSelect.val());
+
+                        initCropMask($card);
+
+                        initMaskEditor($card);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+
+
+            function updatePrice(wrapper, size) {
+                const parsedSize = JSON.parse(size);
+                const price = parsedSize.price;
+                wrapper.find('.price-input').html(price.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                }));
+                wrapper.find('.price-inputv').val(price);
+                updateTotalPedido();
+            }
+
+            $(document).on('input', '.quantity-input', function() {
+                const wrapper = $(this).closest('.image-wrapper');
+                const size = wrapper.find('.size-select').val();
+                updatePrice(wrapper, size);
+            });
+
+            function updateTotalPedido() {
+                let total = 0;
+                const valor_entrega = parseFloat($('#val_entrega').val()) || 0;
+                $('#imageContainer .image-wrapper').each(function() {
+                    const price = parseFloat($(this).find('.price-inputv').val()) || 0;
+                    const quantity = parseInt($(this).find('.quantity-input').val()) || 1;
+                    total += price * quantity;
+                });
+                total += valor_entrega;
+                $('#input_total').val(total);
+                $('#total_pedido').html(total.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                }));
+            }
+
+            function uploadImages(formData) {
+                $('#progressModal').css('display', 'flex');
+
+                $.ajax({
+                    url: '{{ route('upload.image') }}',
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('input[name="_token"]').val()
+                    },
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    xhr: function() {
+                        const xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener('progress', function(evt) {
+                            if (evt.lengthComputable) {
+                                const percent = (evt.loaded / evt.total) * 100;
+                                $('#uploadProgress').val(percent);
+                                if (percent === 100) $('#progressModal').hide();
+                            }
+                        }, false);
+                        return xhr;
+                    },
+                    success: function(data) {
+                        if (data.images) {
+                            alert('Imagens enviadas com sucesso');
+                            window.location.href = '/pagamento/escolha/' + data.pedido;
+                        }
+                    },
+                    error: function(error) {
+                        console.error('Erro:', error);
+                        $('#progressModal').hide();
+                    }
+                });
+            }
+
+            $(document).on('click', '#progressModal .close', function() {
+                $('#progressModal').hide();
+            });
+            $(window).on('click', function(event) {
+                if (event.target === document.getElementById('progressModal')) {
+                    $('#progressModal').hide();
+                }
+            });
         });
-        cropSizes.forEach(function (size, index) {
-          const $option = $('<option>').val(JSON.stringify(size)).text(size.nome);
-          if (index === 0) $option.prop('selected', true);
-          $sizeSelect.append($option);
-        });
+    </script>
+    </body>
 
-        const $qtyInput = $('<input>').addClass('quantity-input').attr({
-          type: 'number', min: '1', value: '1'
-        });
-
-        const $priceSpan  = $('<span>').addClass('price-input');
-        const $priceInput = $('<input>').addClass('price-inputv').attr({ type: 'hidden', readonly: true });
-        const $subtotal   = $('<div>').addClass('item-total mt-2');
-
-        const $deleteBtn = $('<button>').attr('type', 'button')
-          .addClass('btn btn-danger btn-sm')
-          .html('<i class="bi bi-trash3"></i> Remover')
-          .on('click', function () {
-            $col.remove();
-            updateTotalPedido();
-          });
-
-        const $controls = $('<div>').addClass('image-controls').append($deleteBtn);
-
-        $atributos.append(
-          $('<div>').append($sizeSelect, $qtyInput, $priceSpan, $priceInput),
-          $subtotal,
-          $controls
-        );
-
-        $card.append($thumb, $atributos);
-        $col.append($card);
-        $('#imageContainer').append($col);
-
-     updatePrice($col, $sizeSelect.val());
-
-initCropMask($card);
-
-initMaskEditor($card);
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-
-
-
-  function updatePrice(wrapper, size) {
-    const parsedSize = JSON.parse(size);
-    const price = parsedSize.price;
-    wrapper.find('.price-input').html(price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
-    wrapper.find('.price-inputv').val(price);
-    updateTotalPedido();
-  }
-
-  $(document).on('input', '.quantity-input', function () {
-    const wrapper = $(this).closest('.image-wrapper');
-    const size = wrapper.find('.size-select').val();
-    updatePrice(wrapper, size);
-  });
-
-  function updateTotalPedido() {
-    let total = 0;
-    const valor_entrega = parseFloat($('#val_entrega').val()) || 0;
-    $('#imageContainer .image-wrapper').each(function () {
-      const price = parseFloat($(this).find('.price-inputv').val()) || 0;
-      const quantity = parseInt($(this).find('.quantity-input').val()) || 1;
-      total += price * quantity;
-    });
-    total += valor_entrega;
-    $('#input_total').val(total);
-    $('#total_pedido').html(total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
-  }
-
-  function uploadImages(formData) {
-    $('#progressModal').css('display', 'flex');
-
-    $.ajax({
-      url: '{{ route('upload.image') }}',
-      method: 'POST',
-      headers: { 'X-CSRF-TOKEN': $('input[name="_token"]').val() },
-      data: formData,
-      processData: false,
-      contentType: false,
-      xhr: function () {
-        const xhr = new window.XMLHttpRequest();
-        xhr.upload.addEventListener('progress', function (evt) {
-          if (evt.lengthComputable) {
-            const percent = (evt.loaded / evt.total) * 100;
-            $('#uploadProgress').val(percent);
-            if (percent === 100) $('#progressModal').hide();
-          }
-        }, false);
-        return xhr;
-      },
-      success: function (data) {
-        if (data.images) {
-          alert('Imagens enviadas com sucesso');
-          window.location.href = '/pagamento/escolha/' + data.pedido;
-        }
-      },
-      error: function (error) {
-        console.error('Erro:', error);
-        $('#progressModal').hide();
-      }
-    });
-  }
-
-  $(document).on('click', '#progressModal .close', function () {
-    $('#progressModal').hide();
-  });
-  $(window).on('click', function (event) {
-    if (event.target === document.getElementById('progressModal')) {
-      $('#progressModal').hide();
-    }
-  });
-});
-
-  </script>
-</body>
-</html>
+    </html>
 @endsection
