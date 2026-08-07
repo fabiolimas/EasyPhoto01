@@ -271,42 +271,7 @@
             });
 
 
-            //   $('#processButton').on('click', function () {
-            //     if (!selecionado) {
-            //       new bootstrap.Modal(document.getElementById('modalAviso')).show();
-            //       return;
-            //     }
 
-            //     const formData = new FormData($('#uploadForm')[0]);
-            //     let sizeArray = [], quantityArray = [], priceArray = [];
-            //     let imagesProcessed = 0;
-            //     const images = $('#imageContainer img');
-
-            //     if (images.length === 0) return;
-
-            //     images.each(function (i, img) {
-            //       fetch(img.src).then(res => res.blob()).then(blob => {
-            //         formData.append('images[]', blob, 'image_' + i + '.jpg');
-
-            //         const wrapper = $(img).closest('.image-wrapper');
-            //         const size = JSON.parse(wrapper.find('.size-select').val());
-            //         const quantity = wrapper.find('.quantity-input').val();
-            //         const price = wrapper.find('.price-inputv').val();
-
-            //         sizeArray.push(size);
-            //         quantityArray.push(quantity);
-            //         priceArray.push(price);
-
-            //         imagesProcessed++;
-            //         if (imagesProcessed === images.length) {
-            //           formData.append('tamanhos', JSON.stringify(sizeArray));
-            //           formData.append('quantidades', JSON.stringify(quantityArray));
-            //           formData.append('precos', JSON.stringify(priceArray));
-            //           uploadImages(formData);
-            //         }
-            //       });
-            //     });
-            //   });
 
             let selecionado = false;
 
@@ -559,8 +524,8 @@
                         const $mask = $('<div>').addClass('crop-mask');
                         // const $img = $('<img>').attr('src', e.target.result);
                         const $img = $('<img>')
-    .attr('src', e.target.result)
-    .attr('data-filename', file.name);
+                            .attr('src', e.target.result)
+                            .attr('data-filename', file.name);
                         const $check = $(`
                             <label class="select-image">
                                 <input type="checkbox" class="image-selector">
@@ -569,48 +534,97 @@
 
                         $card.append($check);
 
-                        function updateSelectedCount() {
 
-                            let total = $('.image-selector:checked').length;
+                        function updateSelectedCount() {
+                            const total = $('.image-selector:checked').length;
 
                             $('#selectedCount').text(total + ' selecionadas');
 
-                            $('#bulkActions').toggle($('.image-wrapper').length > 0);
-
+                            $('#bulkActions').css(
+                                'display',
+                                $('.image-wrapper').length > 0 ? 'flex' : 'none'
+                            );
                         }
-                        $(document).on('change', '#selectAllImages', function() {
+                        $(document).on('change', '#selectAllImages', function () {
 
-                            let checked = $(this).is(':checked');
+    const checked = this.checked;
 
-                            $('.image-selector')
-                                .prop('checked', checked)
-                                .trigger('change');
+    // Faz tudo em uma única operação
+    $('.image-selector').prop('checked', checked);
 
-                        });
-                        $(document).on('change', '.image-selector', function() {
+    // Atualiza visualmente todas de uma vez
+    $('.image-wrapper').toggleClass('selected', checked);
 
-                            $(this)
-                                .closest('.image-wrapper')
-                                .toggleClass('selected', $(this).is(':checked'));
+    // Atualiza contador somente uma vez
+    $('#selectedCount').text(
+        checked
+            ? $('.image-selector').length + ' selecionadas'
+            : '0 selecionadas'
+    );
 
-                            updateSelectedCount();
+});
+                       $(document).on('change', '.image-selector', function () {
 
-                        });
+    const $wrapper = $(this).closest('.image-wrapper');
+
+    $wrapper.toggleClass('selected', this.checked);
+
+    updateSelectedCount();
+
+});
                         $('#bulkSizeSelect').on('change', function() {
 
                             let value = $(this).val();
 
                             if (!value) return;
 
-                            $('.image-selector:checked').each(function() {
+                            $('#bulkSizeSelect').on('change', function () {
 
-                                let wrapper = $(this).closest('.image-wrapper');
+    const value = this.value;
 
-                                wrapper.find('.size-select')
-                                    .val(value)
-                                    .trigger('change');
+    if (!value) return;
 
-                            });
+    const parsedSize = JSON.parse(value);
+    const price = parsedSize.price;
+
+    const $selected = $('.image-selector:checked');
+
+    $selected.each(function () {
+
+        const $wrapper = $(this).closest('.image-wrapper');
+
+        // Atualiza tamanho
+        $wrapper.find('.size-select').val(value);
+
+        // Atualiza preço diretamente
+        $wrapper.find('.price-input').html(
+            price.toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            })
+        );
+
+        $wrapper.find('.price-inputv').val(price);
+    });
+
+    // Atualiza o total somente uma vez
+    updateTotalPedido();
+
+    // Atualiza as máscaras somente depois
+    requestAnimationFrame(function () {
+
+        $selected.each(function () {
+
+            const $wrapper = $(this).closest('.image-wrapper');
+            const $card = $wrapper.find('.image-card');
+
+            updateCropMask($card);
+
+        });
+
+    });
+
+});
 
                         });
 
@@ -620,10 +634,10 @@
                         const $atributos = $('<div>').addClass('atributos');
 
                         const $sizeSelect = $('<select>').addClass('size-select').on('change',
-                        function() {
-                            updatePrice($col, $(this).val());
-                            updateCropMask($card);
-                        });
+                            function() {
+                                updatePrice($col, $(this).val());
+                                updateCropMask($card);
+                            });
                         cropSizes.forEach(function(size, index) {
                             const $option = $('<option>').val(JSON.stringify(size)).text(size
                                 .nome);
