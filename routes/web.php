@@ -108,6 +108,7 @@ Route::get('/altera-status/{id}', [PedidoController::class, 'alteraStatus'])->na
 Route::get('/busca-pedido-admin', [PedidoController::class, 'buscaPedidos'])->name('busca-pedidos-admin');
 Route::get('/busca-pedido-admin-lab', [PedidoController::class, 'buscaPedidosLab'])->name('busca-pedidos-admin-lab');
 Route::get('/download/{id}', [ImageUploadController::class, 'downloadFiles'])->name('download-files');
+Route::get('/pedido/delete/{id}', [PedidoController::class, 'destroy'])->name('delete-pedido');
 
 //Formas de Entrega
 Route::get('/formas-de-entrega', [FormasDeEntregasController::class, 'index'])->name('formas-de-entrega');

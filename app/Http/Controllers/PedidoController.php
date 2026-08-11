@@ -298,6 +298,11 @@ class PedidoController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $pedido=Pedido::find($id);
+
+        $pedido->delete();
+
+        return redirect()->back()->with('success','Pedido Excluido com sucesso!');
+
     }
 }

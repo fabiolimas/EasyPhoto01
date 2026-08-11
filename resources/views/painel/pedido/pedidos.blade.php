@@ -141,6 +141,10 @@
                                                     href="{{ route('download-files', $pedido->id) }}">Baixar</a></li>
                                             <li><a class="dropdown-item"
                                                     href="{{ route('altera-status', $pedido->id) }}">Finalizar</a></li>
+                                            @can('is_admin')
+                                                    <li><a class="dropdown-item"
+                                                    href="{{ route('delete-pedido', $pedido->id) }}">Excluir</a></li>
+                                            @endcan
 
                                         </ul>
                                         @endif
