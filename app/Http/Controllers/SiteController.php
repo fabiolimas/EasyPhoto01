@@ -44,7 +44,10 @@ class SiteController extends Controller
     public function detalhePedido(Request $request)
     {
         $pedido=Pedido::find($request->id);
-        $itensPedido=PedidoItem::where('pedido_id', $pedido->id)->get();
+         $itensPedido = PedidoItem::where('pedido_id', $pedido->id)
+    ->orderBy('tamanho')
+    ->get()
+    ->groupBy('tamanho');
         $totalImagens=0;
         $totalPedido=0;
         $usuario=User::find($pedido->user_id);
@@ -54,10 +57,14 @@ class SiteController extends Controller
         ->where('payment_id','<>', null)
         ->first();
 
-        foreach($itensPedido as $item){
-            $totalImagens+=$item->quantidade;
+        foreach ($itensPedido as $tamanho => $itens){
+ foreach ($itens as $item){
+         $totalImagens += $item->quantidade;
+    }
+
 
         }
+
         $laboratorio=Laboratorio::find($pedido->laboratorio_id);
 
 

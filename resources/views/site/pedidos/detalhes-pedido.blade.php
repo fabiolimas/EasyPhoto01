@@ -116,72 +116,114 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($itensPedido as $item)
-                    <tr>
-                        <td>
-                            <div class="minImagem" data-bs-toggle="modal"
-                                data-bs-target="#modalMiniatura-{{ $loop->index + 1 }}">
-                                <img src="{{ Storage::url($item->caminho) }}" alt="Selecionar imagens"
-                                    title="Selecionar Imagens" class="w-100" style="cursor: pointer">
+                                      @php
+    $modalIndex = 0;
+@endphp
+
+@foreach ($itensPedido as $tamanho => $itens)
+
+    {{-- Cabeçalho do grupo --}}
+    <tr>
+        <td colspan="6" class="bg-light">
+            <h5 class="m-3">
+                {{ $tamanho }}
+            </h5>
+        </td>
+    </tr>
+
+    {{-- Itens do grupo --}}
+    @foreach ($itens as $item)
+
+        @php
+            $modalIndex++;
+            $totalItem = $item->quantidade * $item->preco;
+            $totalPedido += $totalItem;
+        @endphp
+
+        <tr>
+            <td>
+                <div class="minImagem"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalMiniatura-{{ $modalIndex }}">
+
+                    <img src="{{ Storage::url($item->caminho) }}"
+                        alt="Selecionar imagens"
+                        title="Selecionar Imagens"
+                        class="w-100"
+                        style="cursor: pointer">
+
+                </div>
+
+                {{-- Modal Miniatura --}}
+                <div class="modal fade"
+                    id="modalMiniatura-{{ $modalIndex }}"
+                    tabindex="-1"
+                    aria-labelledby="modalLabel-{{ $modalIndex }}"
+                    aria-hidden="true">
+
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+
+                                <h1 class="modal-title fs-5"
+                                    id="modalLabel-{{ $modalIndex }}">
+                                    Imagem: {{ $item->nome }}
+                                </h1>
+
+                                <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close">
+                                </button>
 
                             </div>
-                            {{-- Modal Miniatura --}}
-                            <div class="modal fade" id="modalMiniatura-{{ $loop->index + 1 }}" tabindex="-1"
-                                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Imagem: {{ $item->nome }}
-                                            </h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
+
+                            <div class="modal-body">
+
+                                <div class="contentMiniatura mt-3">
+
+                                    <div class="row">
+
+                                        <div class="imagemMiniatura">
+                                            <img src="{{ Storage::url($item->caminho) }}"
+                                                alt="Selecionar imagens"
+                                                title="Selecionar Imagens"
+                                                class="w-100"
+                                                style="cursor: pointer">
                                         </div>
-                                        <div class="modal-body">
 
-
-                                            <div class="contentMiniatura mt-3">
-
-                                                <div class="row">
-
-
-                                                    <div class="imagemMiniatura">
-                                                        <img src="{{ Storage::url($item->caminho) }}"
-                                                            alt="Selecionar imagens" title="Selecionar Imagens"
-                                                            class="w-100" style="cursor: pointer">
-                                                    </div>
-
-
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {{-- <div class="modal-footer">
-
-
-                                        <button type="button" class="btn btn-danger">Selecionar imagens</button>
-
-                                            </div> --}}
                                     </div>
+
                                 </div>
+
                             </div>
-                        </td>
-                        <td>{{ $item->nome }}</td>
-                        <td>{{ $item->tamanho }}</td>
-                        <td>{{ $item->quantidade }}</td>
-                        <td>R$ {{ number_format($item->preco, 2, ',', '.') }}</td>
-                        @php
-                            $totalItem = $item->quantidade * $item->preco;
-                            $totalPedido += $totalItem;
-                        @endphp
-                        <td>R$ {{ number_format($totalItem, 2, ',', '.') }}</td>
 
+                        </div>
+                    </div>
 
+                </div>
+            </td>
 
-                        {{-- Modal Visualização --}}
+            <td>{{ $item->nome }}</td>
 
+            <td>{{ $item->tamanho }}</td>
 
-                    </tr>
-                @endforeach
+            <td>{{ $item->quantidade }}</td>
+
+            <td>
+                R$ {{ number_format($item->preco, 2, ',', '.') }}
+            </td>
+
+            <td>
+                R$ {{ number_format($totalItem, 2, ',', '.') }}
+            </td>
+
+        </tr>
+
+    @endforeach
+
+@endforeach
                 <tr>
                     <td></td>
                     <td></td>
@@ -224,14 +266,19 @@
                             <div class="row">
 
 
-                                @foreach ($itensPedido as $item)
-                                    <div class="imagemPedido col-md-4">
-                                        <img src="{{ Storage::url($item->caminho) }}" alt="{{$item->nome}}"
-                                            title="{{$item->nome}}" class="w-100" style="cursor: pointer">
-                                    </div>
+                                @foreach ($itensPedido as $tamanho => $itens)
+                                                            <div class="col-12 m-3">
+                                                                <h5>{{ $tamanho }}</h5>
+                                                            </div>
 
-
-                                @endforeach
+                                                            @foreach ($itens as $item)
+                                                                <div class="imagemPedido col-md-4">
+                                                                    <img src="{{ Storage::url($item->caminho) }}"
+                                                                        alt="Selecionar imagens" title="Selecionar Imagens"
+                                                                        class="w-100" style="cursor: pointer">
+                                                                </div>
+                                                            @endforeach
+                                                        @endforeach
 
 
                             </div>

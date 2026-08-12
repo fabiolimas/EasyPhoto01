@@ -21,13 +21,13 @@
 
         <div class="row">
 
-               <!-- Detalhes -->
+            <!-- Detalhes -->
 
 
             <div class="row detalhesPedido table-responsive">
                 <table class="table table-striped mb-3 mt-3">
                     <tr>
-                        <td>Cliente: <b>{{ mb_convert_case($pedido->cliente, MB_CASE_TITLE, "UTF-8") }}</b>
+                        <td>Cliente: <b>{{ mb_convert_case($pedido->cliente, MB_CASE_TITLE, 'UTF-8') }}</b>
                             <i class="bi bi-search m-2" data-bs-toggle="modal" data-bs-target="#dadosCliente"
                                 style="cursor:pointer"></i>
                         </td>
@@ -60,17 +60,13 @@
 
 
                         <td>ID Pagamento: @if ($payment != null)
-
-                            {{$paymentId = $payment->payment_id}}
-                            <a href="{{ route('consultar.pagamento', $paymentId) }}"
-                                class="btn btn-success" title="Verificar Pagamento"><i class="bi bi-search"></i></a></td>
-                                {{-- {{ $payment->payment_id }} --}}
-                            @else
-
-
-                            {{$paymentId=''}}
-
-                            @endif
+                                {{ $paymentId = $payment->payment_id }}
+                                <a href="{{ route('consultar.pagamento', $paymentId) }}" class="btn btn-success"
+                                    title="Verificar Pagamento"><i class="bi bi-search"></i></a></td>
+                        {{-- {{ $payment->payment_id }} --}}
+                    @else
+                        {{ $paymentId = '' }}
+                        @endif
 
                     </tr>
 
@@ -79,173 +75,221 @@
         </div>
 
         <div class="row btnAcoes mb-3 mt-3">
-            @if($pedido->status == 'Cancelado')
-
+            @if ($pedido->status == 'Cancelado')
             @else
-            @if ($pedido->status == 'Finalizado')
+                @if ($pedido->status == 'Finalizado')
+                    <div class="col-md-2 col-sd-6 d-flex justify-content-start">
+                        <a href="{{ route('altera-status', $pedido->id) }}" class="btn btn-dark disabled w-100 mt-2"> <i
+                                class="bi bi-check-circle"></i> Finalizar</a>
+                    </div>
+                @else
+                    <div class="col-md-2 col-sd-6 d-flex justify-content-start">
+                        <a href="{{ route('altera-status', $pedido->id) }}" class="btn btn-dark w-100 mt-2"> <i
+                                class="bi bi-check-circle"></i> Finalizar</a>
+                    </div>
+                @endif
                 <div class="col-md-2 col-sd-6 d-flex justify-content-start">
-                    <a href="{{ route('altera-status', $pedido->id) }}" class="btn btn-dark disabled w-100 mt-2"> <i class="bi bi-check-circle"></i> Finalizar</a>
+                    <a href="{{ route('download-files', $pedido->id) }}" class="btn btn-success w-100 mt-2">
+                        <i class="bi bi-download"></i> Baixar</a>
                 </div>
-            @else
-                <div class="col-md-2 col-sd-6 d-flex justify-content-start">
-                    <a href="{{ route('altera-status', $pedido->id) }}" class="btn btn-dark w-100 mt-2"> <i class="bi bi-check-circle"></i> Finalizar</a>
-                </div>
-            @endif
-            <div class="col-md-2 col-sd-6 d-flex justify-content-start">
-                <a href="{{ route('download-files', $pedido->id) }}" class="btn btn-success w-100 mt-2">
-                    <i class="bi bi-download"></i> Baixar</a>
-            </div>
             @endif
             <div class="col-md-8 d-flex justify-content-end">
-                <button class="btn btn-danger w-100 mt-2" data-bs-toggle="modal" data-bs-target="#modalPedido"><i class="bi bi-images"></i> Visualizar Fotos</a>
+                <button class="btn btn-danger w-100 mt-2" data-bs-toggle="modal" data-bs-target="#modalPedido"><i
+                        class="bi bi-images"></i> Visualizar Fotos</a>
             </div>
 
         </div>
         <hr>
         <div class="card panel mb-4">
-        <div class="panel-head">
-          <div>
-            <div class="panel-title">Itens do pedido</div>
+            <div class="panel-head">
+                <div>
+                    <div class="panel-title">Itens do pedido</div>
 
-          </div>
-        </div>
-        <div class="table-responsive">
-          <table class="table table-modern align-middle mb-0">
-            <thead>
-              <tr>
-                <th style="width:80px">Imagem</th>
-                <th>Arquivos</th>
-                <th>Tamanho</th>
-                <th>Cópias</th>
-                <th>Valor unitário</th>
-                <th>Valor Total</th>
-              </tr>
-            </thead>
-            <tbody>
-             @foreach ($itensPedido as $item)
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-modern align-middle mb-0">
+                    <thead>
                         <tr>
-                            <td>
-                                <div class="minImagem" data-bs-toggle="modal"
-                                    data-bs-target="#modalMiniatura-{{ $loop->index + 1 }}">
-                                    <img src="{{ Storage::url($item->caminho) }}" alt="Selecionar imagens"
-                                        title="Selecionar Imagens" class="w-100" style="cursor: pointer">
+                            <th style="width:80px">Imagem</th>
+                            <th>Arquivos</th>
+                            <th>Tamanho</th>
+                            <th>Cópias</th>
+                            <th>Valor unitário</th>
+                            <th>Valor Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       @php
+    $modalIndex = 0;
+@endphp
+
+@foreach ($itensPedido as $tamanho => $itens)
+
+    {{-- Cabeçalho do grupo --}}
+    <tr>
+        <td colspan="6" class="bg-light">
+            <h5 class="m-3">
+                {{ $tamanho }}
+            </h5>
+        </td>
+    </tr>
+
+    {{-- Itens do grupo --}}
+    @foreach ($itens as $item)
+
+        @php
+            $modalIndex++;
+            $totalItem = $item->quantidade * $item->preco;
+            $totalPedido += $totalItem;
+        @endphp
+
+        <tr>
+            <td>
+                <div class="minImagem"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalMiniatura-{{ $modalIndex }}">
+
+                    <img src="{{ Storage::url($item->caminho) }}"
+                        alt="Selecionar imagens"
+                        title="Selecionar Imagens"
+                        class="w-100"
+                        style="cursor: pointer">
+
+                </div>
+
+                {{-- Modal Miniatura --}}
+                <div class="modal fade"
+                    id="modalMiniatura-{{ $modalIndex }}"
+                    tabindex="-1"
+                    aria-labelledby="modalLabel-{{ $modalIndex }}"
+                    aria-hidden="true">
+
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+
+                                <h1 class="modal-title fs-5"
+                                    id="modalLabel-{{ $modalIndex }}">
+                                    Imagem: {{ $item->nome }}
+                                </h1>
+
+                                <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close">
+                                </button>
+
+                            </div>
+
+                            <div class="modal-body">
+
+                                <div class="contentMiniatura mt-3">
+
+                                    <div class="row">
+
+                                        <div class="imagemMiniatura">
+                                            <img src="{{ Storage::url($item->caminho) }}"
+                                                alt="Selecionar imagens"
+                                                title="Selecionar Imagens"
+                                                class="w-100"
+                                                style="cursor: pointer">
+                                        </div>
+
+                                    </div>
 
                                 </div>
-                                {{-- Modal Miniatura --}}
-                                <div class="modal fade" id="modalMiniatura-{{ $loop->index + 1 }}" tabindex="-1"
-                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </td>
+
+            <td>{{ $item->nome }}</td>
+
+            <td>{{ $item->tamanho }}</td>
+
+            <td>{{ $item->quantidade }}</td>
+
+            <td>
+                R$ {{ number_format($item->preco, 2, ',', '.') }}
+            </td>
+
+            <td>
+                R$ {{ number_format($totalItem, 2, ',', '.') }}
+            </td>
+
+        </tr>
+
+    @endforeach
+
+@endforeach
+                        <div class="modal fade" id="modalPedido" tabindex="-1" aria-labelledby="exampleModalLabel"
+                                    aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Imagem:
-                                                    {{ $item->nome }}</h1>
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Pedido
+                                                    #{{ $pedido->id }}
+                                                </h1>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
 
 
-                                                <div class="contentMiniatura mt-3">
+                                                <div class="contentModalLab mt-3">
 
                                                     <div class="row">
 
+                                                        @foreach ($itensPedido as $tamanho => $itens)
+                                                            <div class="col-12 m-3">
+                                                                <h5>{{ $tamanho }}</h5>
+                                                            </div>
 
-                                                        <div class="imagemMiniatura">
-                                                            <img src="{{ Storage::url($item->caminho) }}"
-                                                                alt="Selecionar imagens" title="Selecionar Imagens"
-                                                                class="w-100" style="cursor: pointer">
-                                                        </div>
-
+                                                            @foreach ($itens as $item)
+                                                                <div class="imagemPedido col-md-4">
+                                                                    <img src="{{ Storage::url($item->caminho) }}"
+                                                                        alt="Selecionar imagens" title="Selecionar Imagens"
+                                                                        class="w-100" style="cursor: pointer">
+                                                                </div>
+                                                            @endforeach
+                                                        @endforeach
 
 
                                                     </div>
                                                 </div>
                                             </div>
-                                            {{-- <div class="modal-footer">
 
-
-                            <button type="button" class="btn btn-danger">Selecionar imagens</button>
-
-                         </div> --}}
                                         </div>
                                     </div>
                                 </div>
-                            </td>
-                            <td>{{ $item->nome }}</td>
-                            <td>{{ $item->tamanho }}</td>
-                            <td>{{ $item->quantidade }}</td>
-                            <td>R$ {{ number_format($item->preco, 2, ',', '.') }}</td>
-                            @php
-                                $totalItem = $item->quantidade * $item->preco;
-                                $totalPedido += $totalItem;
-                            @endphp
-                            <td>R$ {{ number_format($totalItem, 2, ',', '.') }}</td>
-
-
-
-                            {{-- Modal Visualização --}}
-                            <div class="modal fade" id="modalPedido" tabindex="-1" aria-labelledby="exampleModalLabel"
-                                aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Pedido #{{ $pedido->id }}
-                                            </h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-
-
-                                            <div class="contentModalLab mt-3">
-
-                                                <div class="row">
-
-                                                    @foreach ($itensPedido as $item)
-                                                        <div class="imagemPedido col-md-4">
-                                                            <img src="{{ Storage::url($item->caminho) }}"
-                                                                alt="Selecionar imagens" title="Selecionar Imagens"
-                                                                class="w-100" style="cursor: pointer">
-                                                        </div>
-                                                    @endforeach
-
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {{-- <div class="modal-footer">
-
-
-                            <button type="button" class="btn btn-danger">Selecionar imagens</button>
-
-                         </div> --}}
-                                    </div>
-                                </div>
-                            </div>
-
+                        <tr>
+                            <td></td>
+                            <td class="fw-semibold">Entrega</td>
+                            @if ($pedido->val_entrega == 0 || $pedido->val_entrega == null)
+                                <td>{{ $pedido->forma_de_entrega }}</td>
+                            @else
+                                <th scope="now">R$ {{ number_format($pedido->val_entrega, 2, ',', '.') }}</th>
+                            @endif
                         </tr>
-                    @endforeach
-              <tr>
-                <td></td>
-                <td class="fw-semibold">Entrega</td>
-                 @if ($pedido->val_entrega == 0 || $pedido->val_entrega == null)
-                            <td>{{ $pedido->forma_de_entrega }}</td>
-                        @else
-                            <th scope="now">R$ {{ number_format($pedido->val_entrega, 2, ',', '.') }}</th>
-                        @endif
-              </tr>
-              <tr class="table-active">
-                <td></td>
-                <td class="fw-bold">Total</td>
-                <td></td>
-                <td class="fw-bold">{{ $totalImagens }}</td>
-                <td></td>
-                <td class="fw-bold">R$ {{ number_format($totalPedido + $pedido->val_entrega, 2, ',', '.') }}</td>
-              </tr>
-            </tbody>
-          </table>
+                        <tr class="table-active">
+                            <td></td>
+                            <td class="fw-bold">Total</td>
+                            <td></td>
+                            <td class="fw-bold">{{ $totalImagens }}</td>
+                            <td></td>
+                            <td class="fw-bold">R$ {{ number_format($totalPedido + $pedido->val_entrega, 2, ',', '.') }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
 
 
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"

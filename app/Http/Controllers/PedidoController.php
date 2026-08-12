@@ -135,7 +135,12 @@ class PedidoController extends Controller
     public function detalhePedido(Request $request)
     {
         $pedido = Pedido::find($request->id);
-        $itensPedido = PedidoItem::where('pedido_id', $pedido->id)->get();
+      $itensPedido = PedidoItem::where('pedido_id', $pedido->id)
+    ->orderBy('tamanho')
+    ->get()
+    ->groupBy('tamanho');
+
+
         $totalImagens = 0;
         $totalPedido = 0;
 
@@ -152,9 +157,21 @@ class PedidoController extends Controller
             ->where('laboratorio_id', auth()->user()->laboratorio_id)
             ->count();
 
-        foreach ($itensPedido as $item) {
-            $totalImagens += $item->quantidade;
+        // foreach ($itensPedido as $item) {
+        //     $totalImagens += $item->quantidade;
+        // }
+
+        foreach ($itensPedido as $tamanho => $itens){
+ foreach ($itens as $item){
+         $totalImagens += $item->quantidade;
+    }
+
+
         }
+
+
+
+
         $laboratorio = Laboratorio::find($pedido->laboratorio_id);
 
 
