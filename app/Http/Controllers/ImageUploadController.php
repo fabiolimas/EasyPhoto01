@@ -120,7 +120,7 @@ if (!empty(trim($pedido->observacao))) {
 
 
         // Definir o caminho da imagem
-        $imagePath = 'uploads/pedido_' . $pedido->id . '/Foto_' . $size['width'] . 'x' . $size['height'] . '/' . $quantity;
+        $imagePath = 'uploads/pedido_' . $pedido->id . '/Foto_' . $size['height'] . 'x' . $size['width'] . '/' . $quantity;
         $fullImagePath = storage_path('app/public/' . $imagePath);
 
         // Criar a estrutura de pastas se não existir
@@ -141,7 +141,7 @@ if (!empty(trim($pedido->observacao))) {
             'pedido_id' => $pedido->id,
             'nome' => $imageName,
             'caminho' => $imageUrl,
-            'tamanho' => $size['width'] . 'x' . $size['height'],
+            'tamanho' => $size['height'] . 'x' . $size['width'],
             'quantidade' => $quantity,
             'preco' => $price, // Salvar o preço
         ]);
