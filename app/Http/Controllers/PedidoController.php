@@ -53,6 +53,7 @@ class PedidoController extends Controller
 
 
             $pedidosCancelados = Pedido::where('status', 'Cancelado')
+            ->where('laboratorio_id', auth()->user()->laboratorio_id)
 
                 ->count();
 
