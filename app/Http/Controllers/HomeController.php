@@ -55,6 +55,7 @@ class HomeController extends Controller
 
              $pedidosCancelados = Pedido::where('status', 'Cancelado')
                 ->where('created_at','>', Carbon::now()->subDays($request->dia))
+               ->where('laboratorio_id', auth()->user()->laboratorio_id)
                 ->count();
 
             $pedidos_recentes = Pedido::join('laboratorios', 'laboratorios.id', 'pedidos.laboratorio_id')

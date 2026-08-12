@@ -203,9 +203,10 @@ class PedidoController extends Controller
             } else {
 
                 $pedidos = Pedido::where('cliente', 'like', '%' . $busca . '%')
+                  ->where('laboratorio_id', auth()->user()->laboratorio_id)
                     ->orWhere('id', 'like', '%' . $busca . '%')
                     ->orWhere('status', 'like', '%' . $status . '%')
-                    ->where('laboratorio_id', auth()->user()->laboratorio_id)
+
                      ->orderBy('id','desc')
                     ->paginate(30);
             }
