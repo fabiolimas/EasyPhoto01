@@ -163,6 +163,10 @@
                 </div>
 
                 <div class="d-flex gap-2 flex-wrap">
+                     {{-- <button type="button" class="btn-action btn-action-dark" data-bs-toggle="modal"
+                        data-bs-target="#modalObservacao">
+                        <i class="bi bi-square"></i> Acabamento
+                    </button> --}}
                     <button type="button" class="btn-action btn-action-dark" data-bs-toggle="modal"
                         data-bs-target="#modalObservacao">
                         <i class="bi bi-chat-left-text"></i> Observação

@@ -102,51 +102,58 @@ if (!empty(trim($pedido->observacao))) {
         $pedido->observacao
     );
 }
-    foreach ($images as $index => $image) {
-        if (!isset($tamanhos[$index]) || !isset($quantidades[$index]) || !isset($precos[$index])) {
-            continue; // Pula a iteração se o índice não existir
-        }
+   foreach ($images as $index => $image) {
 
-       // $crop = $cropData[$index];
-        $size = $tamanhos[$index];
-        $quantity = $quantidades[$index];
-        $price = $precos[$index]; // Capturar o preço correspondente
-        $imageName = $image->getClientOriginalName();
-
-        // Ler a imagem
-        $manager = new ImageManager(new Driver());
-        $img = $manager->read($image->getRealPath());
-
-
-
-        // Definir o caminho da imagem
-        $imagePath = 'uploads/pedido_' . $pedido->id . '/Foto_' . $size['height'] . 'x' . $size['width'] . '/' . $quantity;
-        $fullImagePath = storage_path('app/public/' . $imagePath);
-
-        // Criar a estrutura de pastas se não existir
-        if (!file_exists($fullImagePath)) {
-            mkdir($fullImagePath, 0755, true);
-        }
-
-        // Salvar a imagem
-        $img->save($fullImagePath . '/' . $imageName);
-
-        $imageUrl = $imagePath . '/' . $imageName;
-        $imageUrls[] = asset('storage/' . $imageUrl);
-
-
-
-        // Salvar o caminho da imagem e outros dados na tabela pedido_items
-        PedidoItem::create([
-            'pedido_id' => $pedido->id,
-            'nome' => $imageName,
-            'caminho' => $imageUrl,
-            'tamanho' => $size['height'] . 'x' . $size['width'],
-            'quantidade' => $quantity,
-            'preco' => $price, // Salvar o preço
-        ]);
+    if (!isset($tamanhos[$index]) || !isset($quantidades[$index]) || !isset($precos[$index])) {
+        continue;
     }
 
+    if (!$image->isValid()) {
+        return response()->json([
+            'error' => true,
+            'message' => 'Erro no upload da imagem.',
+            'arquivo' => $image->getClientOriginalName(),
+            'upload_error' => $image->getError(),
+            'upload_error_message' => $image->getErrorMessage(),
+        ], 422);
+    }
+
+    $size = $tamanhos[$index];
+    $quantity = $quantidades[$index];
+    $price = $precos[$index];
+
+    $imageName = $image->getClientOriginalName();
+
+    // Caminho da imagem
+    $imagePath = 'uploads/pedido_' . $pedido->id .
+        '/Foto_' . $size['height'] . 'x' . $size['width'] .
+        '/' . $quantity;
+
+    $fullImagePath = storage_path('app/public/' . $imagePath);
+
+    // Criar a estrutura de pastas
+    if (!file_exists($fullImagePath)) {
+        mkdir($fullImagePath, 0755, true);
+    }
+
+    // Salvar o arquivo original sem processá-lo com Intervention
+    $image->move($fullImagePath, $imageName);
+
+    // URL da imagem
+    $imageUrl = $imagePath . '/' . $imageName;
+
+    $imageUrls[] = asset('storage/' . $imageUrl);
+
+    // Salvar no banco
+    PedidoItem::create([
+        'pedido_id' => $pedido->id,
+        'nome' => $imageName,
+        'caminho' => $imageUrl,
+        'tamanho' => $size['height'] . 'x' . $size['width'],
+        'quantidade' => $quantity,
+        'preco' => $price,
+    ]);
+}
     return response()->json(['images' => $imageUrls, 'pedido'=>$pedido->id]);
 }
 
