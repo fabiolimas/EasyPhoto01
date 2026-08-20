@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function usuarios(Request $request){
-        $usuarios= User::all();
+        $usuarios= User::paginate(30);
         $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')
               ->where('created_at','>', Carbon::now()->subDays($request->dia))
                 //->whereYear('created_at', Carbon::now()->year)
