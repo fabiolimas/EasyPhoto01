@@ -111,7 +111,7 @@
                 <table class="table table-modern align-middle mb-0">
                     <thead>
                         <tr>
-                            <th style="width:80px">Imagem</th>
+                            {{-- <th style="width:80px">Imagem</th> --}}
                             <th>Arquivos</th>
                             <th>Tamanho</th>
                             <th>Cópias</th>
@@ -145,7 +145,7 @@
         @endphp
 
         <tr>
-            <td>
+            {{-- <td>
                 <div class="minImagem"
                     data-bs-toggle="modal"
                     data-bs-target="#modalMiniatura-{{ $modalIndex }}">
@@ -159,7 +159,7 @@
                 </div>
 
                 {{-- Modal Miniatura --}}
-                <div class="modal fade"
+                {{-- <div class="modal fade"
                     id="modalMiniatura-{{ $modalIndex }}"
                     tabindex="-1"
                     aria-labelledby="modalLabel-{{ $modalIndex }}"
@@ -207,7 +207,7 @@
                     </div>
 
                 </div>
-            </td>
+            </td> --}}
 
             <td>{{ $item->nome }}</td>
 
