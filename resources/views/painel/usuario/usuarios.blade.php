@@ -82,6 +82,7 @@
                 </table>
             </div>
 
+            {{ $usuarios->links() }}
 
     </section>
 
