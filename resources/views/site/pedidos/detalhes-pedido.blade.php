@@ -106,7 +106,7 @@
         <table class="table table-striped table-hover">
             <thead class="thead-dark">
                 <tr>
-                    <th scope="col">Imagem</th>
+                    {{-- <th scope="col">Imagem</th> --}}
                     <th scope="col">Arquivos</th>
                     <th scope="col">Tamanho</th>
                     <th scope="col">Cópias</th>
@@ -141,7 +141,7 @@
         @endphp
 
         <tr>
-            <td>
+            {{-- <td>
                 <div class="minImagem"
                     data-bs-toggle="modal"
                     data-bs-target="#modalMiniatura-{{ $modalIndex }}">
@@ -155,7 +155,7 @@
                 </div>
 
                 {{-- Modal Miniatura --}}
-                <div class="modal fade"
+                {{-- <div class="modal fade"
                     id="modalMiniatura-{{ $modalIndex }}"
                     tabindex="-1"
                     aria-labelledby="modalLabel-{{ $modalIndex }}"
@@ -203,7 +203,7 @@
                     </div>
 
                 </div>
-            </td>
+            </td> --}}
 
             <td>{{ $item->nome }}</td>
 
