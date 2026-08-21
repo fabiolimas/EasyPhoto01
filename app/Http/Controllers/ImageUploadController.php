@@ -53,108 +53,287 @@ class ImageUploadController extends Controller
         return view('site.lab', compact('laboratorios'));
     }
 
-    public function uploadImage(Request $request)
-    {
-
-
-
- // $request->validate([
-    //     'images' => 'required|array',
-    //     'images.*' => 'required|image|mimes:jpeg,png,jpg,gif',
-    // ]);
-
-    $user = User::find($request->user_id);
-
-
-    $images = $request->file('images');
-    $tamanhos = json_decode($request->input('tamanhos'), true);
-    $quantidades = json_decode($request->input('quantidades'), true);
-    // $cropData = json_decode($request->input('cropData'), true);
-    $precos = json_decode($request->input('precos'), true); // Receber preços do frontend
-    $imageUrls = [];
+    public function criarPedido(Request $request)
+{
+    $user = User::findOrFail($request->user_id);
 
     $pedido = new Pedido();
+
     $pedido->user_id = $user->id;
-    $pedido->cliente = $user->name; // Atualize conforme necessário
+    $pedido->cliente = $user->name;
     $pedido->status = 'Aguardando Impressão';
     $pedido->status_pagamento = 'pendente';
     $pedido->laboratorio_id = $request->laboratorio_id;
     $pedido->observacao = $request->observacao;
-    $pedido->total=number_format($request->total, 2, '.', ',');
-    $pedido->payment_method=null;
-    $pedido->forma_de_entrega=$request->forma_entrega;
-    $pedido->val_entrega=number_format($request->val_entrega, 2, '.', ',');
+    $pedido->total = number_format(
+        $request->total,
+        2,
+        '.',
+        ','
+    );
+    $pedido->payment_method = null;
+    $pedido->forma_de_entrega = $request->forma_entrega;
+    $pedido->val_entrega = number_format(
+        $request->val_entrega,
+        2,
+        '.',
+        ','
+    );
 
     $pedido->save();
 
-$pedidoPath = storage_path('app/public/uploads/pedido_' . $pedido->id);
 
-// Criar pasta do pedido
-if (!file_exists($pedidoPath)) {
-    mkdir($pedidoPath, 0755, true);
-}
-
-// Criar observacao.txt dentro da pasta pedido_
-if (!empty(trim($pedido->observacao))) {
-
-    file_put_contents(
-        $pedidoPath . '/observacao.txt',
-        $pedido->observacao
+    /*
+     * Cria a pasta do pedido imediatamente.
+     */
+    $pedidoPath = storage_path(
+        'app/public/uploads/pedido_' . $pedido->id
     );
-}
-   foreach ($images as $index => $image) {
 
-    if (!isset($tamanhos[$index]) || !isset($quantidades[$index]) || !isset($precos[$index])) {
-        continue;
+    if (!file_exists($pedidoPath)) {
+        mkdir($pedidoPath, 0755, true);
     }
 
-    if (!$image->isValid()) {
-        return response()->json([
-            'error' => true,
-            'message' => 'Erro no upload da imagem.',
-            'arquivo' => $image->getClientOriginalName(),
-            'upload_error' => $image->getError(),
-            'upload_error_message' => $image->getErrorMessage(),
-        ], 422);
+
+    /*
+     * Salva observação.
+     */
+    if (!empty(trim($pedido->observacao))) {
+
+        file_put_contents(
+            $pedidoPath . '/observacao.txt',
+            $pedido->observacao
+        );
+
     }
 
-    $size = $tamanhos[$index];
-    $quantity = $quantidades[$index];
-    $price = $precos[$index];
 
-    $imageName = $image->getClientOriginalName();
-
-    // Caminho da imagem
-    $imagePath = 'uploads/pedido_' . $pedido->id .
-        '/Foto_' . $size['height'] . 'x' . $size['width'] .
-        '/' . $quantity;
-
-    $fullImagePath = storage_path('app/public/' . $imagePath);
-
-    // Criar a estrutura de pastas
-    if (!file_exists($fullImagePath)) {
-        mkdir($fullImagePath, 0755, true);
-    }
-
-    // Salvar o arquivo original sem processá-lo com Intervention
-    $image->move($fullImagePath, $imageName);
-
-    // URL da imagem
-    $imageUrl = $imagePath . '/' . $imageName;
-
-    $imageUrls[] = asset('storage/' . $imageUrl);
-
-    // Salvar no banco
-    PedidoItem::create([
-        'pedido_id' => $pedido->id,
-        'nome' => $imageName,
-        'caminho' => $imageUrl,
-        'tamanho' => $size['height'] . 'x' . $size['width'],
-        'quantidade' => $quantity,
-        'preco' => $price,
+    return response()->json([
+        'success' => true,
+        'pedido' => $pedido->id
     ]);
 }
-    return response()->json(['images' => $imageUrls, 'pedido'=>$pedido->id]);
+
+   public function uploadImage(Request $request)
+{
+    /*
+     * O pedido já deve existir.
+     */
+    $pedido = Pedido::findOrFail(
+        $request->pedido_id
+    );
+
+
+    /*
+     * Arquivos enviados nesta requisição.
+     *
+     * Agora esperamos normalmente apenas
+     * UMA imagem por requisição.
+     */
+    $images = $request->file('images');
+
+
+    if (!$images) {
+
+        return response()->json([
+            'error' => true,
+            'message' => 'Nenhuma imagem foi enviada.'
+        ], 422);
+
+    }
+
+
+    /*
+     * Normaliza para array.
+     *
+     * Isso mantém compatibilidade caso eventualmente
+     * sejam enviados vários arquivos.
+     */
+    if (!is_array($images)) {
+        $images = [$images];
+    }
+
+
+    $tamanhos = json_decode(
+        $request->input('tamanhos'),
+        true
+    );
+
+    $quantidades = json_decode(
+        $request->input('quantidades'),
+        true
+    );
+
+    $precos = json_decode(
+        $request->input('precos'),
+        true
+    );
+
+
+    $imageUrls = [];
+
+
+    foreach ($images as $index => $image) {
+
+
+        /*
+         * Verifica se os dados da imagem existem.
+         */
+        if (
+            !isset($tamanhos[$index]) ||
+            !isset($quantidades[$index]) ||
+            !isset($precos[$index])
+        ) {
+
+            continue;
+
+        }
+
+
+        /*
+         * Verifica erro do upload.
+         */
+        if (!$image->isValid()) {
+
+            return response()->json([
+                'error' => true,
+                'message' =>
+                    'Erro no upload da imagem.',
+
+                'arquivo' =>
+                    $image->getClientOriginalName(),
+
+                'upload_error' =>
+                    $image->getError(),
+
+                'upload_error_message' =>
+                    $image->getErrorMessage(),
+
+            ], 422);
+
+        }
+
+
+        $size =
+            $tamanhos[$index];
+
+        $quantity =
+            $quantidades[$index];
+
+        $price =
+            $precos[$index];
+
+
+        /*
+         * Nome original.
+         */
+        $imageName =
+            $image->getClientOriginalName();
+
+
+        /*
+         * Caminho da imagem.
+         */
+        $imagePath =
+            'uploads/pedido_' .
+            $pedido->id .
+            '/Foto_' .
+            $size['height'] .
+            'x' .
+            $size['width'] .
+            '/' .
+            $quantity;
+
+
+        $fullImagePath =
+            storage_path(
+                'app/public/' .
+                $imagePath
+            );
+
+
+        /*
+         * Cria diretórios.
+         */
+        if (!file_exists($fullImagePath)) {
+
+            mkdir(
+                $fullImagePath,
+                0755,
+                true
+            );
+
+        }
+
+
+        /*
+         * Salva o arquivo ORIGINAL.
+         *
+         * Não passa pelo Intervention Image.
+         */
+        $image->move(
+            $fullImagePath,
+            $imageName
+        );
+
+
+        /*
+         * Caminho relativo.
+         */
+        $imageUrl =
+            $imagePath .
+            '/' .
+            $imageName;
+
+
+        $imageUrls[] =
+            asset(
+                'storage/' .
+                $imageUrl
+            );
+
+
+        /*
+         * Registra no banco.
+         */
+        PedidoItem::create([
+
+            'pedido_id' =>
+                $pedido->id,
+
+            'nome' =>
+                $imageName,
+
+            'caminho' =>
+                $imageUrl,
+
+            'tamanho' =>
+                $size['height'] .
+                'x' .
+                $size['width'],
+
+            'quantidade' =>
+                $quantity,
+
+            'preco' =>
+                $price,
+
+        ]);
+
+    }
+
+
+    return response()->json([
+
+        'success' => true,
+
+        'images' =>
+            $imageUrls,
+
+        'pedido' =>
+            $pedido->id
+
+    ]);
 }
 
 

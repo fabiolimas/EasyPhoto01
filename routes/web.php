@@ -64,6 +64,7 @@ Route::get('/detalhe-pedido/{id}', [SiteController::class, 'detalhePedido'])->na
 Route::get('/busca-pedido', [SiteController::class, 'buscaPedidos'])->name('busca-pedidos');
 Route::get('/cancelar-pedido/{id}', [SiteController::class, 'cancelarPedido'])->name('cancelar-pedido');
 
+
 //Usuarios
 Route::get('/usuarios', [App\Http\Controllers\UserController::class, 'usuarios'])->name('usuarios');
 Route::get('/usuario',[UserController::class, 'usuario'])->name('usuario');
@@ -109,6 +110,7 @@ Route::get('/busca-pedido-admin', [PedidoController::class, 'buscaPedidos'])->na
 Route::get('/busca-pedido-admin-lab', [PedidoController::class, 'buscaPedidosLab'])->name('busca-pedidos-admin-lab');
 Route::get('/download/{id}', [ImageUploadController::class, 'downloadFiles'])->name('download-files');
 Route::get('/pedido/delete/{id}', [PedidoController::class, 'destroy'])->name('delete-pedido');
+Route::post( '/pedido/criar',  [ImageUploadController::class, 'criarPedido'])->name('pedido.criar');
 
 //Formas de Entrega
 Route::get('/formas-de-entrega', [FormasDeEntregasController::class, 'index'])->name('formas-de-entrega');
