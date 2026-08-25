@@ -1318,28 +1318,25 @@
                 $('#observacao_input').val($('#observacao_text').val());
             });
 
-            $('#processButton').on('click', function() {
+            $('#processButton').on('click', function(e) {
 
 
+                    if ($(this).hasClass('disabled')) {
+                    e.preventDefault();
 
+                    alert('Selecione uma forma de entrega.');
+                    return;
+                }
                 const images = $('#imageContainer .image-wrapper');
 
                 if (images.length === 0) {
+
+                    alert('Nenhuma imagem adicionada ao edido!');
                     return;
                 }
 
-                /*
-                 * Inicia a fila de upload.
-                 *
-                 * Os arquivos originais já estão armazenados
-                 * em cada .image-wrapper através de:
-                 *
-                 * .data('file', file)
-                 */
+
                 uploadImages();
-
-
-
 
 
 
@@ -1348,15 +1345,6 @@
                     const size = wrapper.find('.size-select').val();
                     updatePrice(wrapper, size);
                 });
-
-
-
-
-
-
-
-
-
 
 
                 /*

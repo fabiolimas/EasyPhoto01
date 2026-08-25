@@ -50,7 +50,7 @@
     .btn-action-dark:hover{background:#000}
     .btn-action-primary{background:#fff;color:var(--red-primary);border-color:#fff;font-weight:600}
     .btn-action-primary:hover{background:#f5f5f5;color:var(--red-primary)}
-    .btn-action.disabled{opacity:.6;pointer-events:none}
+    .btn-action.disabled{opacity:.6;cursor: not-allowed;}
     .total-badge{background:rgba(0,0,0,.35);color:#fff;padding:.65rem 1.5rem;border-radius:10px;font-weight:700;font-size:1.1rem;letter-spacing:.5px}
     .total-badge small{display:block;font-size:.7rem;font-weight:400;opacity:.8;letter-spacing:1px;text-transform:uppercase}
 .contentModalLab {
