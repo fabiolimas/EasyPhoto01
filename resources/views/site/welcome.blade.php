@@ -175,7 +175,7 @@
                         data-bs-target="#modalEntrega">
                         <i class="bi bi-truck"></i> Forma de Entrega
                     </button>
-                    <button type="button" id="processButton" class="btn-action btn-action-primary">
+                    <button type="button" id="processButton" class="btn-action btn-action-primary disabled">
                         <i class="bi bi-cart-check"></i> Enviar
                     </button>
                 </div>
