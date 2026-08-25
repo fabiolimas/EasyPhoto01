@@ -1321,17 +1321,19 @@
             $('#processButton').on('click', function(e) {
 
 
-                    if ($(this).hasClass('disabled')) {
-                    e.preventDefault();
 
-                    alert('Selecione uma forma de entrega.');
-                    return;
-                }
                 const images = $('#imageContainer .image-wrapper');
 
                 if (images.length === 0) {
 
-                    alert('Nenhuma imagem adicionada ao edido!');
+                    alert('Nenhuma imagem adicionada ao pedido!');
+                    return;
+                }
+
+                   if ($(this).hasClass('disabled')) {
+                    e.preventDefault();
+
+                    alert('Selecione uma forma de entrega.');
                     return;
                 }
 
