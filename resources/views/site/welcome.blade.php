@@ -1334,6 +1334,7 @@
                     e.preventDefault();
 
                     alert('Selecione uma forma de entrega.');
+                    $("#modalEntrega").modal('show');
                     return;
                 }
 
