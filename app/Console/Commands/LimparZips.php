@@ -34,8 +34,9 @@ class LimparZips extends Command
                 continue;
             }
 
+            $limite = now()->subMinutes(10)->timestamp;
             // ZIPs com mais de 1 hora
-            if (filemtime($file) < now()->subHour()->timestamp) {
+            if (filemtime($file) < $limite) {
 
                 if (@unlink($file)) {
 
