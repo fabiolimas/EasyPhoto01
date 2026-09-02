@@ -41,30 +41,8 @@ class Kernel extends ConsoleKernel
         }
     })->everyMinute();
 
-    $schedule->call(function () {
-
-        $directory = storage_path('app/public/uploads');
-
-        if (!is_dir($directory)) {
-            return;
-        }
-
-        $files = glob($directory . '/*.zip');
-
-        if (!$files) {
-            return;
-        }
-
-        foreach ($files as $file) {
-
-            // Arquivos ZIP com mais de 30 minutos
-            if (filemtime($file) < now()->subMinutes(30)->timestamp) {
-
-                @unlink($file);
-            }
-        }
-
-    })->everyTenMinutes();
+    $schedule->command('zips:limpar')
+        ->everyTenMinutes();
     }
 
     /**
