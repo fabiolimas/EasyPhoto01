@@ -790,27 +790,27 @@
 
                 });
 
-                mask.on('wheel', function(e) {
+                // mask.on('wheel', function(e) {
 
-                    e.preventDefault();
+                //     e.preventDefault();
 
-                    if (e.originalEvent.deltaY < 0) {
+                //     if (e.originalEvent.deltaY < 0) {
 
-                        state.zoom += 0.05;
+                //         state.zoom += 0.05;
 
-                    } else {
+                //     } else {
 
-                        state.zoom -= 0.05;
+                //         state.zoom -= 0.05;
 
-                    }
+                //     }
 
-                    state.zoom = Math.max(.5, Math.min(3, state.zoom));
+                //     state.zoom = Math.max(.5, Math.min(3, state.zoom));
 
-                    limitar();
+                //     limitar();
 
-                    update();
+                //     update();
 
-                });
+                // });
 
                 function limitar() {
 
