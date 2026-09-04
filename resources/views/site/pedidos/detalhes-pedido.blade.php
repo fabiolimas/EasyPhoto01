@@ -238,7 +238,7 @@
                 </tr>
                 <tr>
                     <th scope="now">Total</td>
-                    <td></td>
+
                     <td></td>
                     <td>{{ $totalImagens }}</td>
                     <td></td>
