@@ -43,6 +43,50 @@ class HomeController extends Controller
         } else if (auth()->user()->nivel == 'laboratorio') {
             $totalCancelados = 0;
 
+            if ($request->ajax() && $request->filled('inicio') && $request->filled('fim')) {
+
+        $inicio = Carbon::parse($request->inicio)->startOfDay();
+        $fim = Carbon::parse($request->fim)->endOfDay();
+
+        $pedidos = Pedido::whereBetween('created_at', [$inicio, $fim])
+        ->where('laboratorio_id', auth()->user()->laboratorio_id)
+            ->get();
+
+
+        $pedidosPendentes = $pedidos
+            ->where('status', 'Aguardando Impressão')
+            ->count();
+
+
+        $pedidosConcluidos = $pedidos
+            ->where('status', 'Finalizado')
+            ->count();
+
+
+        $pedidosCancelados = $pedidos
+            ->where('status', 'Cancelado')
+            ->count();
+
+
+        $totalPedidosValor = $pedidos->sum('total');
+
+
+        return response()->json([
+
+            'totalPedidos' => $pedidos->count(),
+
+            'pedidosPendentes' => $pedidosPendentes,
+
+            'pedidosConcluidos' => $pedidosConcluidos,
+
+            'pedidosCancelados' => $pedidosCancelados,
+
+            'totalPedidosValor' => $totalPedidosValor,
+
+        ]);
+
+    }
+
 
             if ($request->dia != null) {
 
