@@ -225,7 +225,6 @@
 
 @endforeach
                 <tr>
-
                     <td></td>
                     <td></td>
                     <td></td>

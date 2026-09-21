@@ -32,7 +32,8 @@ class HomeController extends Controller
         $hoje = Carbon::now();
         $totalPedidos = 0;
 
-
+       $inicio = Carbon::parse($request->inicio)->startOfDay();
+        $fim = Carbon::parse($request->fim)->endOfDay();
 
         $meses = $hoje->copy()->subMonths(6);
 
@@ -40,106 +41,105 @@ class HomeController extends Controller
 
             return redirect('/lab');
         } else if (auth()->user()->nivel == 'laboratorio') {
-        $totalCancelados = 0;
+            $totalCancelados = 0;
 
-        if($request != null){
 
-            $pedidos = Pedido::where('laboratorio_id', auth()->user()->laboratorio_id)
-                ->where('created_at','>', Carbon::now()->subDays($request->dia))
-                //->whereYear('created_at', Carbon::now()->year)
-                ->get();
-            foreach ($pedidos as $ped) {
-                $totalPedidos += $ped->total;
+            if ($request->dia != null) {
+
+                $pedidos = Pedido::where('laboratorio_id', auth()->user()->laboratorio_id)
+                    ->where('created_at', '>', Carbon::now()->subDays($request->dia))
+                    //->whereYear('created_at', Carbon::now()->year)
+                    ->get();
+                foreach ($pedidos as $ped) {
+                    $totalPedidos += $ped->total;
+                }
+
+
+                $pedidosCancelados = Pedido::where('status', 'Cancelado')
+                    ->where('created_at', '>', Carbon::now()->subDays($request->dia))
+                    ->where('laboratorio_id', auth()->user()->laboratorio_id)
+                    ->count();
+
+                $pedidos_recentes = Pedido::join('laboratorios', 'laboratorios.id', 'pedidos.laboratorio_id')
+                    ->select('pedidos.*', 'laboratorios.nome as labNome')
+                    ->where('laboratorio_id', auth()->user()->laboratorio_id)
+                    ->where('pedidos.created_at', '>', Carbon::now()->subDays($request->dia))
+                    ->orderBY('id', 'Desc')
+                    ->limit(5)->get();
+
+
+                $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')
+                    ->where('created_at', '>', Carbon::now()->subDays($request->dia))
+                    //->whereYear('created_at', Carbon::now()->year)
+                    ->where('laboratorio_id', auth()->user()->laboratorio_id)
+                    ->count();
+
+                $pedidosConcluidos = Pedido::where('status', 'Finalizado')
+                    ->where('created_at', '>', Carbon::now()->subDays($request->dia))
+                    //->whereYear('created_at', Carbon::now()->year)
+                    ->where('laboratorio_id', auth()->user()->laboratorio_id)
+                    ->count();
+
+                $clientes = User::join('pedidos', 'pedidos.user_id', '=', 'users.id')
+                    ->select(
+                        'users.name',
+                        'pedidos.user_id as cliente',
+                        DB::raw('COUNT(pedidos.id) as total_pedidos')
+                    )
+                    ->where('users.laboratorio_id', 0)
+                    ->where('pedidos.laboratorio_id', auth()->user()->laboratorio_id)
+                    ->where('pedidos.created_at', '>', Carbon::now()->subDays($request->dia))
+                    // ->whereYear('pedidos.created_at', Carbon::now()->year)
+                    ->orderBy('users.name', 'asc')
+                    ->groupBy('pedidos.user_id', 'users.name')
+                    ->get();
+            } else {
+
+                $pedidos = Pedido::where('laboratorio_id', auth()->user()->laboratorio_id)
+                    ->whereMonth('created_at', Carbon::now()->month)
+                    //->whereYear('created_at', Carbon::now()->year)
+                    ->get();
+
+                foreach ($pedidos as $ped) {
+                    $totalPedidos += $ped->total;
+                }
+                $pedidosCancelados = Pedido::where('status', 'Cancelado')
+                    ->whereBetween('created_at', [$meses, $hoje])
+                    ->count();
+
+                $pedidos_recentes = Pedido::join('laboratorios', 'laboratorios.id', 'pedidos.laboratorio_id')
+                    ->select('pedidos.*', 'laboratorios.nome as labNome')
+                    ->where('laboratorio_id', auth()->user()->laboratorio_id)
+                    ->orderBY('id', 'Desc')
+                    ->limit(5)->get();
+
+
+                $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')
+                    ->whereMonth('created_at', Carbon::now()->month)
+                    //->whereYear('created_at', Carbon::now()->year)
+                    ->where('laboratorio_id', auth()->user()->laboratorio_id)
+                    ->count();
+
+                $pedidosConcluidos = Pedido::where('status', 'Finalizado')
+                    ->whereMonth('created_at', Carbon::now()->month)
+                    //->whereYear('created_at', Carbon::now()->year)
+                    ->where('laboratorio_id', auth()->user()->laboratorio_id)
+                    ->count();
+
+                $clientes = User::join('pedidos', 'pedidos.user_id', '=', 'users.id')
+                    ->select(
+                        'users.name',
+                        'pedidos.user_id as cliente',
+                        DB::raw('COUNT(pedidos.id) as total_pedidos')
+                    )
+                    ->where('users.laboratorio_id', 0)
+                    ->where('pedidos.laboratorio_id', auth()->user()->laboratorio_id)
+                    // ->whereMonth('pedidos.created_at', Carbon::now()->month)
+                    // ->whereYear('pedidos.created_at', Carbon::now()->year)
+                    ->orderBy('users.name', 'asc')
+                    ->groupBy('pedidos.user_id', 'users.name')
+                    ->get();
             }
-
-
-             $pedidosCancelados = Pedido::where('status', 'Cancelado')
-                ->where('created_at','>', Carbon::now()->subDays($request->dia))
-               ->where('laboratorio_id', auth()->user()->laboratorio_id)
-                ->count();
-
-            $pedidos_recentes = Pedido::join('laboratorios', 'laboratorios.id', 'pedidos.laboratorio_id')
-                ->select('pedidos.*', 'laboratorios.nome as labNome')
-                ->where('laboratorio_id', auth()->user()->laboratorio_id)
-                 ->where('pedidos.created_at','>', Carbon::now()->subDays($request->dia))
-                ->orderBY('id', 'Desc')
-                ->limit(5)->get();
-
-
-            $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')
-              ->where('created_at','>', Carbon::now()->subDays($request->dia))
-                //->whereYear('created_at', Carbon::now()->year)
-                ->where('laboratorio_id', auth()->user()->laboratorio_id)
-                ->count();
-
-            $pedidosConcluidos = Pedido::where('status', 'Finalizado')
-                  ->where('created_at','>', Carbon::now()->subDays($request->dia))
-                //->whereYear('created_at', Carbon::now()->year)
-                ->where('laboratorio_id', auth()->user()->laboratorio_id)
-                ->count();
-
-            $clientes = User::join('pedidos', 'pedidos.user_id', '=', 'users.id')
-                ->select(
-                    'users.name',
-                    'pedidos.user_id as cliente',
-                    DB::raw('COUNT(pedidos.id) as total_pedidos')
-                )
-                ->where('users.laboratorio_id', 0)
-                ->where('pedidos.laboratorio_id', auth()->user()->laboratorio_id)
-                ->where('pedidos.created_at','>', Carbon::now()->subDays($request->dia))
-                // ->whereYear('pedidos.created_at', Carbon::now()->year)
-                ->orderBy('users.name', 'asc')
-                ->groupBy('pedidos.user_id', 'users.name')
-                ->get();
-
-
-        }else{
-
-        $pedidos = Pedido::where('laboratorio_id', auth()->user()->laboratorio_id)
-                ->whereMonth('created_at', Carbon::now()->month)
-                //->whereYear('created_at', Carbon::now()->year)
-                ->get();
-
-            foreach ($pedidos as $ped) {
-                $totalPedidos += $ped->total;
-            }
-            $pedidosCancelados = Pedido::where('status', 'Cancelado')
-                ->whereBetween('created_at', [$meses, $hoje])
-                ->count();
-
-            $pedidos_recentes = Pedido::join('laboratorios', 'laboratorios.id', 'pedidos.laboratorio_id')
-                ->select('pedidos.*', 'laboratorios.nome as labNome')
-                ->where('laboratorio_id', auth()->user()->laboratorio_id)
-                ->orderBY('id', 'Desc')
-                ->limit(5)->get();
-
-
-            $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')
-               ->whereMonth('created_at', Carbon::now()->month)
-                //->whereYear('created_at', Carbon::now()->year)
-                ->where('laboratorio_id', auth()->user()->laboratorio_id)
-                ->count();
-
-            $pedidosConcluidos = Pedido::where('status', 'Finalizado')
-                ->whereMonth('created_at', Carbon::now()->month)
-                //->whereYear('created_at', Carbon::now()->year)
-                ->where('laboratorio_id', auth()->user()->laboratorio_id)
-                ->count();
-
-            $clientes = User::join('pedidos', 'pedidos.user_id', '=', 'users.id')
-                ->select(
-                    'users.name',
-                    'pedidos.user_id as cliente',
-                    DB::raw('COUNT(pedidos.id) as total_pedidos')
-                )
-                ->where('users.laboratorio_id', 0)
-                ->where('pedidos.laboratorio_id', auth()->user()->laboratorio_id)
-                // ->whereMonth('pedidos.created_at', Carbon::now()->month)
-                // ->whereYear('pedidos.created_at', Carbon::now()->year)
-                ->orderBy('users.name', 'asc')
-                ->groupBy('pedidos.user_id', 'users.name')
-                ->get();
-        }
             return view('painel.home', compact('totalPedidos', 'pedidos_recentes', 'pedidosCancelados', 'pedidos', 'pedidosPendentes', 'pedidosConcluidos', 'clientes'));
         } else {
 
@@ -160,61 +160,102 @@ class HomeController extends Controller
 
 
 
+ if ($request->ajax() && $request->filled('inicio') && $request->filled('fim')) {
+
+        $inicio = Carbon::parse($request->inicio)->startOfDay();
+        $fim = Carbon::parse($request->fim)->endOfDay();
+
+        $pedidos = Pedido::whereBetween('created_at', [$inicio, $fim])
+            ->get();
 
 
+        $pedidosPendentes = $pedidos
+            ->where('status', 'Aguardando Impressão')
+            ->count();
 
-                if($request->dia != null){
-                      $pedidos_recentes = Pedido::join('laboratorios', 'laboratorios.id', 'pedidos.laboratorio_id')
-                ->select('pedidos.*', 'laboratorios.nome as labNome')
-                 ->where('pedidos.created_at','>', Carbon::now()->subDays($request->dia))
-                ->orderBY('id', 'Desc')
-                ->limit(5)->get();
 
-                    $pedidos = Pedido::where('created_at','>', Carbon::now()->subDays($request->dia))
+        $pedidosConcluidos = $pedidos
+            ->where('status', 'Finalizado')
+            ->count();
 
-                ->get();
 
-            foreach ($pedidos as $pda) {
-                $totalPedidos += $pda->total;
-            }
-            $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')
-            ->where('created_at','>', Carbon::now()->subDays($request->dia))
+        $pedidosCancelados = $pedidos
+            ->where('status', 'Cancelado')
+            ->count();
 
-                ->count();
-            $pedidosConcluidos = Pedido::where('status', 'Finalizado')
-              ->where('created_at','>', Carbon::now()->subDays($request->dia))
-                ->count();
 
-            $pedidosCancelados = Pedido::where('status', 'Cancelado')
-             ->where('created_at','>', Carbon::now()->subDays($request->dia))
-                ->count();
+        $totalPedidosValor = $pedidos->sum('total');
 
-                }else{
 
-                   $pedidos_recentes = Pedido::join('laboratorios', 'laboratorios.id', 'pedidos.laboratorio_id')
-                ->select('pedidos.*', 'laboratorios.nome as labNome')
-                ->orderBY('id', 'Desc')
-                ->limit(5)->get();
+        return response()->json([
 
-            $pedidos = Pedido::whereBetween('created_at', [$meses, $hoje])
+            'totalPedidos' => $pedidos->count(),
 
-                ->get();
+            'pedidosPendentes' => $pedidosPendentes,
 
-            foreach ($pedidos as $pda) {
-                $totalPedidos += $pda->total;
-            }
-            $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')
-                ->whereBetween('created_at', [$meses, $hoje])
+            'pedidosConcluidos' => $pedidosConcluidos,
 
-                ->count();
-            $pedidosConcluidos = Pedido::where('status', 'Finalizado')
-                ->whereBetween('created_at', [$meses, $hoje])
-                ->count();
+            'pedidosCancelados' => $pedidosCancelados,
 
-            $pedidosCancelados = Pedido::where('status', 'Cancelado')
-                ->whereBetween('created_at', [$meses, $hoje])
-                ->count();
+            'totalPedidosValor' => $totalPedidosValor,
+
+        ]);
+
+    }
+
+
+            if ($request->dia != null) {
+                $pedidos_recentes = Pedido::join('laboratorios', 'laboratorios.id', 'pedidos.laboratorio_id')
+                    ->select('pedidos.*', 'laboratorios.nome as labNome')
+                    ->where('pedidos.created_at', '>', Carbon::now()->subDays($request->dia))
+                    ->orderBY('id', 'Desc')
+                    ->limit(5)->get();
+
+                $pedidos = Pedido::where('created_at', '>', Carbon::now()->subDays($request->dia))
+
+                    ->get();
+
+                foreach ($pedidos as $pda) {
+                    $totalPedidos += $pda->total;
                 }
+                $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')
+                    ->where('created_at', '>', Carbon::now()->subDays($request->dia))
+                    ->count();
+
+                $pedidosConcluidos = Pedido::where('status', 'Finalizado')
+                    ->where('created_at', '>', Carbon::now()->subDays($request->dia))
+                    ->count();
+
+                $pedidosCancelados = Pedido::where('status', 'Cancelado')
+                    ->where('created_at', '>', Carbon::now()->subDays($request->dia))
+                    ->count();
+                 } else {
+
+                $pedidos_recentes = Pedido::join('laboratorios', 'laboratorios.id', 'pedidos.laboratorio_id')
+                    ->select('pedidos.*', 'laboratorios.nome as labNome')
+                    ->orderBY('id', 'Desc')
+                    ->limit(5)->get();
+
+                $pedidos = Pedido::whereBetween('created_at', [$meses, $hoje])
+
+                    ->get();
+
+                foreach ($pedidos as $pda) {
+                    $totalPedidos += $pda->total;
+                }
+
+                $pedidosPendentes = Pedido::where('status', 'Aguardando Impressão')
+                    ->whereBetween('created_at', [$meses, $hoje])
+
+                    ->count();
+                $pedidosConcluidos = Pedido::where('status', 'Finalizado')
+                    ->whereBetween('created_at', [$meses, $hoje])
+                    ->count();
+
+                $pedidosCancelados = Pedido::where('status', 'Cancelado')
+                    ->whereBetween('created_at', [$meses, $hoje])
+                    ->count();
+            }
             return view('painel.home', compact('totalPedidos', 'pedidosCancelados', 'pedidos_recentes', 'pedidos', 'pedidosPendentes', 'pedidosConcluidos', 'clientes'));
         }
     }
